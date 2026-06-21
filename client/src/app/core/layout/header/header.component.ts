@@ -27,18 +27,18 @@ import { filter } from 'rxjs';
         </nav>
 
         <div class="right-actions">
-          <a href="https://partner-finder.oracle.com/?CompanyNumber=4-101008251043&page=shell&shell=partner-finder&partner-finder=partner-finder-profile" 
-             target="_blank" class="oracle-partner-link">
-            <img src="/assets/oracle-partner.png" alt="Oracle Partner Badge" class="oracle-badge">
-          </a>
-
-          <!-- Updated Internal Login Button -->
+          
           <a routerLink="/login" class="internal-login-btn" title="Employee Login">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
             <span>Login</span>
+          </a>
+
+          <a href="https://partner-finder.oracle.com/?CompanyNumber=4-101008251043&page=shell&shell=partner-finder&partner-finder=partner-finder-profile" 
+             target="_blank" class="oracle-partner-link">
+            <img src="/assets/oracle-partner.png" alt="Oracle Partner Badge" class="oracle-badge">
           </a>
 
           <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle navigation menu">
@@ -209,6 +209,8 @@ import { filter } from 'rxjs';
       align-items: center;
       flex-shrink: 0;
       transition: transform 0.2s ease;
+      padding-left: 15px; /* Added padding to separate from login button */
+      border-left: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     @media (min-width: 768px) {
@@ -229,16 +231,15 @@ import { filter } from 'rxjs';
       filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); 
     }
 
-    /* --- NEW: Internal Login Button with Box Hover Effects --- */
+    /* --- Internal Login Button --- */
     .internal-login-btn {
-      display: none; /* Hidden on mobile, shown in drawer */
+      display: none;
       align-items: center;
       gap: 6px;
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.3);
       padding: 8px 16px;
       border-radius: 6px;
-      margin-left: 10px; /* Space from Oracle badge */
       color: #ffffff;
       font-weight: 500;
       font-size: 0.9rem;
