@@ -1,0 +1,36 @@
+// client/src/styles/_variables.scss
+
+// 1. Color Palette (Mapped to Cloud Vantage corporate identity)
+$color-navy: #0A2540;      // Milaha-inspired deep corporate navy
+$color-teal-accent: #00E5FF; // Tech-forward cloud accent (replacing maritime blue)
+$color-white: #FFFFFF;
+$color-gray-50: #F8F9FA;
+$color-gray-100: #F1F3F5;
+$color-gray-600: #868E96;
+$color-text-main: #1A1A1A;
+
+// 2. Typography
+$font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+// 3. Spacing Scale (8pt grid system)
+$space-xs: 0.5rem;   // 8px
+$space-sm: 1rem;     // 16px
+$space-md: 2rem;     // 32px
+$space-lg: 4rem;     // 64px
+$space-xl: 8rem;     // 128px
+
+// 4. Breakpoint Mixins (Mobile First)
+$breakpoints: (
+  'sm': 480px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1440px
+);
+
+@mixin respond-to($size) {
+  @if map-has-key($breakpoints, $size) {
+    @media (min-width: map-get($breakpoints, $size)) {
+      @content;
+    }
+  }
+}
