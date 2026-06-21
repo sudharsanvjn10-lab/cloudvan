@@ -155,7 +155,7 @@ import { filter } from 'rxjs';
     .desktop-nav {
       display: none;
       align-items: center;
-      gap: 12px; /* Reduced gap slightly since the boxes have their own padding */
+      gap: 28px;
     }
     
     @media (min-width: 1024px) {
@@ -164,43 +164,35 @@ import { filter } from 'rxjs';
       }
     }
     
-    /* Transparent Box Styling for Links */
     .desktop-nav a {
-      color: #f8fafc;
+      color: #f8fafc; /* Very light gray/white */
       font-weight: 500;
       font-size: 0.95rem;
       text-decoration: none;
-      padding: 8px 16px; /* This creates the "box" shape */
-      border-radius: 6px; /* Slightly rounded corners */
-      background: transparent;
-      border: 1px solid transparent; /* Invisible border to prevent layout shift on hover */
-      transition: all 0.3s ease; /* Smooth animation for hover */
+      transition: color 0.2s ease;
     }
 
-    /* Hover effect for standard links */
     .desktop-nav a:hover,
     .desktop-nav a.active {
-      background: rgba(255, 255, 255, 0.1); /* Subtle white frosted glass effect */
-      border: 1px solid rgba(255, 255, 255, 0.2); /* Faint border appears on hover */
-      color: #00a8cc; /* Text turns teal */
-      transform: translateY(-2px); /* Slight lift effect */
+      color: #00a8cc; /* Teal accent */
+      color: var(--color-accent, #00a8cc);
     }
 
-    /* Special styling for Contact Us button */
     .desktop-nav .nav-btn {
-      background: rgba(0, 168, 204, 0.15); /* Transparent teal background */
-      border: 1px solid #00a8cc; /* Solid teal border */
+      background: #00a8cc;
+      background: var(--color-accent, #00a8cc);
       color: #ffffff !important;
-      margin-left: 8px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background 0.2s ease, transform 0.2s ease;
     }
 
-    /* Hover effect for Contact Us button */
     .desktop-nav .nav-btn:hover {
-      background: #00a8cc; /* Fills in solid teal on hover */
-      color: #ffffff !important;
-      box-shadow: 0 4px 12px rgba(0, 168, 204, 0.4); /* Glow effect */
-      transform: translateY(-2px);
+      background: #008eb3;
+      transform: translateY(-1px);
     }
+    
     /* --- Mobile Elements --- */
     .hamburger {
       display: flex;
