@@ -16,6 +16,7 @@ interface Slide {
   imports: [CommonModule, RouterModule],
   template: `
     <section class="hero" aria-label="Promotional Carousel">
+      
       <div 
         class="slide" 
         *ngFor="let slide of slides; let i = index"
@@ -46,6 +47,14 @@ interface Slide {
           [attr.aria-label]="'Go to slide ' + (i + 1)">
         </button>
       </div>
+
+      <div class="hero-socials">
+        <span class="social-label">Connect:</span>
+        <a href="https://www.linkedin.com/company/cloud-vantage-solutions/" target="_blank" title="LinkedIn">in</a>
+        <a href="https://twitter.com/cloud_vantage_s" target="_blank" title="X (Twitter)">X</a>
+        <a href="https://www.facebook.com/cloudvantage/" target="_blank" title="Facebook">fb</a>
+      </div>
+
     </section>
   `,
   styles: [`
@@ -54,7 +63,7 @@ interface Slide {
       height: 100vh;
       min-height: 600px;
       overflow: hidden;
-      background-color: var(--color-primary);
+      background-color: var(--color-primary, #001f3f);
     }
 
     .slide {
@@ -73,7 +82,7 @@ interface Slide {
       }
     }
 
-    /* Dark gradient overlay similar to Milaha */
+    /* Dark gradient overlay */
     .overlay {
       position: absolute;
       top: 0; left: 0;
@@ -88,14 +97,13 @@ interface Slide {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      color: var(--color-bg-light);
+      color: #f8fafc;
       max-width: 800px;
 
       h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); color: #fff; margin-bottom: 1rem; }
       p { font-size: clamp(1.1rem, 2vw, 1.5rem); color: #e2e8f0; margin-bottom: 2rem; }
     }
 
-    /* Shared Button Style inherited from variables, redefined for standalone context if needed, or using global classes */
     .btn {
       display: inline-block;
       padding: 16px 32px;
@@ -105,10 +113,11 @@ interface Slide {
       cursor: pointer;
       width: max-content;
       transition: all 0.3s ease;
+      text-decoration: none;
     }
     .primary {
-      background: var(--color-accent);
-      color: var(--color-primary);
+      background: var(--color-accent, #00a8cc);
+      color: var(--color-primary, #001f3f);
       &:hover { background: #fff; }
     }
 
@@ -139,7 +148,7 @@ interface Slide {
       z-index: 10;
       transition: background 0.3s;
       
-      &:hover { background: var(--color-accent); color: var(--color-primary); }
+      &:hover { background: var(--color-accent, #00a8cc); color: var(--color-primary, #001f3f); }
       &.prev { left: 20px; }
       &.next { right: 20px; }
     }
@@ -162,9 +171,69 @@ interface Slide {
         transition: background 0.3s, transform 0.3s;
 
         &.active {
-          background: var(--color-accent);
+          background: var(--color-accent, #00a8cc);
           transform: scale(1.3);
         }
+      }
+    }
+
+    /* Floating Social Links CSS */
+    .hero-socials {
+      position: absolute;
+      bottom: 40px;
+      left: 10%; /* Keeps it aligned with main container padding */
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .social-label {
+      color: #ffffff;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-right: 5px;
+    }
+
+    .hero-socials a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.95rem;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(4px);
+      transition: all 0.3s ease;
+    }
+
+    .hero-socials a:hover {
+      background: var(--color-accent, #00a8cc);
+      border-color: var(--color-accent, #00a8cc);
+      transform: translateY(-5px); /* Lifts up on hover */
+      box-shadow: 0 5px 15px rgba(0, 168, 204, 0.5);
+    }
+    
+    /* Responsive adjustment for small screens */
+    @media (max-width: 768px) {
+      .hero-socials {
+        bottom: 20px;
+        left: 5%;
+      }
+      .social-label {
+        display: none; /* Hide label on mobile to save space */
+      }
+      .hero-socials a {
+        width: 35px;
+        height: 35px;
+        font-size: 0.85rem;
       }
     }
   `]
@@ -180,7 +249,6 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       subline: "Empowering Futures, Unleashing Innovations across global enterprise sectors.",
       ctaText: "Discover Our Advantage",
       ctaLink: "/about",
-      // PLACEHOLDER: Replace with actual corporate architecture/abstract tech images
       imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" 
     },
     {
@@ -188,7 +256,6 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       subline: "Expert Oracle Fusion HCM implementations tailored for scaling workforces.",
       ctaText: "Explore HCM Services",
       ctaLink: "/services",
-      // PLACEHOLDER: Replace with actual team/corporate office image
       imageUrl: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2070&auto=format&fit=crop"
     },
     {
@@ -196,7 +263,6 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       subline: "Headquartered in Dubai with dedicated offshore centers in Chennai and Madurai.",
       ctaText: "View Our Global Presence",
       ctaLink: "/contact",
-      // PLACEHOLDER: Replace with actual Dubai/Chennai skyline or data center image
       imageUrl: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2070&auto=format&fit=crop"
     }
   ];
