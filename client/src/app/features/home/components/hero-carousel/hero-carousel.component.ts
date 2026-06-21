@@ -249,7 +249,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       subline: "Empowering Futures, Unleashing Innovations across global enterprise sectors.",
       ctaText: "Discover Our Advantage",
       ctaLink: "/about",
-      imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" 
+      imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" 
     },
     {
       headline: "Master Your Most Important Asset",
@@ -264,6 +264,55 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       ctaText: "View Our Global Presence",
       ctaLink: "/contact",
       imageUrl: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      headline: "Streamline Enterprise Operations",
+      subline: "Automate back-office functions with cutting-edge Oracle Fusion ERP solutions.",
+      ctaText: "Explore ERP Systems",
+      ctaLink: "/services",
+      imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop"
+    },
+    {
+      headline: "Resilient Supply Chains",
+      subline: "Optimize logistics and inventory management for peak global efficiency.",
+      ctaText: "Discover SCM Solutions",
+      ctaLink: "/services",
+      imageUrl: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      headline: "Elevate Customer Experiences",
+      subline: "Connect data across marketing, sales, and service to build lasting relationships.",
+      ctaText: "View CX Offerings",
+      ctaLink: "/services",
+      imageUrl: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      headline: "Agile Financial Planning",
+      subline: "Align financial and operational strategies with powerful enterprise performance management.",
+      ctaText: "Learn About EPM",
+      ctaLink: "/services",
+      imageUrl: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      headline: "Round-the-Clock Support",
+      subline: "Continuous integration and system optimization from our offshore delivery centers.",
+      ctaText: "Explore Managed Services",
+      ctaLink: "/services",
+      imageUrl: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      headline: "Thought Leadership & Vision",
+      subline: "Stay ahead of the curve with our latest insights on digital cloud transformation.",
+      ctaText: "Read Our Insights",
+      ctaLink: "/insights",
+      imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      headline: "Join Our Growing Team",
+      subline: "Build your career alongside top-tier enterprise architects and tech innovators.",
+      ctaText: "View Careers",
+      ctaLink: "/careers",
+      imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop"
     }
   ];
 
@@ -279,7 +328,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
   startAutoAdvance() {
     this.autoAdvanceTimer = setInterval(() => {
       this.nextSlide();
-    }, 7000); // 7-second rotation
+    }, 7000);
   }
 
   stopAutoAdvance() {
@@ -293,7 +342,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
   }
 
   manualNavigation(direction: number) {
-    this.stopAutoAdvance(); // Respect user interaction
+    this.stopAutoAdvance();
     const newIndex = this.currentSlide() + direction;
     if (newIndex < 0) {
       this.currentSlide.set(this.slides.length - 1);

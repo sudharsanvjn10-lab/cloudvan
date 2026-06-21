@@ -20,13 +20,15 @@ import { TeamGridComponent } from './components/team-grid/team-grid.component';
     TeamGridComponent
   ],
   template: `
-    <app-hero-carousel></app-hero-carousel>
-    <app-stats-counter></app-stats-counter>
-    <app-services-pillars></app-services-pillars>
-    <app-why-cloud-vantage></app-why-cloud-vantage>
-    <app-insights-grid></app-insights-grid>
-    <app-clients-logos></app-clients-logos>
-    <app-team-grid></app-team-grid>
+    <main class="home-page-wrapper">
+      <app-hero-carousel></app-hero-carousel>
+      <app-stats-counter></app-stats-counter>
+      <app-services-pillars></app-services-pillars>
+      <app-why-cloud-vantage></app-why-cloud-vantage>
+      <app-insights-grid></app-insights-grid>
+      <app-clients-logos></app-clients-logos>
+      <app-team-grid></app-team-grid>
+    </main>
   `
 })
 export class HomeComponent {}

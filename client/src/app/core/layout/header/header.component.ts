@@ -39,8 +39,8 @@ import { filter } from 'rxjs';
       <div class="mobile-drawer" [class.open]="isMobileMenuOpen">
         <div class="drawer-header">
           <div class="brand-container" style="gap: 8px;">
-            <div class="logo-wrapper" style="width: 32px; height: 32px;">
-              <img src="/assets/logo.png" alt="Cloud Vantage Logo" class="brand-logo">
+            <div class="logo-wrapper" style="width: 50px; height: 50px; border-color: rgba(0, 31, 63, 0.2);">
+              <img src="/assets/logo.png" alt="Cloud Vantage Logo" class="brand-logo" style="filter: none;">
             </div>
             <span class="logo-text">Cloud <span style="color: var(--color-accent, #00a8cc);">Vantage</span></span>
           </div>
@@ -82,7 +82,7 @@ import { filter } from 'rxjs';
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      gap: 20px; /* Ensures elements don't crash into each other on smaller screens */
+      gap: 20px;
     }
     
     /* --- Left: Circular Brand Styling --- */
@@ -91,32 +91,39 @@ import { filter } from 'rxjs';
       align-items: center;
       gap: 12px;
       text-decoration: none;
-      flex-shrink: 0; /* Prevents container from squishing */
+      flex-shrink: 0;
     }
 
-    /* The Circular Wrapper trick */
+    /* The Blended Circular Wrapper */
     .logo-wrapper {
-      width: 48px;
-      height: 48px;
+      width: 72px;  /* INCREASED SIZE (Coin sized) */
+      height: 72px; /* INCREASED SIZE (Coin sized) */
       border-radius: 50%;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #ffffff; /* White background to make dark logos visible */
-      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: transparent; /* Blends with the header background */
+      border: 2px solid rgba(255, 255, 255, 0.5); /* Semi-transparent circular border */
       flex-shrink: 0;
+      transition: border-color 0.3s ease;
+    }
+
+    .brand-container:hover .logo-wrapper {
+      border-color: #ffffff; /* Border brightens on hover */
     }
 
     .brand-logo {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* Ensures the whole logo is visible inside the circle */
+      width: 85%; /* Scaled slightly down so it doesn't touch the border edge */
+      height: 85%;
+      object-fit: contain;
       display: block;
+      /* Adds a subtle white glow so dark logos remain visible on the transparent background */
+      filter: drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.7)); 
     }
 
     .brand-text {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: #ffffff;
       white-space: nowrap;
@@ -125,13 +132,12 @@ import { filter } from 'rxjs';
     
     /* --- Right: Oracle Badge --- */
     .oracle-partner-link {
-      display: none; /* Hide on very small mobile screens */
+      display: none;
       align-items: center;
       flex-shrink: 0;
       transition: transform 0.2s ease;
     }
 
-    /* Show badge on tablets and larger */
     @media (min-width: 768px) {
       .oracle-partner-link {
         display: flex;
@@ -147,7 +153,6 @@ import { filter } from 'rxjs';
       width: auto !important;
       display: block !important;
       border-radius: 4px;
-      /* Subtle drop shadow to make it pop against the dark background */
       filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); 
     }
 
@@ -155,7 +160,7 @@ import { filter } from 'rxjs';
     .desktop-nav {
       display: none;
       align-items: center;
-      gap: 28px;
+      gap: 12px;
     }
     
     @media (min-width: 1024px) {
@@ -165,32 +170,38 @@ import { filter } from 'rxjs';
     }
     
     .desktop-nav a {
-      color: #f8fafc; /* Very light gray/white */
+      color: #f8fafc;
       font-weight: 500;
       font-size: 0.95rem;
       text-decoration: none;
-      transition: color 0.2s ease;
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: transparent;
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
     }
 
     .desktop-nav a:hover,
     .desktop-nav a.active {
-      color: #00a8cc; /* Teal accent */
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #00a8cc;
       color: var(--color-accent, #00a8cc);
+      transform: translateY(-2px);
     }
 
     .desktop-nav .nav-btn {
-      background: #00a8cc;
-      background: var(--color-accent, #00a8cc);
+      background: rgba(0, 168, 204, 0.15);
+      border: 1px solid #00a8cc;
       color: #ffffff !important;
-      padding: 10px 20px;
-      border-radius: 6px;
-      font-weight: 600;
-      transition: background 0.2s ease, transform 0.2s ease;
+      margin-left: 8px;
     }
 
     .desktop-nav .nav-btn:hover {
-      background: #008eb3;
-      transform: translateY(-1px);
+      background: #00a8cc;
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(0, 168, 204, 0.4);
+      transform: translateY(-2px);
     }
     
     /* --- Mobile Elements --- */
@@ -286,7 +297,7 @@ import { filter } from 'rxjs';
       width: 100%;
       height: 100vh;
       background: rgba(0, 21, 41, 0.6);
-      backdrop-filter: blur(2px); /* Modern blur effect */
+      backdrop-filter: blur(2px);
       z-index: 1001;
     }
   `]
@@ -301,20 +312,17 @@ export class HeaderComponent implements OnInit {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      // Determine if we are on the root URL or /home to handle background transparency
       this.isHomePage = event.urlAfterRedirects === '/' || event.urlAfterRedirects === '/home';
     });
   }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    // Add background color when scrolled down 50px
     this.isScrolled = window.scrollY > 50;
   }
 
   toggleMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
-    // Prevent background scrolling when mobile menu is open
     document.body.style.overflow = this.isMobileMenuOpen ? 'hidden' : 'auto';
   }
 }

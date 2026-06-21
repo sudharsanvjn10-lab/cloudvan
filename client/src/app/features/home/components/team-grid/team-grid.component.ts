@@ -281,27 +281,27 @@ export class TeamGridComponent {
   // State to hold the currently clicked member for the modal
   selectedMember = signal<TeamMember | null>(null);
 
-  // 100% Manual Data
+  // 100% Manual Data - Replaced all photos with the dummy jeevan.png
   team = signal<TeamMember[]>([
     {
       id: '1', name: 'Jeevanantham R.', title: 'Founder & Director',
       bio: 'Lead Oracle HCM Cloud Solution Architect with over 20+ years of extensive experience and expertise. Oversees Service Delivery and Global operations. Prior to founding Cloud Vantage, held key positions at Bahwan Cybertek, Hexaware Transsys, and others.',
-      photoUrl: '/assets/jeevan.jpg' 
+      photoUrl: '/assets/jeevan.png' 
     },
     {
       id: '2', name: 'Mahendran P', title: 'Delivery Head',
       bio: '18+ years of overall IT experience in Oracle and related technologies, with hands-on project implementation experience in Agile methodology. Leads the EBS Technical Competency spanning EBS Technical, Fusion ERP, Fusion HCM, and Fusion Integration (OIC/ICS/SOA).',
-      photoUrl: '/assets/mahendran.jpg'
+      photoUrl: '/assets/jeevan.png'
     },
     {
       id: '3', name: 'Ilampooranan C.S', title: 'Technical Head',
       bio: 'Over two decades of experience in Oracle Developer Suite and Oracle EBS. Leads implementation of customized solutions for clients, with deep understanding of the Oracle HCM Cloud Suite.',
-      photoUrl: '/assets/ilampooranan.jpg' 
+      photoUrl: '/assets/jeevan.png' 
     },
     {
       id: '4', name: 'Srinivas A', title: 'Sales and Marketing Specialist',
       bio: 'Driven by a passion for identifying and delivering solutions aligned with client needs. Responsible for crafting and executing sales strategy, fostering growth, and leading business development initiatives.',
-      photoUrl: '/assets/srinivas.jpg' 
+      photoUrl: '/assets/jeevan.png' 
     }
   ]);
 

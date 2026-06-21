@@ -1,124 +1,106 @@
-import { Component, ElementRef, OnInit, ViewChild, signal, inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-
-interface Stat {
-  label: string;
-  target: number;
-  suffix: string;
-  current: number;
-}
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-stats-counter',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <section class="stats-section" #statsContainer>
-      <div class="container stats-grid">
-        <div class="stat-card" *ngFor="let stat of stats()">
-          <span class="number">{{ stat.current }}{{ stat.suffix }}</span>
-          <span class="label">{{ stat.label }}</span>
+    <section class="stats-section">
+      <div class="container">
+        <div class="stats-grid">
+          
+          <div class="stat-item">
+            <h2 class="stat-number">20+</h2>
+            <p class="stat-label">Years in Operation</p>
+          </div>
+
+          <div class="stat-item">
+            <h2 class="stat-number">30+</h2>
+            <p class="stat-label">Successful Implementations</p>
+          </div>
+
+          <div class="stat-item">
+            <h2 class="stat-number">10+</h2>
+            <p class="stat-label">Countries Served</p>
+          </div>
+
+          <div class="stat-item">
+            <h2 class="stat-number">5+</h2>
+            <p class="stat-label">Cloud Offerings</p>
+          </div>
+
         </div>
       </div>
     </section>
   `,
   styles: [`
     .stats-section {
-      background-color: var(--color-bg-light);
-      padding: 4rem 0;
-      border-bottom: 1px solid #e2e8f0;
+      padding: 100px 0;
+      /* Uses the pure white surface color from your new Apple theme */
+      background-color: var(--color-bg-surface, #FFFFFF); 
+      position: relative;
+      z-index: 2;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
     }
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2rem;
+      /* Creates a flexible 4-column layout that gracefully stacks on mobile */
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 40px 20px;
       text-align: center;
-
-      @media (min-width: 768px) {
-        grid-template-columns: repeat(4, 1fr);
-      }
     }
 
-    .stat-card {
+    .stat-item {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      align-items: center;
+      justify-content: center;
+      /* Subtle hover lift effect to match the rest of the site */
+      transition: transform var(--transition-fluid, 0.4s ease);
     }
 
-    .number {
-      font-size: clamp(2.5rem, 4vw, 3.5rem);
+    .stat-item:hover {
+      transform: translateY(-4px);
+    }
+
+    .stat-number {
+      /* Massive, crisp numbers using clamp for perfect scaling on all devices */
+      font-size: clamp(3.5rem, 6vw, 5rem);
       font-weight: 700;
-      color: var(--color-primary);
+      color: var(--color-primary, #1D1D1F);
+      margin-bottom: 8px;
       line-height: 1;
+      letter-spacing: -0.04em; /* Tighter tracking for large numbers looks premium */
     }
 
-    .label {
-      font-size: 1rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .stat-label {
+      font-size: 0.9rem;
       font-weight: 600;
+      color: var(--color-text-muted, #86868B);
+      text-transform: uppercase;
+      letter-spacing: 0.1em; /* Wide spacing for small uppercase text */
+      margin: 0;
+    }
+
+    /* Responsive adjustments for mobile */
+    @media (max-width: 768px) {
+      .stats-section {
+        padding: 60px 0;
+      }
+      .stats-grid {
+        gap: 50px;
+      }
+      .stat-number {
+        margin-bottom: 4px;
+      }
     }
   `]
 })
-export class StatsCounterComponent implements OnInit {
-  @ViewChild('statsContainer', { static: true }) statsContainer!: ElementRef;
-  private platformId = inject(PLATFORM_ID);
-  
-  // PLACEHOLDER NUMBERS: Replace targets with verified Cloud Vantage metrics.
-  // Using 20+ years based on Founder's experience profile.
-  stats = signal<Stat[]>([
-    { label: 'Years in Operation', target: 20, suffix: '+', current: 0 },
-    { label: 'Successful Implementations', target: 150, suffix: '+', current: 0 },
-    { label: 'Countries Served', target: 15, suffix: '', current: 0 },
-    { label: 'Certified Consultants', target: 50, suffix: '+', current: 0 }
-  ]);
-
-  private hasAnimated = false;
-
-  ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      this.setupObserver();
-    }
-  }
-
-  private setupObserver() {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !this.hasAnimated) {
-        this.animateStats();
-        this.hasAnimated = true;
-        observer.disconnect(); // Only animate once
-      }
-    }, { threshold: 0.5 }); // Trigger when 50% visible
-
-    observer.observe(this.statsContainer.nativeElement);
-  }
-
-  private animateStats() {
-    const duration = 2000; // 2 seconds
-    const fps = 60;
-    const steps = duration / (1000 / fps);
-
-    let currentStep = 0;
-
-    const interval = setInterval(() => {
-      currentStep++;
-      
-      this.stats.update(currentStats => {
-        return currentStats.map(stat => ({
-          ...stat,
-          // Calculate ease-out step
-          current: Math.min(
-            Math.round((stat.target / steps) * currentStep), 
-            stat.target
-          )
-        }));
-      });
-
-      if (currentStep >= steps) {
-        clearInterval(interval);
-      }
-    }, 1000 / fps);
-  }
-}
+export class StatsCounterComponent {}

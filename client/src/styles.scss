@@ -1,35 +1,77 @@
-// client/src/styles.scss
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-@import 'styles/variables';
+/* ==========================================================================
+   GLOBAL STYLES & VARIABLES
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* --- 2. GLOBAL COLOR PALETTE: The Executive Slate --- */
 :root {
-  --color-primary: #{$color-navy};
-  --color-accent: #{$color-teal-accent};
-  --color-bg-light: #{$color-gray-50};
-  --text-main: #{$color-text-main};
-  --text-muted: #{$color-gray-600};
-  --transition-speed: 0.3s;
+  /* Core Brand Colors */
+  --color-primary: #1E293B;       /* Slate Gray (Headers, Footers, Base) */
+  --color-accent: #2563EB;        /* Royal Blue (Buttons, Links, Accents) */
+  --color-accent-hover: #EA580C;  /* Burnt Orange (High-contrast hover state) */
+  
+  /* Backgrounds & Text */
+  --color-bg-light: #FFFFFF;      /* Crisp White */
+  --color-white: #FFFFFF;
+  --text-main: #0F172A;           /* Deep Ink */
+  --text-muted: #475569;          /* Medium Slate for secondary text */
+  
+  /* Layout & Animation */
+  --transition-speed: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Global Reset & Typography */
+/* ==========================================================================
+   RESETS & BASE HTML
+   ========================================================================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
-  font-family: $font-family-sans;
-  color: var(--text-main);
-  background-color: $color-white;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
+html {
+  scroll-behavior: smooth; /* Smooth scrolling for the whole site */
 }
 
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+  background-color: var(--color-bg-light);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* Prevents horizontal scrolling issues */
+}
+
+/* --- Premium Effects: Custom Selection & Scrollbar --- */
+::selection {
+  background-color: rgba(37, 99, 235, 0.2); /* Transparent Royal Blue text highlight */
+  color: var(--text-main);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-light);
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent); /* Turns Royal Blue on hover */
+}
+
+/* ==========================================================================
+   TYPOGRAPHY
+   ========================================================================== */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.2;
-  margin-bottom: $space-sm;
+  margin-bottom: 1rem;
   color: var(--color-primary);
+  letter-spacing: -0.02em; /* Gives headings a tight, modern enterprise look */
 }
 
 h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
@@ -39,72 +81,103 @@ h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
 a {
   text-decoration: none;
   color: inherit;
-  transition: color var(--transition-speed) ease;
+  transition: all var(--transition-speed);
 }
 
-/* Utility Classes */
+/* Remove default focus outline to prevent the blue box on click */
+a:focus, button:focus {
+  outline: none;
+}
+
+/* ==========================================================================
+   UTILITY CLASSES
+   ========================================================================== */
 .container {
   width: 100%;
-  max-width: map-get($breakpoints, 'xl');
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 $space-sm;
-  
-  @include respond-to('md') {
-    padding: 0 $space-md;
-  }
+  padding: 0 24px;
 }
 
-/* Keep your existing fonts and variables, then add these specific global helpers */
-.brand-container { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-.brand-logo { height: 40px; width: auto; }
-.brand-text { font-size: 1.5rem; font-weight: bold; color: #fff; }
+/* ==========================================================================
+   HEADER & GLOBAL OVERRIDES
+   ========================================================================== */
 
-.oracle-partner-link { display: flex; align-items: center; }
-.oracle-badge { height: 35px; width: auto; border-radius: 4px; transition: transform 0.2s; }
-.oracle-badge:hover { transform: scale(1.05); }
+.header-inner { 
+  display: flex !important; 
+  justify-content: flex-start !important; 
+  align-items: center !important; 
+  width: 100% !important; 
+  gap: 30px; 
+}
 
-/* Ensure header container is flex for layout */
-.header-inner { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+/* --- Brand Logo Styling & Animations --- */
+.brand-container { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  text-decoration: none; 
+  transition: transform var(--transition-speed);
+}
 
-/* Add this to styles.scss */
-.oracle-partner-link { 
-  margin-left: auto; /* Pushes the badge to the right */
-  padding-left: 20px; 
+.brand-container:hover {
+  transform: scale(1.02); /* Subtle pop when hovering over the logo/name */
 }
 
 .brand-logo { 
-  height: 40px !important; 
-  width: auto !important; 
+  height: 50px !important;    
+  width: 50px !important;     
+  border-radius: 50%;         
+  object-fit: cover;          
+  border: 2px solid rgba(255, 255, 255, 0.6);  
   display: block !important; 
+  flex-shrink: 0;
+  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
+  transition: border-color var(--transition-speed), transform var(--transition-speed);
+  z-index: 1001 !important;
+}
+
+.brand-container:hover .brand-logo {
+  border-color: var(--color-accent); /* Border lights up Royal Blue */
+  transform: rotate(5deg); /* Tiny playful rotation */
+}
+
+.brand-text { 
+  font-size: 1.5rem; 
+  font-weight: 700; 
+  color: var(--color-bg-light); 
+  letter-spacing: -0.5px;
+}
+
+/* --- Navigation Links Container --- */
+/* Target the nav wrapper (assumes <nav> tag or .nav-links class) to push it right */
+nav, .nav-links {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Pushes the navigation AND the badge to the right */
+  gap: 20px; /* Space between nav items */
+}
+
+/* --- Oracle Badge Styling & Animations --- */
+.oracle-partner-link { 
+  display: flex; 
+  align-items: center; 
+  padding-left: 20px; 
+  /* Added a subtle divider line to cleanly separate the menu from the badge */
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .oracle-badge { 
   height: 40px !important; 
   width: auto !important; 
   display: block !important; 
-}
-
-.brand-logo, .oracle-badge {
-  /* Add a subtle white drop shadow to make dark logos readable on dark backgrounds */
-  filter: drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.8));
-  /* Ensure they are definitely rendered on top of everything */
+  border-radius: 4px; 
+  filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3));
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s; 
   z-index: 1001 !important;
 }
 
-.header-inner { 
-  display: flex !important; 
-  justify-content: flex-start !important; /* Start from the left */
-  align-items: center !important; 
-  width: 100% !important; 
-  gap: 30px; /* Adds space between logo, nav, and badge */
-}
-
-.brand-logo { 
-  height: 50px !important;    /* Adjust size as needed */
-  width: 50px !important;     /* Must match height to be a perfect circle */
-  border-radius: 50%;         /* This creates the circle */
-  object-fit: cover;          /* Ensures image fills the circle */
-  border: 2px solid #ffffff;  /* Optional: Adds a white ring around it */
-  display: block !important; 
-  flex-shrink: 0;
+.oracle-badge:hover { 
+  transform: scale(1.08) translateY(-2px); /* Bouncy lift effect */
+  filter: drop-shadow(0px 8px 15px rgba(37, 99, 235, 0.4)); /* Royal Blue glow */
 }
