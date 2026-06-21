@@ -6,13 +6,9 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// --- SECURITY MIDDLEWARE ---
 app.use(cors()); 
 app.use(express.json());
 
-// --- DATABASE CONNECTION POOL ---
-// This safely manages multiple connections to your MySQL database
-// We parse the URL and explicitly enable SSL for Aiven
 const pool = mysql.createPool({
   uri: process.env.DATABASE_URL ? process.env.DATABASE_URL.replace('?ssl-mode=REQUIRED', '') : undefined,
   ssl: {
@@ -22,8 +18,6 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0
 });
-
-// --- API ENDPOINTS ---
 
 app.get('/api/insights', async (req, res) => {
   try {
