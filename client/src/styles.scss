@@ -53,3 +53,58 @@ a {
     padding: 0 $space-md;
   }
 }
+
+/* Keep your existing fonts and variables, then add these specific global helpers */
+.brand-container { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand-logo { height: 40px; width: auto; }
+.brand-text { font-size: 1.5rem; font-weight: bold; color: #fff; }
+
+.oracle-partner-link { display: flex; align-items: center; }
+.oracle-badge { height: 35px; width: auto; border-radius: 4px; transition: transform 0.2s; }
+.oracle-badge:hover { transform: scale(1.05); }
+
+/* Ensure header container is flex for layout */
+.header-inner { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+
+/* Add this to styles.scss */
+.oracle-partner-link { 
+  margin-left: auto; /* Pushes the badge to the right */
+  padding-left: 20px; 
+}
+
+.brand-logo { 
+  height: 40px !important; 
+  width: auto !important; 
+  display: block !important; 
+}
+
+.oracle-badge { 
+  height: 40px !important; 
+  width: auto !important; 
+  display: block !important; 
+}
+
+.brand-logo, .oracle-badge {
+  /* Add a subtle white drop shadow to make dark logos readable on dark backgrounds */
+  filter: drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.8));
+  /* Ensure they are definitely rendered on top of everything */
+  z-index: 1001 !important;
+}
+
+.header-inner { 
+  display: flex !important; 
+  justify-content: flex-start !important; /* Start from the left */
+  align-items: center !important; 
+  width: 100% !important; 
+  gap: 30px; /* Adds space between logo, nav, and badge */
+}
+
+.brand-logo { 
+  height: 50px !important;    /* Adjust size as needed */
+  width: 50px !important;     /* Must match height to be a perfect circle */
+  border-radius: 50%;         /* This creates the circle */
+  object-fit: cover;          /* Ensures image fills the circle */
+  border: 2px solid #ffffff;  /* Optional: Adds a white ring around it */
+  display: block !important; 
+  flex-shrink: 0;
+}
