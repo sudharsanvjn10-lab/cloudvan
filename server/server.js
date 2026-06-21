@@ -88,5 +88,5 @@ app.listen(PORT, () => {
   console.log(` - /api/insights`);
   console.log(` - /api/team`);
   console.log(` - /api/status\n`);
-  console.log(`Waiting for frontend requests...`);
+  console.log(`Waiting for live production requests...`);
 });
