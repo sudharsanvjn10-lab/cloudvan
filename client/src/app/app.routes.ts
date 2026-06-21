@@ -31,5 +31,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/contact/contact.component').then(c => c.ContactComponent),
     title: 'Contact Us | Cloud Vantage Solutions'
   },
+  { 
+    path: 'login', 
+    loadComponent: () => import('./features/login/login.component').then(c => c.LoginComponent),
+    title: 'Internal Portal | Cloud Vantage Solutions'
+  },
   { path: '**', redirectTo: '' } // Fallback for 404s
 ];

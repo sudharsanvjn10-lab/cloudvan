@@ -26,14 +26,26 @@ import { filter } from 'rxjs';
           <a routerLink="/contact" class="nav-btn">Contact Us</a>
         </nav>
 
-        <a href="https://partner-finder.oracle.com/?CompanyNumber=4-101008251043&page=shell&shell=partner-finder&partner-finder=partner-finder-profile" 
-           target="_blank" class="oracle-partner-link">
-          <img src="/assets/oracle-partner.png" alt="Oracle Partner Badge" class="oracle-badge">
-        </a>
+        <div class="right-actions">
+          <a href="https://partner-finder.oracle.com/?CompanyNumber=4-101008251043&page=shell&shell=partner-finder&partner-finder=partner-finder-profile" 
+             target="_blank" class="oracle-partner-link">
+            <img src="/assets/oracle-partner.png" alt="Oracle Partner Badge" class="oracle-badge">
+          </a>
 
-        <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle navigation menu">
-          <span></span><span></span><span></span>
-        </button>
+          <!-- Updated Internal Login Button -->
+          <a routerLink="/login" class="internal-login-btn" title="Employee Login">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span>Login</span>
+          </a>
+
+          <button class="hamburger" (click)="toggleMenu()" aria-label="Toggle navigation menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+
       </div>
 
       <div class="mobile-drawer" [class.open]="isMobileMenuOpen">
@@ -53,6 +65,14 @@ import { filter } from 'rxjs';
           <a routerLink="/insights">Insights</a>
           <a routerLink="/careers">Careers</a>
           <a routerLink="/contact">Contact Us</a>
+          
+          <a routerLink="/login" class="mobile-login-link">
+             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Internal Portal
+          </a>
         </nav>
       </div>
       <div class="overlay" *ngIf="isMobileMenuOpen" (click)="toggleMenu()"></div>
@@ -71,7 +91,7 @@ import { filter } from 'rxjs';
     }
     
     header.scrolled {
-      background: #001f3f; /* Dark navy fallback if CSS variables fail */
+      background: #001f3f; 
       background: var(--color-primary, #001f3f);
       padding: 12px 0;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -94,31 +114,29 @@ import { filter } from 'rxjs';
       flex-shrink: 0;
     }
 
-    /* The Blended Circular Wrapper */
     .logo-wrapper {
-      width: 72px;  /* INCREASED SIZE (Coin sized) */
-      height: 72px; /* INCREASED SIZE (Coin sized) */
+      width: 72px;  
+      height: 72px; 
       border-radius: 50%;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: transparent; /* Blends with the header background */
-      border: 2px solid rgba(255, 255, 255, 0.5); /* Semi-transparent circular border */
+      background: transparent; 
+      border: 2px solid rgba(255, 255, 255, 0.5); 
       flex-shrink: 0;
       transition: border-color 0.3s ease;
     }
 
     .brand-container:hover .logo-wrapper {
-      border-color: #ffffff; /* Border brightens on hover */
+      border-color: #ffffff; 
     }
 
     .brand-logo {
-      width: 85%; /* Scaled slightly down so it doesn't touch the border edge */
+      width: 85%; 
       height: 85%;
       object-fit: contain;
       display: block;
-      /* Adds a subtle white glow so dark logos remain visible on the transparent background */
       filter: drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.7)); 
     }
 
@@ -130,32 +148,6 @@ import { filter } from 'rxjs';
       letter-spacing: -0.5px;
     }
     
-    /* --- Right: Oracle Badge --- */
-    .oracle-partner-link {
-      display: none;
-      align-items: center;
-      flex-shrink: 0;
-      transition: transform 0.2s ease;
-    }
-
-    @media (min-width: 768px) {
-      .oracle-partner-link {
-        display: flex;
-      }
-    }
-
-    .oracle-partner-link:hover {
-      transform: translateY(-2px);
-    }
-
-    .oracle-badge {
-      height: 38px !important;
-      width: auto !important;
-      display: block !important;
-      border-radius: 4px;
-      filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); 
-    }
-
     /* --- Center: Desktop Navigation --- */
     .desktop-nav {
       display: none;
@@ -202,6 +194,81 @@ import { filter } from 'rxjs';
       color: #ffffff !important;
       box-shadow: 0 4px 12px rgba(0, 168, 204, 0.4);
       transform: translateY(-2px);
+    }
+
+    /* --- Right Actions Wrapper --- */
+    .right-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    /* --- Right: Oracle Badge --- */
+    .oracle-partner-link {
+      display: none;
+      align-items: center;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    @media (min-width: 768px) {
+      .oracle-partner-link {
+        display: flex;
+      }
+    }
+
+    .oracle-partner-link:hover {
+      transform: translateY(-2px);
+    }
+
+    .oracle-badge {
+      height: 38px !important;
+      width: auto !important;
+      display: block !important;
+      border-radius: 4px;
+      filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); 
+    }
+
+    /* --- NEW: Internal Login Button with Box Hover Effects --- */
+    .internal-login-btn {
+      display: none; /* Hidden on mobile, shown in drawer */
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 6px;
+      margin-left: 10px; /* Space from Oracle badge */
+      color: #ffffff;
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    @media (min-width: 768px) {
+      .internal-login-btn {
+        display: flex;
+      }
+    }
+
+    .internal-login-btn svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.3s ease;
+    }
+
+    .internal-login-btn:hover {
+      background: var(--color-accent, #00a8cc);
+      border-color: var(--color-accent, #00a8cc);
+      box-shadow: 0 4px 12px rgba(0, 168, 204, 0.4);
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
+
+    .internal-login-btn:hover svg {
+      transform: translateY(-1px);
     }
     
     /* --- Mobile Elements --- */
@@ -288,6 +355,20 @@ import { filter } from 'rxjs';
 
     .mobile-nav a:hover {
       color: #00a8cc;
+    }
+
+    .mobile-login-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 15px;
+      padding-top: 20px !important;
+      border-top: 1px solid #e2e8f0;
+      color: #64748b !important;
+    }
+
+    .mobile-login-link:hover {
+      color: #00a8cc !important;
     }
 
     .overlay {
