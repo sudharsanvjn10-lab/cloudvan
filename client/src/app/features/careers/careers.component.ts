@@ -23,20 +23,20 @@ import { CommonModule } from '@angular/common';
         <div class="job-card">
           <div class="job-info">
             <h3>Senior Oracle HCM Consultant</h3>
-            <span>📍 Dubai, UAE | 💼 Full-Time</span>
-          </div>
-          <button class="btn-apply">Apply Now</button>
-        </div>
-        <div class="job-card">
-          <div class="job-info">
-            <h3>Oracle Technical Developer (OIC/VBCS)</h3>
             <span>📍 Chennai, India | 💼 Full-Time</span>
           </div>
           <button class="btn-apply">Apply Now</button>
         </div>
         <div class="job-card">
           <div class="job-info">
-            <h3>Cloud Infrastructure Architect</h3>
+            <h3>Junior Oracle HCM Consultant</h3>
+            <span>📍 Chennai, India | 💼 Full-Time</span>
+          </div>
+          <button class="btn-apply">Apply Now</button>
+        </div>
+        <div class="job-card">
+          <div class="job-info">
+            <h3>Oracle Technical Developer (OIC/VBCS)</h3>
             <span>📍 Madurai, India | 💼 Full-Time</span>
           </div>
           <button class="btn-apply">Apply Now</button>

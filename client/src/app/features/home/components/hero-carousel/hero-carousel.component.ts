@@ -53,6 +53,8 @@ interface Slide {
         <a href="https://www.linkedin.com/company/cloud-vantage-solutions/" target="_blank" title="LinkedIn">in</a>
         <a href="https://twitter.com/cloud_vantage_s" target="_blank" title="X (Twitter)">X</a>
         <a href="https://www.facebook.com/cloudvantage/" target="_blank" title="Facebook">fb</a>
+        <a href="https://www.instagram.com/cloudvantages/" target="_blank" title="Instagram">ig</a>
+        <a href="https://www.youtube.com/@CloudVantageSolutions/" target="_blank" title="YouTube">yt</a>
       </div>
 
     </section>

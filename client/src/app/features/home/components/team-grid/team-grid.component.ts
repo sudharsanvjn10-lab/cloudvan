@@ -285,23 +285,23 @@ export class TeamGridComponent {
   team = signal<TeamMember[]>([
     {
       id: '1', name: 'Jeevanantham R.', title: 'Founder & Director',
-      bio: 'Lead Oracle HCM Cloud Solution Architect with over 20+ years of extensive experience and expertise. Oversees Service Delivery and Global operations. Prior to founding Cloud Vantage, held key positions at Bahwan Cybertek, Hexaware Transsys, and others.',
-      photoUrl: '/assets/jeevan.png' 
+      bio: 'Jeevanantham R, the founder and director of Cloud Vantage Solutions is a lead Oracle HCM Cloud Solution Architect who brings over 20+ years of extensive experience and expertise to the table. With a strong commitment to delivering innovative solutions, he plays a pivotal role in spearheading the growth and success of our company. In his capacity, he oversees Service Delivery and Global operations. Prior to founding Cloud Vantage he held key positions at renowned companies, including Bahwan Cybertek, Hexaware Transsys and others.',
+      photoUrl: '/assets/jeevanantham.png' 
     },
     {
       id: '2', name: 'Mahendran P', title: 'Delivery Head',
-      bio: '18+ years of overall IT experience in Oracle and related technologies, with hands-on project implementation experience in Agile methodology. Leads the EBS Technical Competency spanning EBS Technical, Fusion ERP, Fusion HCM, and Fusion Integration (OIC/ICS/SOA).',
-      photoUrl: '/assets/jeevan.png'
+      bio: 'With more than 18 years of overall IT experience in Oracle and related Technologies involving a spectrum of responsibilities, Mahendran P has Hands-on project implementation experience in Agile methodology. At Cloud Vantage Solutions, he leads the EBS Technical Competency that encapsules multiple tracks: EBS Technical, Fusion ERP, Fusion HCM and Fusion Integration (OIC/ICS/SOA). His expertise and leadership drive excellence across these critical areas.',
+      photoUrl: '/assets/mahendran.png'
     },
     {
       id: '3', name: 'Ilampooranan C.S', title: 'Technical Head',
-      bio: 'Over two decades of experience in Oracle Developer Suite and Oracle EBS. Leads implementation of customized solutions for clients, with deep understanding of the Oracle HCM Cloud Suite.',
-      photoUrl: '/assets/jeevan.png' 
+      bio: 'C. S. ILAMPOORANAN, who serves as technical lead forms an integral part of the Cloud Vantage Solutions team. With over two decades of experience in Oracle Developer Suite and Oracle EBS experience, he takes charge of implementing customised solutions for our clients. His deep understanding of Oracle HCM Cloud Suite, coupled with passion for technology, enables him to provide guidance and expertise in delivering highly effective solutions.',
+      photoUrl: '/assets/ilampooranan.png' 
     },
     {
       id: '4', name: 'Srinivas A', title: 'Sales and Marketing Specialist',
-      bio: 'Driven by a passion for identifying and delivering solutions aligned with client needs. Responsible for crafting and executing sales strategy, fostering growth, and leading business development initiatives.',
-      photoUrl: '/assets/jeevan.png' 
+      bio: 'Srinivas A, our dedicated Sales and Marketing Specialist is driven by a. profound passion for identifying and delivering solutions that precisely align with our clients needs and expectations. In his role, he assumes responsibility for crafting and executing our sales strategy, fostering growth and undertaking business development initiatives that drive the success of Cloud Vantage Solutions.',
+      photoUrl: '/assets/srinivas.png' 
     }
   ]);
 

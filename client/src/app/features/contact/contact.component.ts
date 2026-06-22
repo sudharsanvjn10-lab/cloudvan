@@ -53,27 +53,26 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 
         <div class="info-section">
           <h2>Our Offices</h2>
-          
-          <div class="office">
-            <h3>🇦🇪 Dubai (Headquarters)</h3>
-            <p>Business Bay, Dubai<br>United Arab Emirates</p>
+
+            <div class="Registered Office">
+            <h3>🇮🇳 Madurai (Offshore Development Centre)</h3>
+            <p>Madurai - 625 402, Tamil Nadu, India.<br>Tamil Nadu, India</p>
           </div>
           
-          <div class="office">
+          <div class="Registered Office">
             <h3>🇮🇳 Chennai (Delivery Center)</h3>
-            <p>OMR IT Expressway, Chennai<br>Tamil Nadu, India</p>
+            <p>Pallikarani Chennai - 600117<br>Tamil Nadu, India</p>
           </div>
 
-          <div class="office">
-            <h3>🇮🇳 Madurai (Delivery Center)</h3>
-            <p>IT Park, Vadapalanji, Madurai<br>Tamil Nadu, India</p>
-          </div>
-          
           <div class="direct-contact">
             <p><strong>Email:</strong> info&#64;cloudvantagesolutions.com</p>
           </div>
-        </div>
 
+           <div class="direct-contact">
+            <p><strong>Mobile:</strong> +91 99400 98685</p>
+          </div>
+
+        </div>
       </div>
     </section>
   `,

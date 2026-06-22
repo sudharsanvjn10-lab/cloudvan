@@ -11,10 +11,10 @@ import { RouterModule } from '@angular/router';
       <div class="container footer-grid">
         <div class="footer-col">
           <span class="logo-text">Cloud <span>Vantage</span></span>
-          <p class="mission">We help manage the most important asset of any company — its people.</p>
+          <p class="mission">We are committed to providing our customers with exceptional service while offering our employees the best training.</p>
           <div class="address-block">
-            <strong>HQ:</strong> Dubai, UAE<br>
-            <strong>Offshore Centers:</strong> Chennai & Madurai, India
+            <strong>HQ : </strong> Registered Office, Madurai - 625 402, Tamil Nadu, India.<br>
+            <strong>Offshore Centers:</strong>Pallikarani, Chennai - 600117, Tamil Nadu, India.<br>
           </div>
           <div class="contact-info">
             <a href="mailto:contact@cloud-vantage.com">contact&#64;cloud-vantage.com</a>
