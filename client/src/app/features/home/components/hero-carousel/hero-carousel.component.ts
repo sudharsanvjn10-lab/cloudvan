@@ -262,7 +262,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
     },
     {
       headline: "Global Delivery, Local Precision",
-      subline: "Headquartered in Dubai with dedicated offshore centers in Chennai and Madurai.",
+      subline: "Headquartered in Madurai with dedicated offshore centers in Chennai and Madurai.",
       ctaText: "View Our Global Presence",
       ctaLink: "/contact",
       imageUrl: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2070&auto=format&fit=crop"

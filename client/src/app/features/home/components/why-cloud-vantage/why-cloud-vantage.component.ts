@@ -196,8 +196,8 @@ export class WhyCloudVantageComponent {
     {
       title: 'Global Delivery Model',
       heading: 'Onshore Strategy, Offshore Precision',
-      body: 'Headquartered in Dubai with state-of-the-art offshore delivery centers in Chennai and Madurai, India. This hybrid model guarantees enterprise-grade architectural design coupled with highly cost-effective, round-the-clock technical execution and support.',
-      features: ['Dubai Strategic HQ', 'Chennai & Madurai Delivery Centers', '24/7 Technical Support Lifecycle'],
+      body: 'Headquartered in Madurai with state-of-the-art offshore delivery centers in Chennai and Madurai, India. This hybrid model guarantees enterprise-grade architectural design coupled with highly cost-effective, round-the-clock technical execution and support.',
+      features: ['Madurai Strategic HQ', 'Chennai & Madurai Delivery Centers', '24/7 Technical Support Lifecycle'],
       imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop'
     },
     {

@@ -11,7 +11,7 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
     <div class="inner-hero">
       <div class="container">
         <h1>About Cloud Vantage</h1>
-        <p>Architecting enterprise futures across Dubai, Chennai, and Madurai.</p>
+        <p>Architecting enterprise futures across Chennai, and Madurai.</p>
       </div>
     </div>
 
@@ -20,7 +20,7 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
         <div class="text-block">
           <h2>Our Story</h2>
           <p>
-            Cloud Vantage Solutions, is the most reliable and preferred partner in Oracle’s illustrious realm of HCM Cloud in the Middle Eastern region and USA. Our prestigious headquarters located in the vibrant city of Dubai radiates commitment while offshore development centres nestled in India specifically Chennai & Madurai amplify our global reach and prowess. 
+            Cloud Vantage Solutions, is the most reliable and preferred partner in Oracle’s illustrious realm of HCM Cloud in the Middle Eastern region and USA. Our prestigious headquarters located in the vibrant city of Madurai radiates commitment while offshore development centres nestled in India specifically Chennai & Madurai amplify our global reach and prowess. 
             Driven by commitment and enthusiasm, our tireless pursuits of innovation propel us forward.</p>
            <p>Unleashing the power of Oracle HCM Cloud we facilitate organisations streamline their human capital management processes for unparalleled efficiency. We offer a comprehensive suite of functionalities encompassing from employee Experience to HR and Benefits, to Talent Management and Recruiting, to Workforce Management, HR analytics, payroll management and more.</p>
             <p>In tandem with our proficiency in Oracle HCM, we broaden our scope to encompass a comprehensive suite of Oracle applications. These include Oracle ERP, Oracle SCM, and Oracle CX, collectively forming a robust portfolio of solutions.</p>
