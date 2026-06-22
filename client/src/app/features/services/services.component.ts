@@ -209,21 +209,25 @@ interface DetailedService {
       margin-right: 12px;
     }
 
-    /* --- Image Styling --- */
+    /* --- Image Styling & Animations --- */
     .image-wrapper {
       position: relative;
       border-radius: 24px;
       overflow: hidden;
       box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      /* Base state for odd rows */
       transform: perspective(1000px) rotateY(-5deg);
       transition: transform 0.5s ease, box-shadow 0.5s ease;
     }
 
+    /* Base state for even (reversed) rows */
     .service-row.reversed .image-wrapper {
       transform: perspective(1000px) rotateY(5deg);
     }
 
-    .image-wrapper:hover {
+    /* FIX: Ensure BOTH normal AND reversed rows flatten out on hover */
+    .image-wrapper:hover,
+    .service-row.reversed .image-wrapper:hover {
       transform: perspective(1000px) rotateY(0deg) translateY(-10px);
       box-shadow: 0 30px 50px rgba(0,0,0,0.12);
     }
