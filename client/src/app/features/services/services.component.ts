@@ -285,7 +285,7 @@ export class ServicesComponent {
       leadDescription: 'Build resilient, agile, and sustainable supply chains tailored for modern global logistics.',
       paragraph: 'Build a resilient and sustainable supply chain. Oracle Fusion Cloud Supply Chain & Manufacturing (SCM) connects your supply network with an integrated suite of cloud business applications designed and built to outpace change. We help you orchestrate your operations, optimize logistics, and ensure your manufacturing processes remain lean, agile, and cost-effective.',
       features: ['Inventory Management', 'Manufacturing', 'Order Management', 'Logistics', 'Product Lifecycle', 'Supply Chain Planning'],
-      imageUrl: 'https://images.unsplash.com/photo-1586528116311-ad8ed7450862?q=80&w=1200&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1200&auto=format&fit=crop'
     },
     {
       id: 'epm', 

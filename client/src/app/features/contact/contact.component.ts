@@ -17,28 +17,40 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
     <section class="container contact-wrapper">
       <div class="contact-grid">
         
-        <!-- Form Side -->
         <div class="form-section">
           <h2>Send us a Message</h2>
           <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+            
             <div class="form-group">
-              <label>Name</label>
+              <label>Name *</label>
               <input type="text" formControlName="name" placeholder="John Doe">
             </div>
+
             <div class="form-group">
-              <label>Email</label>
+              <label>Company / Organization</label>
+              <input type="text" formControlName="company" placeholder="Your Company Name">
+            </div>
+
+            <div class="form-group">
+              <label>Email *</label>
               <input type="email" formControlName="email" placeholder="john@company.com">
             </div>
+
             <div class="form-group">
-              <label>Message</label>
+              <label>Phone Number *</label>
+              <input type="tel" formControlName="phone" placeholder="+1 234 567 8900">
+            </div>
+
+            <div class="form-group">
+              <label>Message *</label>
               <textarea formControlName="message" rows="5" placeholder="How can we help you?"></textarea>
             </div>
+
             <button type="submit" [disabled]="contactForm.invalid" class="submit-btn">Send Message</button>
             <p *ngIf="submitted" class="success-msg">Thank you! Your message has been sent.</p>
           </form>
         </div>
 
-        <!-- Info Side -->
         <div class="info-section">
           <h2>Our Offices</h2>
           
@@ -95,9 +107,12 @@ export class ContactComponent {
   submitted = false;
 
   constructor(private fb: FormBuilder) {
+    // Added company and phone fields to the reactive form
     this.contactForm = this.fb.group({
       name: ['', Validators.required],
+      company: [''], // Optional field
       email: ['', [Validators.required, Validators.email]],
+      phone: ['', Validators.required], // Required field
       message: ['', Validators.required]
     });
   }
@@ -105,6 +120,7 @@ export class ContactComponent {
   onSubmit() {
     if (this.contactForm.valid) {
       this.submitted = true;
+      console.log('Contact Form Submitted:', this.contactForm.value);
       this.contactForm.reset();
       setTimeout(() => this.submitted = false, 5000);
     }

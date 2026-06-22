@@ -23,12 +23,12 @@ import { filter } from 'rxjs';
           <a routerLink="/services" routerLinkActive="active">Services</a>
           <a routerLink="/insights" routerLinkActive="active">Insights</a>
           <a routerLink="/careers" routerLinkActive="active">Careers</a>
-          <a routerLink="/contact" class="nav-btn">Contact Us</a>
+          <a routerLink="/contact" class="nav-btn action-btn">Contact Us</a>
         </nav>
 
         <div class="right-actions">
           
-          <a routerLink="/login" class="internal-login-btn" title="Employee Login">
+          <a routerLink="/login" class="internal-login-btn action-btn" title="Employee Login">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -161,10 +161,11 @@ import { filter } from 'rxjs';
       }
     }
     
-    .desktop-nav a {
+    .desktop-nav a:not(.action-btn) {
       color: #f8fafc;
-      font-weight: 500;
-      font-size: 0.95rem;
+      /* MODIFICATION: Made font bold and uniform size */
+      font-weight: 600;
+      font-size: 1rem;
       text-decoration: none;
       padding: 8px 16px;
       border-radius: 6px;
@@ -173,8 +174,8 @@ import { filter } from 'rxjs';
       transition: all 0.3s ease;
     }
 
-    .desktop-nav a:hover,
-    .desktop-nav a.active {
+    .desktop-nav a:not(.action-btn):hover,
+    .desktop-nav a.active:not(.action-btn) {
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #00a8cc;
@@ -182,18 +183,34 @@ import { filter } from 'rxjs';
       transform: translateY(-2px);
     }
 
-    .desktop-nav .nav-btn {
-      background: rgba(0, 168, 204, 0.15);
-      border: 1px solid #00a8cc;
+    /* --- Shared Action Button Styling (Login & Contact Us) --- */
+    /* MODIFICATION: Consolidated style for both buttons to ensure they look identical */
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.1); /* Transparent fill */
+      border: 1px solid rgba(255, 255, 255, 0.3); /* White border */
+      padding: 8px 16px;
+      border-radius: 6px;
       color: #ffffff !important;
-      margin-left: 8px;
+      font-weight: 600; /* Matching bolder font */
+      font-size: 1rem; /* Matching larger size */
+      text-decoration: none;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
     }
 
-    .desktop-nav .nav-btn:hover {
-      background: #00a8cc;
-      color: #ffffff !important;
+    .action-btn:hover {
+      background: var(--color-accent, #00a8cc);
+      border-color: var(--color-accent, #00a8cc);
       box-shadow: 0 4px 12px rgba(0, 168, 204, 0.4);
       transform: translateY(-2px);
+      color: #ffffff !important;
+    }
+
+    .desktop-nav .nav-btn {
+      margin-left: 8px; /* Slight separation from text links */
     }
 
     /* --- Right Actions Wrapper --- */
@@ -209,7 +226,7 @@ import { filter } from 'rxjs';
       align-items: center;
       flex-shrink: 0;
       transition: transform 0.2s ease;
-      padding-left: 15px; /* Added padding to separate from login button */
+      padding-left: 15px; 
       border-left: 1px solid rgba(255, 255, 255, 0.2);
     }
 
@@ -231,21 +248,9 @@ import { filter } from 'rxjs';
       filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); 
     }
 
-    /* --- Internal Login Button --- */
+    /* --- Internal Login Button Specifics --- */
     .internal-login-btn {
       display: none;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 8px 16px;
-      border-radius: 6px;
-      color: #ffffff;
-      font-weight: 500;
-      font-size: 0.9rem;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      flex-shrink: 0;
     }
 
     @media (min-width: 768px) {
@@ -258,14 +263,6 @@ import { filter } from 'rxjs';
       width: 16px;
       height: 16px;
       transition: transform 0.3s ease;
-    }
-
-    .internal-login-btn:hover {
-      background: var(--color-accent, #00a8cc);
-      border-color: var(--color-accent, #00a8cc);
-      box-shadow: 0 4px 12px rgba(0, 168, 204, 0.4);
-      transform: translateY(-2px);
-      color: #ffffff;
     }
 
     .internal-login-btn:hover svg {
