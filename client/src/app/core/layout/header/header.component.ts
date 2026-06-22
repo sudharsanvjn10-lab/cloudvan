@@ -51,7 +51,7 @@ import { filter } from 'rxjs';
       <div class="mobile-drawer" [class.open]="isMobileMenuOpen">
         <div class="drawer-header">
           <div class="brand-container" style="gap: 8px;">
-            <div class="logo-wrapper" style="width: 50px; height: 50px; border-color: rgba(0, 31, 63, 0.2);">
+            <div class="logo-wrapper" style="width: 65px; height: 65px; border-color: rgba(0, 31, 63, 0.2);">
               <img src="/assets/logo.png" alt="Cloud Vantage Logo" class="brand-logo" style="filter: none;">
             </div>
             <span class="logo-text">Cloud <span style="color: var(--color-accent, #00a8cc);">Vantage</span></span>
@@ -115,8 +115,8 @@ import { filter } from 'rxjs';
     }
 
     .logo-wrapper {
-      width: 72px;  
-      height: 72px; 
+      width: 85px;  
+      height: 85px; 
       border-radius: 50%;
       overflow: hidden;
       display: flex;
@@ -133,15 +133,17 @@ import { filter } from 'rxjs';
     }
 
     .brand-logo {
-      width: 85%; 
-      height: 85%;
+      /* MODIFICATION: Increased width/height to 100% and added a scale transform */
+      width: 100%; 
+      height: 100%;
       object-fit: contain;
       display: block;
       filter: drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.7)); 
+      transform: scale(1.3); /* This zooms the inner image so it fills the circle much better */
     }
 
     .brand-text {
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       font-weight: 700;
       color: #ffffff;
       white-space: nowrap;
@@ -163,7 +165,6 @@ import { filter } from 'rxjs';
     
     .desktop-nav a:not(.action-btn) {
       color: #f8fafc;
-      /* MODIFICATION: Made font bold and uniform size */
       font-weight: 600;
       font-size: 1rem;
       text-decoration: none;
@@ -184,18 +185,17 @@ import { filter } from 'rxjs';
     }
 
     /* --- Shared Action Button Styling (Login & Contact Us) --- */
-    /* MODIFICATION: Consolidated style for both buttons to ensure they look identical */
     .action-btn {
       display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255, 255, 255, 0.1); /* Transparent fill */
-      border: 1px solid rgba(255, 255, 255, 0.3); /* White border */
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       padding: 8px 16px;
       border-radius: 6px;
       color: #ffffff !important;
-      font-weight: 600; /* Matching bolder font */
-      font-size: 1rem; /* Matching larger size */
+      font-weight: 600;
+      font-size: 1rem; 
       text-decoration: none;
       transition: all 0.3s ease;
       flex-shrink: 0;
@@ -210,7 +210,7 @@ import { filter } from 'rxjs';
     }
 
     .desktop-nav .nav-btn {
-      margin-left: 8px; /* Slight separation from text links */
+      margin-left: 8px; 
     }
 
     /* --- Right Actions Wrapper --- */
