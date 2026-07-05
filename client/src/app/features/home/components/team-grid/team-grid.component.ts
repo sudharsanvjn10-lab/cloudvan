@@ -184,14 +184,15 @@ export interface TeamMember {
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100vh;
-      background: rgba(0, 31, 63, 0.7);
-      backdrop-filter: blur(8px);
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       z-index: 2000;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
-      animation: fadeIn 0.3s ease-out;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @keyframes fadeIn {
@@ -203,15 +204,16 @@ export interface TeamMember {
       background: #ffffff;
       width: 100%;
       max-width: 700px;
-      border-radius: 16px;
+      border-radius: 20px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-      animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
+      from { transform: translateY(40px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
 
@@ -219,12 +221,12 @@ export interface TeamMember {
       position: absolute;
       top: 15px; right: 20px;
       background: none; border: none;
-      font-size: 2rem; color: #94a3b8;
+      font-size: 2rem; color: #64748b;
       cursor: pointer; z-index: 10;
-      transition: color 0.2s;
+      transition: color 0.3s;
     }
     
-    .close-btn:hover { color: #001f3f; }
+    .close-btn:hover { color: #0f172a; }
 
     .modal-body {
       display: flex;
@@ -237,16 +239,24 @@ export interface TeamMember {
 
     .modal-photo-container {
       width: 100%;
-      height: 250px;
-      background: #f1f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      background: #f8fafc;
     }
     
     @media (min-width: 600px) {
-      .modal-photo-container { width: 40%; height: auto; min-height: 300px; }
+      .modal-photo-container { width: 40%; }
     }
 
     .modal-photo {
-      width: 100%; height: 100%; object-fit: cover;
+      width: 180px; 
+      height: 180px; 
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 3px solid #ffffff;
     }
 
     .modal-info {
@@ -259,11 +269,11 @@ export interface TeamMember {
       .modal-info { width: 60%; }
     }
 
-    .modal-info h2 { color: #001f3f; font-size: 1.8rem; margin-bottom: 5px; }
-    .modal-title { color: #00a8cc; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;}
+    .modal-info h2 { color: #0f172a; font-size: 1.8rem; margin-bottom: 5px; font-weight: 700; }
+    .modal-title { color: #2563eb; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;}
     
     .divider {
-      height: 3px; width: 40px; background: #00a8cc; margin: 20px 0; border-radius: 2px;
+      height: 3px; width: 40px; background: #2563eb; margin: 20px 0; border-radius: 2px;
     }
 
     .modal-bio { color: #475569; line-height: 1.7; font-size: 1rem; margin-bottom: 25px; }
@@ -271,9 +281,9 @@ export interface TeamMember {
     .socials a {
       display: inline-flex; justify-content: center; align-items: center;
       width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9;
-      color: #001f3f; font-weight: bold; font-size: 0.9rem; text-decoration: none; transition: 0.3s;
+      color: #0f172a; font-weight: bold; font-size: 0.9rem; text-decoration: none; transition: 0.3s;
     }
-    .socials a:hover { background: #00a8cc; color: #fff; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,168,204,0.3);}
+    .socials a:hover { background: #2563eb; color: #fff; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(37,99,235,0.3);}
   `]
 })
 export class TeamGridComponent {

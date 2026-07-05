@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
               role="tab"
               [attr.aria-selected]="activeTab() === i"
               [class.active]="activeTab() === i"
-              (click)="activeTab.set(i)"
+              (click)="selectTab(i)"
             >
               {{ tab.title }}
             </button>
@@ -134,7 +134,7 @@ import { CommonModule } from '@angular/common';
       height: 100%;
       &.active {
         display: block;
-        animation: fadeIn 0.5s ease-in-out;
+        animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       }
     }
 
@@ -177,13 +177,14 @@ import { CommonModule } from '@angular/common';
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateX(10px); }
-      to { opacity: 1; transform: translateX(0); }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   `]
 })
-export class WhyCloudVantageComponent {
+export class WhyCloudVantageComponent implements OnInit, OnDestroy {
   activeTab = signal(0);
+  private autoCycleInterval: any;
 
   tabs = [
     {
@@ -208,4 +209,31 @@ export class WhyCloudVantageComponent {
       imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop'
     }
   ];
+
+  ngOnInit() {
+    this.startAutoCycle();
+  }
+
+  ngOnDestroy() {
+    this.stopAutoCycle();
+  }
+
+  startAutoCycle() {
+    this.stopAutoCycle();
+    this.autoCycleInterval = setInterval(() => {
+      this.activeTab.update(current => (current + 1) % this.tabs.length);
+    }, 5000); // Switch tab every 5 seconds
+  }
+
+  stopAutoCycle() {
+    if (this.autoCycleInterval) {
+      clearInterval(this.autoCycleInterval);
+      this.autoCycleInterval = null;
+    }
+  }
+
+  selectTab(index: number) {
+    this.activeTab.set(index);
+    this.stopAutoCycle(); // Pause auto-rotation once user interacts manually
+  }
 }

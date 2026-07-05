@@ -1,23 +1,44 @@
 /* ==========================================================================
-   GLOBAL STYLES & VARIABLES
+   GLOBAL STYLES & VARIABLES (World-Class Modern Theme System)
    ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
 
-/* --- 2. GLOBAL COLOR PALETTE: The Executive Slate --- */
+/* --- 2. GLOBAL COLOR PALETTE: Refined HSL Slate & Vibrant Royal Blue --- */
 :root {
-  /* Core Brand Colors */
-  --color-primary: #1E293B;       /* Slate Gray (Headers, Footers, Base) */
-  --color-accent: #2563EB;        /* Royal Blue (Buttons, Links, Accents) */
-  --color-accent-hover: #EA580C;  /* Burnt Orange (High-contrast hover state) */
+  /* Brand Theme System (Curated Harmonious Color Space) */
+  --color-primary: #0b0f19;       /* Deep Space Navy */
+  --color-primary-light: #161e2f; /* Premium Mid-Navy */
+  --color-accent: #2563eb;        /* Royal Blue */
+  --color-accent-glow: rgba(37, 99, 235, 0.4);
+  --color-accent-hover: #3b82f6;  /* Vivid Blue */
+  --color-cyan: #06b6d4;          /* Cyber Cyan */
+  
+  /* Curated Harmonious Gradient Systems */
+  --grad-premium: linear-gradient(135deg, #0b0f19 0%, #161e2f 100%);
+  --grad-accent: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  --grad-accent-hover: linear-gradient(135deg, #3b82f6 0%, #22d3ee 100%);
+  --grad-soft-light: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
   
   /* Backgrounds & Text */
-  --color-bg-light: #FFFFFF;      /* Crisp White */
-  --color-white: #FFFFFF;
-  --text-main: #0F172A;           /* Deep Ink */
-  --text-muted: #475569;          /* Medium Slate for secondary text */
+  --color-bg-light: #f8fafc;      /* Clean slate-white background */
+  --color-white: #ffffff;
+  --text-main: #0f172a;           /* Deep slate text */
+  --text-muted: #64748b;          /* Soft gray-slate for subtitles */
   
-  /* Layout & Animation */
-  --transition-speed: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Modern Layered Shadows (Soft depth instead of borders) */
+  --shadow-sm: 0 2px 8px -2px rgba(11, 15, 25, 0.05), 0 1px 3px -1px rgba(11, 15, 25, 0.03);
+  --shadow-md: 0 12px 24px -6px rgba(11, 15, 25, 0.06), 0 4px 12px -2px rgba(11, 15, 25, 0.03);
+  --shadow-lg: 0 20px 40px -10px rgba(11, 15, 25, 0.08), 0 8px 16px -4px rgba(11, 15, 25, 0.04);
+  --shadow-glow: 0 10px 25px -5px rgba(37, 99, 235, 0.35);
+
+  /* Glassmorphism Presets */
+  --glass-bg: rgba(255, 255, 255, 0.02);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --glass-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.15);
+  
+  /* Smooth Micromotion Variables */
+  --transition-speed: 0.5s cubic-bezier(0.16, 1, 0.3, 1); /* Out-quint transition */
+  --transition-bounce: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 /* ==========================================================================
@@ -30,7 +51,7 @@
 }
 
 html {
-  scroll-behavior: smooth; /* Smooth scrolling for the whole site */
+  scroll-behavior: smooth;
 }
 
 body {
@@ -40,43 +61,51 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden; /* Prevents horizontal scrolling issues */
+  overflow-x: hidden;
 }
 
-/* --- Premium Effects: Custom Selection & Scrollbar --- */
+/* --- Premium Selection Highlight & Custom Scrollbar --- */
 ::selection {
-  background-color: rgba(37, 99, 235, 0.2); /* Transparent Royal Blue text highlight */
-  color: var(--text-main);
+  background-color: rgba(37, 99, 235, 0.15);
+  color: var(--color-primary);
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
   background: var(--color-bg-light);
 }
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 5px;
+  border-radius: 20px;
+  border: 2px solid var(--color-bg-light);
+  transition: all var(--transition-speed);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent); /* Turns Royal Blue on hover */
+  background: var(--color-accent);
 }
 
 /* ==========================================================================
-   TYPOGRAPHY
+   TYPOGRAPHY (Outfit Font for Editorial Premium Headings)
    ========================================================================== */
 h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.15;
   margin-bottom: 1rem;
   color: var(--color-primary);
-  letter-spacing: -0.02em; /* Gives headings a tight, modern enterprise look */
+  letter-spacing: -0.03em;
 }
 
 h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
-h2 { font-size: clamp(2rem, 4vw, 3rem); }
-h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
+h2 { font-size: clamp(2rem, 4vw, 2.75rem); }
+h3 { font-size: clamp(1.4rem, 2.5vw, 1.85rem); }
+
+p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
 
 a {
   text-decoration: none;
@@ -84,13 +113,12 @@ a {
   transition: all var(--transition-speed);
 }
 
-/* Remove default focus outline to prevent the blue box on click */
 a:focus, button:focus {
   outline: none;
 }
 
 /* ==========================================================================
-   UTILITY CLASSES
+   UTILITY CLASSES (World-Class Micromotions & Gradients)
    ========================================================================== */
 .container {
   width: 100%;
@@ -99,10 +127,34 @@ a:focus, button:focus {
   padding: 0 24px;
 }
 
+/* Premium Gradient Highlight Text Class */
+.text-gradient {
+  background: var(--grad-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Premium Button Hover Micro-animations */
+.btn-primary-glow {
+  background: var(--grad-accent);
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-weight: 600;
+  box-shadow: var(--shadow-glow);
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  &:hover {
+    background: var(--grad-accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.5);
+  }
+}
+
 /* ==========================================================================
    HEADER & GLOBAL OVERRIDES
    ========================================================================== */
-
 .header-inner { 
   display: flex !important; 
   justify-content: flex-start !important; 
@@ -111,7 +163,6 @@ a:focus, button:focus {
   gap: 30px; 
 }
 
-/* --- Brand Logo Styling & Animations --- */
 .brand-container { 
   display: flex; 
   align-items: center; 
@@ -121,25 +172,24 @@ a:focus, button:focus {
 }
 
 .brand-container:hover {
-  transform: scale(1.02); /* Subtle pop when hovering over the logo/name */
+  transform: scale(1.015);
 }
 
 .brand-logo { 
-  height: 50px !important;    
-  width: 50px !important;     
-  border-radius: 50%;         
-  object-fit: cover;          
-  border: 2px solid rgba(255, 255, 255, 0.6);  
+  height: 60px !important;    
+  width: auto !important;     
+  border-radius: 0 !important;         
+  object-fit: contain !important;          
+  border: none !important;  
   display: block !important; 
   flex-shrink: 0;
-  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
-  transition: border-color var(--transition-speed), transform var(--transition-speed);
+  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.15));
+  transition: transform var(--transition-bounce);
   z-index: 1001 !important;
 }
 
 .brand-container:hover .brand-logo {
-  border-color: var(--color-accent); /* Border lights up Royal Blue */
-  transform: rotate(5deg); /* Tiny playful rotation */
+  transform: scale(1.05) rotate(-2deg);
 }
 
 .brand-text { 
@@ -149,22 +199,18 @@ a:focus, button:focus {
   letter-spacing: -0.5px;
 }
 
-/* --- Navigation Links Container --- */
-/* Target the nav wrapper (assumes <nav> tag or .nav-links class) to push it right */
 nav, .nav-links {
   display: flex;
   align-items: center;
-  margin-left: auto; /* Pushes the navigation AND the badge to the right */
-  gap: 20px; /* Space between nav items */
+  margin-left: auto;
+  gap: 24px;
 }
 
-/* --- Oracle Badge Styling & Animations --- */
 .oracle-partner-link { 
   display: flex; 
   align-items: center; 
-  padding-left: 20px; 
-  /* Added a subtle divider line to cleanly separate the menu from the badge */
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-left: 24px; 
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .oracle-badge { 
@@ -172,12 +218,12 @@ nav, .nav-links {
   width: auto !important; 
   display: block !important; 
   border-radius: 4px; 
-  filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3));
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s; 
+  filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2));
+  transition: transform var(--transition-bounce), filter 0.4s; 
   z-index: 1001 !important;
 }
 
 .oracle-badge:hover { 
-  transform: scale(1.08) translateY(-2px); /* Bouncy lift effect */
-  filter: drop-shadow(0px 8px 15px rgba(37, 99, 235, 0.4)); /* Royal Blue glow */
+  transform: scale(1.08) translateY(-2px);
+  filter: drop-shadow(0px 8px 20px rgba(37, 99, 235, 0.35));
 }

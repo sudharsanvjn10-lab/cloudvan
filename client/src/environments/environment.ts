@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://cloudvan.onrender.com/api' // Make sure you include the /api !
+  apiUrl: 'http://localhost:3000/api'
 };

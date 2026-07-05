@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-contact',
@@ -102,26 +104,29 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
   `]
 })
 export class ContactComponent {
-  contactForm: FormGroup;
+  private http = inject(HttpClient);
+  private fb = inject(FormBuilder);
+  
+  contactForm: FormGroup = this.fb.group({
+    name: ['', Validators.required],
+    company: [''], // Optional field
+    email: ['', [Validators.required, Validators.email]],
+    phone: ['', Validators.required], // Required field
+    message: ['', Validators.required]
+  });
+  
   submitted = false;
-
-  constructor(private fb: FormBuilder) {
-    // Added company and phone fields to the reactive form
-    this.contactForm = this.fb.group({
-      name: ['', Validators.required],
-      company: [''], // Optional field
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required], // Required field
-      message: ['', Validators.required]
-    });
-  }
 
   onSubmit() {
     if (this.contactForm.valid) {
-      this.submitted = true;
-      console.log('Contact Form Submitted:', this.contactForm.value);
-      this.contactForm.reset();
-      setTimeout(() => this.submitted = false, 5000);
+      this.http.post(`${environment.apiUrl}/contact`, this.contactForm.value).subscribe({
+        next: () => {
+          this.submitted = true;
+          this.contactForm.reset();
+          setTimeout(() => this.submitted = false, 5000);
+        },
+        error: (err) => console.error("Error submitting contact details:", err)
+      });
     }
   }
 }

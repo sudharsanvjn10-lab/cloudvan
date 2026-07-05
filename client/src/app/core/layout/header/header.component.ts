@@ -10,12 +10,15 @@ import { filter } from 'rxjs';
   template: `
     <header [class.scrolled]="isScrolled || !isHomePage">
       <div class="container header-inner">
-        
+
         <a routerLink="/" class="brand-container">
           <div class="logo-wrapper">
             <img src="/assets/logo.png" alt="Cloud Vantage Logo" class="brand-logo">
           </div>
-          <span class="brand-text">Cloud Vantage</span>
+          <span class="brand-text">
+            <span class="first-line">Cloud Vantage</span>
+            <span class="second-line">Solutions</span>
+          </span>
         </a>
 
         <nav class="desktop-nav">
@@ -27,14 +30,22 @@ import { filter } from 'rxjs';
         </nav>
 
         <div class="right-actions">
-          
-          <a routerLink="/login" class="internal-login-btn action-btn" title="Employee Login">
+
+          <a routerLink="/login" *ngIf="!isLoggedIn" class="internal-login-btn action-btn" title="Employee Login">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
             <span>Login</span>
           </a>
+
+          <a routerLink="/login" *ngIf="isLoggedIn" class="internal-login-btn action-btn" title="Admin Dashboard" style="border-color:#2563eb; background:rgba(37,99,235,0.15);">
+            <span>Dashboard</span>
+          </a>
+
+          <button (click)="onLogout()" *ngIf="isLoggedIn" class="internal-login-btn action-btn" title="Log Out" style="border-color:#ef4444; background:rgba(239,68,68,0.15); cursor:pointer;">
+            <span>Log Out</span>
+          </button>
 
           <a href="https://partner-finder.oracle.com/?CompanyNumber=4-101008251043&page=shell&shell=partner-finder&partner-finder=partner-finder-profile" 
              target="_blank" class="oracle-partner-link">
@@ -51,27 +62,38 @@ import { filter } from 'rxjs';
       <div class="mobile-drawer" [class.open]="isMobileMenuOpen">
         <div class="drawer-header">
           <div class="brand-container" style="gap: 8px;">
-            <div class="logo-wrapper" style="width: 65px; height: 65px; border-color: rgba(0, 31, 63, 0.2);">
+            <div class="logo-wrapper" style="width: 80px; height: 80px; border: none;">
               <img src="/assets/logo.png" alt="Cloud Vantage Logo" class="brand-logo" style="filter: none;">
             </div>
-            <span class="logo-text">Cloud <span style="color: var(--color-accent, #00a8cc);">Vantage</span></span>
+            <span class="logo-text" style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15;">
+              <span style="font-weight: 700;">Cloud <span style="color: var(--color-accent, #2563EB);">Vantage</span></span>
+              <span style="font-size: 0.55em; font-weight: 600; color: #64748b; text-transform: none; margin-left: 56px;">Solutions</span>
+            </span>
           </div>
           <button class="close-btn" (click)="toggleMenu()" aria-label="Close menu">&times;</button>
         </div>
         <nav class="mobile-nav" (click)="toggleMenu()">
           <a routerLink="/">Home</a>
           <a routerLink="/about">About Us</a>
-          <a routerLink="/services">Oracle Services</a>
+          <a routerLink="/services">Services</a>
           <a routerLink="/insights">Insights</a>
           <a routerLink="/careers">Careers</a>
           <a routerLink="/contact">Contact Us</a>
-          
-          <a routerLink="/login" class="mobile-login-link">
+
+          <a routerLink="/login" *ngIf="!isLoggedIn" class="mobile-login-link">
              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
-            Internal Portal
+            Login
+          </a>
+
+          <a routerLink="/login" *ngIf="isLoggedIn" class="mobile-login-link" style="color:#2563eb !important;">
+            Dashboard
+          </a>
+
+          <a href="#" (click)="onLogout($event)" *ngIf="isLoggedIn" class="mobile-login-link" style="color:#ef4444 !important;">
+            Log Out
           </a>
         </nav>
       </div>
@@ -87,16 +109,18 @@ import { filter } from 'rxjs';
       z-index: 1000;
       background: transparent;
       padding: 24px 0;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    
+
     header.scrolled {
-      background: #001f3f; 
-      background: var(--color-primary, #001f3f);
+      background: rgba(30, 41, 59, 0.75); /* Slate transparent */
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       padding: 12px 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
-    
+
     .header-inner {
       display: flex;
       justify-content: space-between;
@@ -104,7 +128,7 @@ import { filter } from 'rxjs';
       width: 100%;
       gap: 20px;
     }
-    
+
     /* --- Left: Circular Brand Styling --- */
     .brand-container {
       display: flex;
@@ -115,72 +139,85 @@ import { filter } from 'rxjs';
     }
 
     .logo-wrapper {
-      width: 85px;  
-      height: 85px; 
-      border-radius: 50%;
-      overflow: hidden;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: transparent; 
-      border: 2px solid rgba(255, 255, 255, 0.5); 
+      border: none;
       flex-shrink: 0;
-      transition: border-color 0.3s ease;
-    }
-
-    .brand-container:hover .logo-wrapper {
-      border-color: #ffffff; 
+      transition: all 0.3s ease;
     }
 
     .brand-logo {
-      /* MODIFICATION: Increased width/height to 100% and added a scale transform */
-      width: 100%; 
       height: 100%;
+      width: auto;
       object-fit: contain;
       display: block;
       filter: drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.7)); 
-      transform: scale(1.3); /* This zooms the inner image so it fills the circle much better */
+      transition: transform 0.3s ease;
     }
 
     .brand-text {
-      font-size: 1.7rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.15;
+    }
+
+    .first-line {
+      font-size: 1.4rem;
       font-weight: 700;
       color: #ffffff;
       white-space: nowrap;
       letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    
+
+    .second-line {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      text-transform: none;
+      -webkit-text-fill-color: #cbd5e1; /* Override parent webkit text fill transparent */
+      opacity: 0.8;
+      margin-left: 75px; /* Offset to start exactly under the V in Vantage */
+      margin-top: 1px;
+      letter-spacing: 0.5px;
+    }
+
     /* --- Center: Desktop Navigation --- */
     .desktop-nav {
       display: none;
       align-items: center;
       gap: 12px;
     }
-    
+
     @media (min-width: 1024px) {
       .desktop-nav {
         display: flex;
       }
     }
-    
+
     .desktop-nav a:not(.action-btn) {
-      color: #f8fafc;
+      color: #cbd5e1;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.95rem;
       text-decoration: none;
       padding: 8px 16px;
       border-radius: 6px;
       background: transparent;
       border: 1px solid transparent;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
     .desktop-nav a:not(.action-btn):hover,
     .desktop-nav a.active:not(.action-btn) {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #00a8cc;
-      color: var(--color-accent, #00a8cc);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #38bdf8; /* Vibrant light blue/cyan accent */
       transform: translateY(-2px);
     }
 
@@ -189,22 +226,23 @@ import { filter } from 'rxjs';
       display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       padding: 8px 16px;
       border-radius: 6px;
       color: #ffffff !important;
       font-weight: 600;
-      font-size: 1rem; 
+      font-size: 0.95rem; 
       text-decoration: none;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
       flex-shrink: 0;
+      backdrop-filter: blur(4px);
     }
 
     .action-btn:hover {
-      background: var(--color-accent, #00a8cc);
-      border-color: var(--color-accent, #00a8cc);
-      box-shadow: 0 4px 12px rgba(0, 168, 204, 0.4);
+      background: #2563eb; /* Royal Blue */
+      border-color: #2563eb;
+      box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);
       transform: translateY(-2px);
       color: #ffffff !important;
     }
@@ -227,7 +265,7 @@ import { filter } from 'rxjs';
       flex-shrink: 0;
       transition: transform 0.2s ease;
       padding-left: 15px; 
-      border-left: 1px solid rgba(255, 255, 255, 0.2);
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     @media (min-width: 768px) {
@@ -268,7 +306,7 @@ import { filter } from 'rxjs';
     .internal-login-btn:hover svg {
       transform: translateY(-1px);
     }
-    
+
     /* --- Mobile Elements --- */
     .hamburger {
       display: flex;
@@ -279,13 +317,13 @@ import { filter } from 'rxjs';
       cursor: pointer;
       padding: 8px;
     }
-    
+
     @media (min-width: 1024px) {
       .hamburger {
         display: none;
       }
     }
-    
+
     .hamburger span {
       width: 28px;
       height: 2px;
@@ -301,13 +339,16 @@ import { filter } from 'rxjs';
       right: -320px;
       width: 300px;
       height: 100vh;
-      background: #ffffff;
+      background: rgba(15, 23, 42, 0.95); /* Deep ink transparent */
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       z-index: 1002;
-      transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       padding: 30px 24px;
-      box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+      box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
     }
-    
+
     .mobile-drawer.open {
       right: 0;
     }
@@ -317,12 +358,12 @@ import { filter } from 'rxjs';
       justify-content: space-between;
       align-items: center;
       margin-bottom: 40px;
-      border-bottom: 1px solid #f1f5f9;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       padding-bottom: 20px;
     }
 
     .drawer-header .logo-text {
-      color: #001f3f;
+      color: #ffffff;
       font-weight: 700;
       font-size: 1.25rem;
     }
@@ -332,7 +373,7 @@ import { filter } from 'rxjs';
       border: none;
       font-size: 2.5rem;
       cursor: pointer;
-      color: #64748b;
+      color: #94a3b8;
       line-height: 1;
     }
 
@@ -343,7 +384,7 @@ import { filter } from 'rxjs';
     }
 
     .mobile-nav a {
-      color: #0f172a;
+      color: #cbd5e1;
       font-size: 1.15rem;
       font-weight: 600;
       text-decoration: none;
@@ -352,7 +393,7 @@ import { filter } from 'rxjs';
     }
 
     .mobile-nav a:hover {
-      color: #00a8cc;
+      color: #38bdf8;
     }
 
     .mobile-login-link {
@@ -361,12 +402,12 @@ import { filter } from 'rxjs';
       gap: 10px;
       margin-top: 15px;
       padding-top: 20px !important;
-      border-top: 1px solid #e2e8f0;
-      color: #64748b !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94a3b8 !important;
     }
 
     .mobile-login-link:hover {
-      color: #00a8cc !important;
+      color: #38bdf8 !important;
     }
 
     .overlay {
@@ -375,8 +416,8 @@ import { filter } from 'rxjs';
       left: 0;
       width: 100%;
       height: 100vh;
-      background: rgba(0, 21, 41, 0.6);
-      backdrop-filter: blur(2px);
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
       z-index: 1001;
     }
   `]
@@ -385,7 +426,12 @@ export class HeaderComponent implements OnInit {
   isScrolled = false;
   isMobileMenuOpen = false;
   isHomePage = true;
+
   private router = inject(Router);
+
+  get isLoggedIn(): boolean {
+    return !!localStorage.getItem('admin_token');
+  }
 
   ngOnInit() {
     this.router.events.pipe(
@@ -403,5 +449,13 @@ export class HeaderComponent implements OnInit {
   toggleMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
     document.body.style.overflow = this.isMobileMenuOpen ? 'hidden' : 'auto';
+  }
+
+  onLogout(event?: Event) {
+    if (event) event.preventDefault();
+    localStorage.removeItem('admin_token');
+    localStorage.removeItem('admin_email');
+    localStorage.removeItem('admin_privilege');
+    this.router.navigate(['/login']);
   }
 }

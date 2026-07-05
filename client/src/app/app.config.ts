@@ -9,6 +9,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withFetch()), // Enables modern Fetch API for HttpClient
-    provideAnimations() // <-- Added this to enable smooth page transitions
+    provideAnimations() // Enables smooth page transitions
   ]
 };

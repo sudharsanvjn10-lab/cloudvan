@@ -11,7 +11,7 @@ import { fadeAnimation } from './route-animations';
   animations: [fadeAnimation],
   template: `
     <app-header></app-header>
-    
+
     <!-- Animation Wrapper -->
     <main class="route-workspace" [@routeAnimations]="prepareRoute(outlet)">
       <!-- #outlet reference allows the animation trigger to know when the route changes -->
@@ -23,20 +23,19 @@ import { fadeAnimation } from './route-animations';
   styles: [`
     .route-workspace {
       /* Crucial: Keeps the fading-out page locked to the top of this container */
-      position: relative; 
+      position: relative;
       display: block;
       width: 100%;
-      
+
       /* Stops any side-to-side jitter or scrollbar flashing during the crossfade */
-      overflow: hidden; 
-      
+      overflow: hidden;
+
       /* Ensures the footer stays pushed to the bottom even during the split-second transition */
-      min-height: 100vh; 
+      min-height: 100vh;
     }
   `]
 })
 export class AppComponent {
-  
   // This function tells the animation trigger exactly when the route has changed
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.isActivated ? outlet.activatedRoute : '';
