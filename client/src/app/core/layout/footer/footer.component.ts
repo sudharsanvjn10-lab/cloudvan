@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -71,7 +71,7 @@ import { environment } from '../../../../environments/environment';
       </div>
       <div class="footer-bottom">
         <div class="container">
-          <p>&copy; {{ currentYear }} Cloud Vantage Solutions. All Rights Reserved.</p>
+          <p>&copy; {{ currentYear }} Cloud Vantage Solutions. All Rights Reserved. <span *ngIf="visitCount" style="margin-left: 15px; color: rgba(255, 255, 255, 0.65); font-weight: 500; font-size: 0.85rem;">| Page Visits: {{ visitCount }}</span></p>
         </div>
       </div>
     </footer>
@@ -182,10 +182,20 @@ import { environment } from '../../../../environments/environment';
     }
   `]
 })
-export class FooterComponent {
+export class FooterComponent implements OnInit {
   private http = inject(HttpClient);
   currentYear = new Date().getFullYear();
   subscribed = false;
+  visitCount: number | null = null;
+
+  ngOnInit() {
+    this.http.post<{ count: number }>(`${environment.apiUrl}/visits`, {}).subscribe({
+      next: (res) => {
+        this.visitCount = res.count;
+      },
+      error: (err) => console.error("Error logging visit:", err)
+    });
+  }
 
   onSubscribe(email: string, event: Event) {
     event.preventDefault();

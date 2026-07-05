@@ -11,14 +11,14 @@ import { environment } from '../../../environments/environment';
   template: `
     <div class="inner-hero">
       <div class="container">
-        <h1>Join Our Team</h1>
-        <p>Build the future of enterprise cloud solutions with us.</p>
+        <h1 class="reveal-up">Join Our Team</h1>
+        <p class="reveal-up-delay-1">Build the future of enterprise cloud solutions with us.</p>
       </div>
     </div>
     
     <section class="container careers-content">
       <div class="intro">
-        <h2>Why Cloud Vantage?</h2>
+        <h2>Why Cloud Vantage Solutions?</h2>
         <p>We are always looking for passionate Oracle functional consultants, technical architects, and developers to join our global delivery teams in Dubai, Chennai, and Madurai.</p>
       </div>
       

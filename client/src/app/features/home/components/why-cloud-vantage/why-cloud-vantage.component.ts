@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
     <section class="why-cvs-section">
       <div class="container wrapper">
         <div class="header-area">
-          <h2>Why Cloud Vantage?</h2>
+          <h2>Why Cloud Vantage Solutions?</h2>
           <p>Delivering measurable business value through deep technical expertise and strategic global deployment.</p>
         </div>
 

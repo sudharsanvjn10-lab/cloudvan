@@ -57,7 +57,7 @@ export interface AdminUser {
               </div>
             </div>
             <h2>Internal Portal</h2>
-            <p>Authorized Cloud Vantage personnel only.</p>
+            <p>Authorized Cloud Vantage Solutions personnel only.</p>
           </div>
 
           <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
@@ -87,7 +87,7 @@ export interface AdminUser {
         <header class="dashboard-header">
           <div class="header-logo">
             <img src="/assets/logo.png" alt="Logo">
-            <h1>Cloud Vantage Admin Portal</h1>
+            <h1>Cloud Vantage Solutions Admin Portal</h1>
           </div>
           <div class="user-meta">
             <span class="user-email">{{ loggedInUserEmail() }} ({{ loggedInUserPrivilege() }})</span>
@@ -339,6 +339,7 @@ export interface AdminUser {
     }
 
     .brand-title {
+      font-family: 'Outfit', sans-serif;
       font-size: 1.35rem;
       font-weight: 700;
       color: #0f172a;
@@ -346,6 +347,7 @@ export interface AdminUser {
     }
 
     .brand-subtitle {
+      font-family: 'Inter', sans-serif;
       font-size: 0.75rem;
       font-weight: 600;
       color: #3b82f6;

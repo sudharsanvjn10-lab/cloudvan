@@ -19,8 +19,8 @@ interface DetailedService {
   template: `
     <header class="services-header">
       <div class="container">
-        <h1>Our Oracle Cloud Services</h1>
-        <p>Comprehensive enterprise solutions tailored for your business.</p>
+        <h1 class="reveal-up">Our Oracle Cloud Services</h1>
+        <p class="reveal-up-delay-1">Comprehensive enterprise solutions tailored for your business.</p>
       </div>
     </header>
 

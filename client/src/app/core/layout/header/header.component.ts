@@ -11,7 +11,7 @@ import { filter } from 'rxjs';
     <header [class.scrolled]="isScrolled || !isHomePage">
       <div class="container header-inner">
 
-        <a routerLink="/" class="brand-container">
+        <a routerLink="/" class="brand-container" (click)="onHomeClick($event)">
           <div class="logo-wrapper">
             <img src="/assets/logo.png" alt="Cloud Vantage Logo" class="brand-logo">
           </div>
@@ -73,7 +73,7 @@ import { filter } from 'rxjs';
           <button class="close-btn" (click)="toggleMenu()" aria-label="Close menu">&times;</button>
         </div>
         <nav class="mobile-nav" (click)="toggleMenu()">
-          <a routerLink="/">Home</a>
+          <a routerLink="/" (click)="onHomeClick($event)">Home</a>
           <a routerLink="/about">About Us</a>
           <a routerLink="/services">Services</a>
           <a routerLink="/insights">Insights</a>
@@ -449,6 +449,12 @@ export class HeaderComponent implements OnInit {
   toggleMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
     document.body.style.overflow = this.isMobileMenuOpen ? 'hidden' : 'auto';
+  }
+
+  onHomeClick(event: Event) {
+    if (this.router.url === '/' || this.router.url === '/home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   onLogout(event?: Event) {

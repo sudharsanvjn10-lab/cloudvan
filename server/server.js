@@ -310,16 +310,39 @@ app.delete('/api/admin/user/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// POST: Record and increment page visit count
+app.post('/api/visits', async (req, res) => {
+  try {
+    await pool.query('UPDATE visitor_stats SET count = count + 1 WHERE id = 1');
+    const [rows] = await pool.query('SELECT count FROM visitor_stats WHERE id = 1');
+    res.json({ count: rows[0] ? rows[0].count : 0 });
+  } catch (error) {
+    console.error("Error updating visits:", error);
+    res.status(500).json({ error: 'Failed to record visit' });
+  }
+});
+
+// GET: Fetch current page visit count
+app.get('/api/visits', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT count FROM visitor_stats WHERE id = 1');
+    res.json({ count: rows[0] ? rows[0].count : 0 });
+  } catch (error) {
+    console.error("Error fetching visits:", error);
+    res.status(500).json({ error: 'Failed to fetch visit count' });
+  }
+});
+
 app.get('/api/status', (req, res) => {
   res.json({ 
     status: 'Online', 
-    service: 'Cloud Vantage Dedicated API', 
+    service: 'Cloud Vantage Solutions Dedicated API', 
     database: 'MySQL Configured',
     timestamp: new Date() 
   });
 });
 
 app.listen(PORT, () => {
-  console.log(`\n🚀 Cloud Vantage API running on port ${PORT}`);
+  console.log(`\n🚀 Cloud Vantage Solutions API running on port ${PORT}`);
   console.log(`Waiting for live production requests...`);
 });

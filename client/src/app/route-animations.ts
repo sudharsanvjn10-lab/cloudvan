@@ -2,41 +2,48 @@ import { trigger, transition, style, query, animate, group } from '@angular/anim
 
 export const fadeAnimation = trigger('routeAnimations', [
   transition('* <=> *', [
-    /* 1. Setup: Lock widths to prevent shrinking during animation */
+    /* 1. Setup: Lock widths to prevent layout jumps during transitions */
     query(':enter, :leave', [
       style({
         width: '100%'
       })
     ], { optional: true }),
     
-    /* 2. Old Page: Set to absolute so it floats perfectly over the new page */
+    /* 2. Old Page: Shift slightly up and fade out */
     query(':leave', [
       style({
         position: 'absolute',
         top: 0,
         left: 0,
-        zIndex: 10
+        zIndex: 10,
+        opacity: 1,
+        transform: 'scale(1) translateY(0)'
       })
     ], { optional: true }),
     
-    /* 3. New Page: Start completely invisible but in standard document flow 
-          (this keeps the footer perfectly at the bottom) */
+    /* 3. New Page: Start slightly lower, scaled down, and fully transparent */
     query(':enter', [
       style({ 
-        opacity: 0
+        opacity: 0,
+        transform: 'scale(0.985) translateY(16px)'
       })
     ], { optional: true }),
 
-    /* 4. The Fix: Synchronized Crossfade.
-          Both animations run at the exact same time (400ms) with no delays. 
-          This eliminates the white "flash" entirely. */
+    /* 4. Coordinated Animation: Execute both transitions simultaneously using 
+          a premium out-quint easing function for hardware-accelerated fluid motion. */
     group([
       query(':leave', [
-        animate('400ms ease-in-out', style({ opacity: 0 }))
+        animate('500ms cubic-bezier(0.16, 1, 0.3, 1)', style({ 
+          opacity: 0, 
+          transform: 'scale(1.015) translateY(-8px)'
+        }))
       ], { optional: true }),
       
       query(':enter', [
-        animate('400ms ease-in-out', style({ opacity: 1 }))
+        animate('600ms cubic-bezier(0.16, 1, 0.3, 1)', style({ 
+          opacity: 1, 
+          transform: 'scale(1) translateY(0)'
+        }))
       ], { optional: true })
     ])
   ])

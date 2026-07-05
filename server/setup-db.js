@@ -109,6 +109,18 @@ async function setupDatabase() {
       )
     `);
 
+    // 9. Create Visitor Stats Table
+    console.log("Creating 'visitor_stats' table...");
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS visitor_stats (
+        id INT PRIMARY KEY,
+        count INT NOT NULL DEFAULT 0
+      )
+    `);
+    await connection.execute(`
+      INSERT IGNORE INTO visitor_stats (id, count) VALUES (1, 0)
+    `);
+
     console.log("✅ Database setup complete!");
     await connection.end();
 

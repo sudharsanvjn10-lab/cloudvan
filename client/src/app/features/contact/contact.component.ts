@@ -11,8 +11,8 @@ import { environment } from '../../../environments/environment';
   template: `
     <div class="inner-hero">
       <div class="container">
-        <h1>Contact Us</h1>
-        <p>Let's discuss how we can transform your business.</p>
+        <h1 class="reveal-up">Contact Us</h1>
+        <p class="reveal-up-delay-1">Let's discuss how we can transform your business.</p>
       </div>
     </div>
 
