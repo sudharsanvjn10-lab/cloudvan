@@ -258,13 +258,13 @@ export class ServicesPillarsComponent {
       id: 'core-hr', title: 'Core HR & Global Workforce', icon: '👥',
       shortDesc: 'Establish enterprise workforce structures, person models, and automated employee journeys from hire to retire.',
       subLinks: ['Workforce Structures', 'Position & Job Management', 'Journeys & Onboarding', 'Health & Safety'],
-      imageUrl: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=800&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop'
     },
     {
       id: 'payroll', title: 'Payroll & Compensation', icon: '💳',
       shortDesc: 'Automate localized multi-country payroll calculations, retroactive pay runs, Fast Formulas, and total rewards.',
       subLinks: ['Global Payroll Processing', 'Fast Formulas Architecture', 'Salary Basis & Cycles', 'Total Compensation Statements'],
-      imageUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=800&auto=format&fit=crop'
     },
     {
       id: 'absence', title: 'Time & Absence Management', icon: '⏱️',
@@ -276,13 +276,13 @@ export class ServicesPillarsComponent {
       id: 'talent', title: 'Talent & Recruiting (ORC)', icon: '🎯',
       shortDesc: 'Attract top candidates with Oracle Recruiting Cloud, align employee goals, and optimize performance cycles.',
       subLinks: ['Oracle Recruiting Cloud (ORC)', 'Goal & Performance Reviews', 'Succession Planning', 'Oracle Learning Cloud'],
-      imageUrl: 'https://images.unsplash.com/photo-1565688534245-05d6b5be184a?q=80&w=800&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop'
     },
     {
       id: 'redwood', title: 'Redwood UI & VBS Extensions', icon: '🎨',
       shortDesc: 'Design bespoke employee experiences utilizing Oracle Visual Builder Studio (VBS), JavaScript chains, and Business Rules.',
       subLinks: ['Visual Builder Studio (VBS)', 'Express & Advanced Business Rules', 'Custom Guided Journeys', 'Modern Redwood Pages'],
-      imageUrl: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=800&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop'
     },
     {
       id: 'integrations', title: 'HDL & BI Reporting', icon: '⚡',

@@ -66,21 +66,21 @@ export class InsightsGridComponent implements OnInit {
       title: 'Maximizing ROI with Oracle Fusion HCM',
       excerpt: 'Discover proven strategies to optimize your human capital management deployment for long-term scalability and user adoption.',
       date: 'October 12, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=800&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'
     },
     {
       id: '2',
       title: 'Migrating Legacy HRMS to Oracle Fusion HCM',
       excerpt: 'A comprehensive roadmap for enterprises transitioning from on-premise PeopleSoft / EBS HRMS systems to modern Oracle Cloud HCM.',
       date: 'September 28, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop'
     },
     {
       id: '3',
       title: 'Modernizing Employee Journeys with Redwood UI',
       excerpt: 'How Oracle Redwood UI and Visual Builder Studio enable streamlined employee self-service and personalized workforce experiences.',
       date: 'September 15, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=800&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800&auto=format&fit=crop'
     }
   ];
 

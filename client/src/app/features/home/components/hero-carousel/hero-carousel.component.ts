@@ -336,7 +336,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       subline: "Unleash the full power of Oracle Fusion HCM Cloud with tailored implementations and continuous innovation.",
       ctaText: "Discover Our Services",
       ctaLink: "/services",
-      imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=2070&auto=format&fit=crop"
     },
     {
       category: "GLOBAL ENTERPRISE WORKFORCE",
@@ -344,7 +344,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       subline: "Scalable Oracle Fusion Core HR architectures and employee journey workflows.",
       ctaText: "Explore Core HR",
       ctaLink: "/services",
-      imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2070&auto=format&fit=crop"
     },
     {
       category: "INTELLIGENT PAYROLL ARCHITECTURE",
@@ -352,7 +352,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       subline: "Flawless multi-country payroll calculations, retroactive processing, and compliance.",
       ctaText: "Explore Payroll Solutions",
       ctaLink: "/services",
-      imageUrl: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2070&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=2070&auto=format&fit=crop"
     },
     {
       category: "ORC & TALENT ACQUISITION",
@@ -360,7 +360,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       subline: "Next-gen Oracle Recruiting Cloud (ORC) with intelligent performance and goal management.",
       ctaText: "View Talent Solutions",
       ctaLink: "/services",
-      imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2069&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=2070&auto=format&fit=crop"
     },
     {
       category: "REDWOOD DESIGN & VBS",
@@ -384,7 +384,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
       subline: "Build your career alongside top-tier Oracle Fusion HCM architects and technical innovators.",
       ctaText: "View Careers",
       ctaLink: "/careers",
-      imageUrl: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2070&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
     }
   ];
 

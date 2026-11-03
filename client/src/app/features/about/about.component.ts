@@ -2,12 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeadingComponent } from '../../shared/components/section-heading/section-heading.component';
 import { TeamGridComponent } from '../home/components/team-grid/team-grid.component';
-import { EnterpriseVerticalsComponent } from '../../shared/components/enterprise-verticals/enterprise-verticals.component';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, SectionHeadingComponent, TeamGridComponent, EnterpriseVerticalsComponent],
+  imports: [CommonModule, SectionHeadingComponent, TeamGridComponent],
   template: `
     <div class="inner-hero">
       <div class="container">
@@ -78,7 +77,29 @@ import { EnterpriseVerticalsComponent } from '../../shared/components/enterprise
       </div>
     </section>
 
-    <app-enterprise-verticals></app-enterprise-verticals>
+    <section class="trust-section">
+      <div class="container text-center">
+        <h2>Trusted by Global Leaders</h2>
+        <div class="title-underline"></div>
+        <p class="section-subtitle">We collaborate with top enterprises and strategic partners to deliver unparalleled Oracle Cloud solutions.</p>
+        
+        <div class="trust-grid">
+          <div class="trust-image-wrapper">
+            <h3 class="trust-heading">Our Valued Clients</h3>
+            <div class="image-box">
+              <img src="/assets/clients.png" alt="Cloud Vantage Clients" loading="lazy">
+            </div>
+          </div>
+
+          <div class="trust-image-wrapper">
+            <h3 class="trust-heading">Our Strategic Partners</h3>
+            <div class="image-box">
+              <img src="/assets/partners.png" alt="Cloud Vantage Partners" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="testimonials-section">
       <div class="container">

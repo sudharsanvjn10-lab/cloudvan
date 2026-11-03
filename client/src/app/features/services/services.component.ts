@@ -491,7 +491,7 @@ export class ServicesComponent {
         'Health & Safety Incidents', 
         'Workforce Predictions & Modeling'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1200&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1200&auto=format&fit=crop'
     },
     {
       id: 'payroll',
@@ -509,7 +509,7 @@ export class ServicesComponent {
         'Total Compensation Statements', 
         'Costing & GL Journal Mapping'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1200&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop'
     },
     {
       id: 'absence',
