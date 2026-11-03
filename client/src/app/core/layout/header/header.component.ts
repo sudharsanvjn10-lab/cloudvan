@@ -92,9 +92,9 @@ import { filter } from 'rxjs';
             Dashboard
           </a>
 
-          <a href="#" (click)="onLogout($event)" *ngIf="isLoggedIn" class="mobile-login-link" style="color:#ef4444 !important;">
+          <button type="button" (click)="onLogout($event)" *ngIf="isLoggedIn" class="mobile-login-link mobile-logout-btn" style="color:#ef4444 !important; background:none; border:none; width:100%; text-align:left; font-size:inherit; font-family:inherit; cursor:pointer; padding: 12px 0;">
             Log Out
-          </a>
+          </button>
         </nav>
       </div>
       <div class="overlay" *ngIf="isMobileMenuOpen" (click)="toggleMenu()"></div>
@@ -140,11 +140,14 @@ import { filter } from 'rxjs';
 
     .logo-wrapper {
       height: 60px;
+      padding: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: transparent; 
-      border: none;
+      background: rgba(255, 255, 255, 0.04); 
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       flex-shrink: 0;
       transition: all 0.3s ease;
     }
@@ -202,6 +205,7 @@ import { filter } from 'rxjs';
     }
 
     .desktop-nav a:not(.action-btn) {
+      position: relative;
       color: #cbd5e1;
       font-weight: 600;
       font-size: 0.95rem;
@@ -217,8 +221,20 @@ import { filter } from 'rxjs';
     .desktop-nav a.active:not(.action-btn) {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #38bdf8; /* Vibrant light blue/cyan accent */
+      color: #38bdf8;
       transform: translateY(-2px);
+    }
+
+    .desktop-nav a.active:not(.action-btn)::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 12px;
+      right: 12px;
+      height: 2px;
+      background: #38bdf8;
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
     }
 
     /* --- Shared Action Button Styling (Login & Contact Us) --- */
@@ -282,8 +298,10 @@ import { filter } from 'rxjs';
       height: 38px !important;
       width: auto !important;
       display: block !important;
-      border-radius: 4px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.3)); 
+      transition: all 0.3s ease;
     }
 
     /* --- Internal Login Button Specifics --- */

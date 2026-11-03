@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 interface Slide {
+  category: string;
   headline: string;
   subline: string;
   ctaText: string;
@@ -15,7 +16,7 @@ interface Slide {
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <section class="hero" aria-label="Promotional Carousel">
+    <section class="hero" aria-label="Oracle Fusion HCM Cloud Solutions Carousel">
       
       <div 
         class="slide" 
@@ -27,9 +28,13 @@ interface Slide {
         <div class="overlay"></div>
         
         <div class="container slide-content" *ngIf="currentSlide() === i">
-          <h1 class="fade-up">{{ slide.headline }}</h1>
-          <p class="fade-up delay-1">{{ slide.subline }}</p>
-          <a [routerLink]="slide.ctaLink" class="btn primary fade-up delay-2">
+          <div class="category-pill fade-up">
+            <span class="pill-dot"></span>
+            <span>{{ slide.category }}</span>
+          </div>
+          <h1 class="fade-up delay-1">{{ slide.headline }}</h1>
+          <p class="fade-up delay-2">{{ slide.subline }}</p>
+          <a [routerLink]="slide.ctaLink" class="btn primary fade-up delay-3">
             {{ slide.ctaText }}
           </a>
         </div>
@@ -83,9 +88,9 @@ interface Slide {
     .hero {
       position: relative;
       height: 100vh;
-      min-height: 600px;
+      min-height: 640px;
       overflow: hidden;
-      background-color: var(--color-primary, #001f3f);
+      background-color: var(--color-primary, #070b19);
     }
 
     .slide {
@@ -94,8 +99,10 @@ interface Slide {
       width: 100%; height: 100%;
       background-size: cover;
       background-position: center;
+      background-color: #070b19;
+      background-image: linear-gradient(135deg, #070b19 0%, #0f172a 50%, #1e3a8a 100%);
       opacity: 0;
-      transition: opacity 1s ease-in-out;
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 1;
 
       &.active {
@@ -104,12 +111,12 @@ interface Slide {
       }
     }
 
-    /* Dark gradient overlay */
+    /* Enhanced multi-stop directional dark gradient for WCAG AAA text contrast */
     .overlay {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.4) 100%);
+      background: linear-gradient(90deg, rgba(7, 11, 25, 0.94) 0%, rgba(10, 17, 38, 0.82) 50%, rgba(10, 17, 38, 0.45) 100%);
     }
 
     .slide-content {
@@ -120,23 +127,60 @@ interface Slide {
       flex-direction: column;
       justify-content: center;
       color: #f8fafc;
-      max-width: 800px;
+      max-width: 840px;
 
       h1 { 
         font-size: clamp(2.5rem, 5vw, 4.5rem); 
         color: #fff; 
-        margin-bottom: 1rem; 
-        background: linear-gradient(to right, #ffffff, #cbd5e1);
+        margin-bottom: 1.25rem; 
+        line-height: 1.15;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
-      p { font-size: clamp(1.1rem, 2vw, 1.5rem); color: #cbd5e1; margin-bottom: 2rem; }
+
+      p { 
+        font-size: clamp(1.1rem, 2vw, 1.4rem); 
+        color: #cbd5e1; 
+        margin-bottom: 2.25rem; 
+        line-height: 1.6;
+        max-width: 720px;
+      }
+    }
+
+    /* Category Pill */
+    .category-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.16);
+      border: 1px solid rgba(96, 165, 250, 0.35);
+      color: #60a5fa;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      width: fit-content;
+      backdrop-filter: blur(8px);
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
     }
 
     .btn {
       display: inline-block;
-      padding: 16px 32px;
-      font-size: 1.125rem;
+      padding: 16px 36px;
+      font-size: 1.05rem;
       font-weight: 600;
       border-radius: 8px;
       cursor: pointer;
@@ -144,201 +188,203 @@ interface Slide {
       transition: all var(--transition-speed, 0.4s) cubic-bezier(0.16, 1, 0.3, 1);
       text-decoration: none;
     }
+
     .primary {
-      background: var(--grad-accent);
+      background: var(--grad-accent, linear-gradient(135deg, #2563eb 0%, #06b6d4 100%));
       color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
-      &:hover { 
-        background: var(--grad-accent-hover);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
+
+      &:hover {
+        background: var(--grad-accent-hover, linear-gradient(135deg, #3b82f6 0%, #22d3ee 100%));
         transform: translateY(-2px);
         box-shadow: 0 8px 30px rgba(37, 99, 235, 0.5);
       }
     }
 
-    /* Animations */
-    .fade-up {
-      animation: fadeUpAnim 1s forwards cubic-bezier(0.16, 1, 0.3, 1);
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    .delay-1 { animation-delay: 0.15s; }
-    .delay-2 { animation-delay: 0.3s; }
-
-    @keyframes fadeUpAnim {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Controls */
+    /* Modern Frosted Glass Navigation Controls */
     .control {
       position: absolute;
       top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.1);
-      border: none;
-      color: #fff;
-      font-size: 2rem;
-      padding: 1rem;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      font-size: 1.15rem;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       z-index: 10;
-      transition: background 0.3s;
-      
-      &:hover { background: var(--color-accent, #00a8cc); color: var(--color-primary, #001f3f); }
-      &.prev { left: 20px; }
-      &.next { right: 20px; }
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(-50%);
+
+      &:hover {
+        background: rgba(37, 99, 235, 0.7);
+        border-color: #60a5fa;
+        box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);
+        transform: translateY(-50%) scale(1.08);
+      }
+
+      &.prev { left: 24px; }
+      &.next { right: 24px; }
     }
 
+    /* Morphing Elongated Pill Indicators */
     .indicators {
       position: absolute;
       bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
+      align-items: center;
       gap: 10px;
       z-index: 10;
+    }
 
-      .dot {
-        width: 12px; height: 12px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.4);
-        border: none;
-        cursor: pointer;
-        transition: background 0.3s, transform 0.3s;
+    .dot {
+      height: 8px;
+      width: 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 
-        &.active {
-          background: var(--color-accent, #00a8cc);
-          transform: scale(1.3);
+      &.active {
+        width: 32px;
+        background: #0ea5e9;
+        box-shadow: 0 0 12px rgba(14, 165, 233, 0.6);
+      }
+
+      &:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.6);
+      }
+    }
+
+    /* Social Links */
+    .hero-socials {
+      position: absolute;
+      bottom: 25px;
+      right: 30px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 10;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(10px);
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+
+      .social-label {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        font-weight: 500;
+      }
+
+      a {
+        color: #e2e8f0;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+          color: #38bdf8;
+          transform: translateY(-2px);
         }
       }
     }
 
-    /* Floating Social Links CSS */
-    .hero-socials {
-      position: absolute;
-      bottom: 40px;
-      left: 10%; /* Keeps it aligned with main container padding */
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .social-label {
-      color: #ffffff;
-      font-size: 0.9rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      opacity: 0.8;
-      margin-right: 5px;
-    }
-
-    .hero-socials a {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      color: rgba(255, 255, 255, 0.85);
-      text-decoration: none;
-      background: transparent;
-      transition: all 0.3s ease;
-    }
-
-    .hero-socials a:hover {
-      color: var(--color-accent, #00a8cc);
-      border-color: var(--color-accent, #00a8cc);
-      background: rgba(255, 255, 255, 0.08);
-      transform: translateY(-4px); /* Lifts up on hover */
-      box-shadow: 0 4px 12px rgba(0, 168, 204, 0.3);
-    }
-    
-    /* Responsive adjustment for small screens */
     @media (max-width: 768px) {
-      .hero-socials {
-        bottom: 20px;
-        left: 5%;
-      }
-      .social-label {
-        display: none; /* Hide label on mobile to save space */
-      }
-      .hero-socials a {
-        width: 35px;
-        height: 35px;
-        font-size: 0.85rem;
+      .hero-socials { display: none; }
+      .control { width: 42px; height: 42px; font-size: 1rem; }
+      .control.prev { left: 12px; }
+      .control.next { right: 12px; }
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+
+    @keyframes heroFadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
   `]
 })
 export class HeroCarouselComponent implements OnInit, OnDestroy {
-  currentSlide = signal(0);
+  currentSlide = signal<number>(0);
   private autoAdvanceTimer: any;
   private destroyRef = inject(DestroyRef);
 
   slides: Slide[] = [
     {
-      headline: "The Next Gen Consulting",
-      subline: "Empowering Futures, Unleashing Innovations across global enterprise sectors.",
-      ctaText: "Discover Our Advantage",
-      ctaLink: "/about",
-      imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" 
-    },
-    {
-      headline: "Master Your Most Important Asset",
-      subline: "Expert Oracle Fusion HCM implementations tailored for scaling workforces.",
-      ctaText: "Explore HCM Services",
+      category: "ORACLE FUSION HCM CLOUD",
+      headline: "Transforming Global Enterprises",
+      subline: "Unleash the full power of Oracle Fusion HCM Cloud with tailored implementations and continuous innovation.",
+      ctaText: "Discover Our Services",
       ctaLink: "/services",
       imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
     },
     {
-      headline: "Global Delivery, Local Precision",
-      subline: "Headquartered in Madurai with dedicated offshore centers in Chennai and Madurai.",
-      ctaText: "View Our Global Presence",
-      ctaLink: "/contact",
-      imageUrl: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2070&auto=format&fit=crop"
-    },
-    {
-      headline: "Streamline Enterprise Operations",
-      subline: "Automate back-office functions with cutting-edge Oracle Fusion ERP solutions.",
-      ctaText: "Explore ERP Systems",
+      category: "GLOBAL ENTERPRISE WORKFORCE",
+      headline: "Core HR & Global Workforce",
+      subline: "Scalable Oracle Fusion Core HR architectures and employee journey workflows.",
+      ctaText: "Explore Core HR",
       ctaLink: "/services",
-      imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop"
     },
     {
-      headline: "Resilient Supply Chains",
-      subline: "Optimize logistics and inventory management for peak global efficiency.",
-      ctaText: "Discover SCM Solutions",
+      category: "INTELLIGENT PAYROLL ARCHITECTURE",
+      headline: "Intelligent Global Payroll",
+      subline: "Flawless multi-country payroll calculations, retroactive processing, and compliance.",
+      ctaText: "Explore Payroll Solutions",
       ctaLink: "/services",
-      imageUrl: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=2070&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2070&auto=format&fit=crop"
     },
     {
-      headline: "Elevate Customer Experiences",
-      subline: "Connect data across marketing, sales, and service to build lasting relationships.",
-      ctaText: "View CX Offerings",
+      category: "ORC & TALENT ACQUISITION",
+      headline: "Attract & Nurture Top Talent",
+      subline: "Next-gen Oracle Recruiting Cloud (ORC) with intelligent performance and goal management.",
+      ctaText: "View Talent Solutions",
       ctaLink: "/services",
-      imageUrl: "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2074&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2069&auto=format&fit=crop"
     },
     {
-      headline: "Agile Financial Planning",
-      subline: "Align financial and operational strategies with powerful enterprise performance management.",
-      ctaText: "Learn About EPM",
+      category: "REDWOOD DESIGN & VBS",
+      headline: "Modern Redwood UI Extensions",
+      subline: "Bespoke Visual Builder Studio (VBS) extensions, Business Rules, and seamless HDL integrations.",
+      ctaText: "Learn About Redwood",
       ctaLink: "/services",
-      imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=2055&auto=format&fit=crop"
     },
     {
+      category: "24/7 GLOBAL MANAGED SERVICES",
       headline: "Round-the-Clock Support",
       subline: "Continuous integration and system optimization from our offshore delivery centers.",
       ctaText: "Explore Managed Services",
       ctaLink: "/services",
-      imageUrl: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2070&auto=format&fit=crop"
     },
     {
+      category: "CAREERS & GLOBAL DELIVERY",
       headline: "Join Our Growing Team",
-      subline: "Build your career alongside top-tier enterprise architects and tech innovators.",
+      subline: "Build your career alongside top-tier Oracle Fusion HCM architects and technical innovators.",
       ctaText: "View Careers",
       ctaLink: "/careers",
-      imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop"
+      imageUrl: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2070&auto=format&fit=crop"
     }
   ];
 

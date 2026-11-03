@@ -252,3 +252,18 @@ nav, .nav-links {
   animation: premiumRevealUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards;
   opacity: 0; /* Keep invisible until delay starts */
 }
+
+
+/* ==========================================================================
+   ENTERPRISE ACCESSIBILITY: REDUCED MOTION SUPPORT (WCAG 2.1 AA)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

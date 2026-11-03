@@ -1,4 +1,4 @@
-import { Directive, ElementRef, OnInit, Renderer2, inject, PLATFORM_ID } from '@angular/core';
+import { Directive, ElementRef, OnInit, Renderer2, Input, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 @Directive({
@@ -6,6 +6,8 @@ import { isPlatformBrowser } from '@angular/common';
   standalone: true
 })
 export class FadeUpDirective implements OnInit {
+  @Input() delay: number = 0; // Delay in milliseconds
+
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
   private platformId = inject(PLATFORM_ID);
@@ -14,10 +16,10 @@ export class FadeUpDirective implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       // Set initial state
       this.renderer.setStyle(this.el.nativeElement, 'opacity', '0');
-      this.renderer.setStyle(this.el.nativeElement, 'transform', 'translateY(40px)');
-      this.renderer.setStyle(this.el.nativeElement, 'transition', 'opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)');
+      this.renderer.setStyle(this.el.nativeElement, 'transform', 'translateY(30px)');
+      const transitionStr = `opacity 0.75s ease-out ${this.delay}ms, transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) ${this.delay}ms`;
+      this.renderer.setStyle(this.el.nativeElement, 'transition', transitionStr);
 
-      // Create observer
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -26,7 +28,7 @@ export class FadeUpDirective implements OnInit {
             observer.unobserve(this.el.nativeElement); // Only animate once
           }
         });
-      }, { threshold: 0.15 }); // Trigger when 15% visible
+      }, { threshold: 0.1 });
 
       observer.observe(this.el.nativeElement);
     }

@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FadeUpDirective } from '../../shared/directives/fade-up.directive';
 
 interface DetailedService {
   id: string;
+  moduleCode: string;
   title: string;
   icon: string;
+  statusBadge: string;
   leadDescription: string;
   paragraph: string;
   features: string[];
@@ -15,17 +18,36 @@ interface DetailedService {
 @Component({
   selector: 'app-services',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FadeUpDirective],
   template: `
     <header class="services-header">
       <div class="container">
-        <h1 class="reveal-up">Our Oracle Cloud Services</h1>
-        <p class="reveal-up-delay-1">Comprehensive enterprise solutions tailored for your business.</p>
+        <span class="header-badge reveal-up">Enterprise Oracle Practice</span>
+        <h1 class="reveal-up-delay-1">Our Oracle Cloud Services</h1>
+        <p class="reveal-up-delay-1">Comprehensive enterprise solutions tailored exclusively for Oracle Fusion HCM Cloud.</p>
       </div>
     </header>
 
+    <!-- Sticky Module Quick-Jump Bar -->
+    <nav class="sticky-subnav" aria-label="Service Modules Sub-Navigation">
+      <div class="container subnav-container">
+        <span class="subnav-label">Jump to:</span>
+        <div class="subnav-pills">
+          <button 
+            *ngFor="let s of detailedServices"
+            type="button"
+            class="subnav-pill"
+            [class.active]="activeModuleId === s.id"
+            (click)="scrollToModule(s.id)">
+            {{ s.title.split('&')[0].trim() }}
+          </button>
+        </div>
+      </div>
+    </nav>
+
     <div class="services-content">
       <section 
+        appFadeUp 
         class="service-row" 
         *ngFor="let service of detailedServices; let isEven = even"
         [class.reversed]="isEven"
@@ -34,26 +56,53 @@ interface DetailedService {
         <div class="container row-inner">
           
           <div class="text-block">
-            <div class="icon-box">{{ service.icon }}</div>
+            <div class="module-meta">
+              <span class="module-code">{{ service.moduleCode }}</span>
+              <div class="icon-box">{{ service.icon }}</div>
+            </div>
+            
             <h2>{{ service.title }}</h2>
             <p class="lead-text">{{ service.leadDescription }}</p>
             <p class="detailed-paragraph">{{ service.paragraph }}</p>
             
             <div class="feature-list-wrapper">
               <h3>Key Capabilities:</h3>
-              <ul class="feature-list">
-                <li *ngFor="let feature of service.features">
-                  <span class="check-mark">✓</span> {{ feature }}
-                </li>
-              </ul>
+              <div class="features-grid">
+                <div class="feature-card" *ngFor="let feature of service.features">
+                  <div class="check-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <span class="feature-text">{{ feature }}</span>
+                </div>
+              </div>
             </div>
             
-            <a routerLink="/contact" class="btn-primary mt-4">Consult with our Experts</a>
+            <a routerLink="/contact" class="btn-primary mt-4">
+              <span>Consult with our Experts</span>
+              <svg class="btn-arrow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
           </div>
 
           <div class="image-block">
-            <div class="image-wrapper">
-              <img [src]="service.imageUrl" [alt]="service.title" loading="lazy">
+            <div class="image-frame-container">
+              <!-- Floating Corner Status Pill -->
+              <div class="floating-status-pill">
+                <span class="status-indicator"></span>
+                <span>{{ service.statusBadge }}</span>
+              </div>
+
+              <div class="image-wrapper">
+                <img 
+                  [src]="service.imageUrl" 
+                  [alt]="service.title" 
+                  loading="lazy" 
+                  (error)="onImgError($event, service.id)">
+              </div>
             </div>
           </div>
 
@@ -62,7 +111,6 @@ interface DetailedService {
     </div>
   `,
   styles: [`
-    /* --- Base Page Styling (Light Theme Body) --- */
     :host {
       display: block;
       background-color: var(--color-white, #FFFFFF); 
@@ -77,47 +125,123 @@ interface DetailedService {
       padding: 0 24px;
     }
 
-    /* --- Header Section (Matched Rich Blue Banner) --- */
+    /* --- Header Section --- */
     .services-header {
-      /* Padding explicitly tuned to match the About & Insights pages */
-      padding: 120px 0 60px; 
+      padding: 130px 0 60px; 
       text-align: center;
-      /* Exact rich blue gradient used in the other banners */
-      background: linear-gradient(to right, #001c3d, #003366); 
+      background: linear-gradient(135deg, #070b19 0%, #0c1a30 50%, #1e3a8a 100%);
+      color: #ffffff;
+      position: relative;
+    }
+
+    .header-badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 16px;
     }
 
     .services-header h1 {
       font-size: clamp(2.5rem, 5vw, 4rem);
       margin-bottom: 15px;
-      color: #ffffff; /* White text */
-      letter-spacing: -0.02em;
+      color: #ffffff;
+      letter-spacing: -0.03em;
       font-weight: 700;
     }
 
     .services-header p {
-      font-size: 1.15rem;
-      /* Bright blue accent text matching the Insights page */
-      color: #3b82f6; 
+      font-size: 1.2rem;
+      color: #94a3b8;
       max-width: 800px;
       margin: 0 auto;
       line-height: 1.6;
-      font-weight: 500;
     }
 
-    /* --- Alternating Row Layout (Z-Pattern) --- */
+    /* --- Sticky Sub-Navigation Bar --- */
+    .sticky-subnav {
+      position: sticky;
+      top: 72px; /* Sits cleanly below sticky header */
+      z-index: 900;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+      padding: 12px 0;
+      transition: all 0.3s ease;
+    }
+
+    .subnav-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      &::-webkit-scrollbar { display: none; }
+    }
+
+    .subnav-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+
+    .subnav-pills {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .subnav-pill {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+
+      &.active {
+        background: #2563eb;
+        border-color: #2563eb;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+    }
+
+    /* --- Alternating Row Layout --- */
     .service-row {
-      padding: 100px 0;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 90px 0;
+      border-bottom: 1px solid #f1f5f9;
+      scroll-margin-top: 130px; /* Accounts for sticky headers when jumping */
     }
 
     .row-inner {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 60px;
+      gap: 50px;
     }
 
-    /* Desktop: Side-by-side layout */
     @media (min-width: 1024px) {
       .row-inner {
         flex-direction: row;
@@ -129,185 +253,351 @@ interface DetailedService {
         width: 50%;
       }
 
-      /* Reverse the order for even rows to create the Z-pattern */
       .service-row.reversed .row-inner {
         flex-direction: row-reverse;
       }
 
-      .text-block { padding-right: 60px; }
-      .service-row.reversed .text-block { padding-right: 0; padding-left: 60px; }
+      .text-block { padding-right: 50px; }
+      .service-row.reversed .text-block { padding-right: 0; padding-left: 50px; }
     }
 
-    /* --- Text Content Styling --- */
+    /* --- Text Block --- */
+    .module-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .module-code {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #2563eb;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
     .icon-box {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      background: rgba(0, 102, 204, 0.05); 
-      width: 80px;
-      height: 80px;
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 20px;
-      border: 1px solid rgba(0, 102, 204, 0.1);
     }
 
     .text-block h2 {
-      font-size: 2.2rem;
-      margin-bottom: 20px;
-      color: var(--color-primary, #1D1D1F);
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      margin-bottom: 16px;
+      color: #0f172a;
       letter-spacing: -0.02em;
+      font-weight: 700;
+      line-height: 1.25;
     }
 
     .lead-text {
-      font-size: 1.2rem;
-      color: var(--color-accent, #0066CC);
-      font-weight: 500;
-      margin-bottom: 20px;
-      line-height: 1.5;
+      font-size: 1.15rem;
+      color: #2563eb;
+      margin-bottom: 16px;
+      line-height: 1.6;
+      font-weight: 600;
     }
 
     .detailed-paragraph {
-      font-size: 1.05rem;
-      color: var(--color-text-muted, #555555);
-      line-height: 1.8;
-      margin-bottom: 30px;
+      font-size: 1rem;
+      color: #64748b;
+      margin-bottom: 28px;
+      line-height: 1.7;
     }
 
-    /* --- Feature List --- */
+    /* --- Key Capabilities 2-Column Mini-Cards --- */
     .feature-list-wrapper h3 {
-      font-size: 1.1rem;
-      color: var(--color-primary, #1D1D1F);
-      margin-bottom: 15px;
+      font-size: 1rem;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.06em;
+      color: #0f172a;
+      margin-bottom: 16px;
     }
 
-    .feature-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 30px 0;
+    .features-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 12px;
+
+      @media (min-width: 640px) {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
-    @media (min-width: 600px) {
-      .feature-list { grid-template-columns: 1fr 1fr; }
-    }
-
-    .feature-list li {
-      color: var(--color-text-main, #1D1D1F);
-      font-size: 1rem;
+    .feature-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 14px;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+      &:hover {
+        background: #ffffff;
+        border-color: #93c5fd;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px -4px rgba(37, 99, 235, 0.12);
+      }
     }
 
-    .check-mark {
-      color: var(--color-accent, #0066CC);
-      font-weight: bold;
-      margin-right: 12px;
+    .check-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #dbeafe;
+      color: #2563eb;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* --- Image Styling & Animations --- */
-    .image-wrapper {
-      position: relative;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-      /* Base state for odd rows */
-      transform: perspective(1000px) rotateY(-5deg);
-      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    .feature-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1.35;
     }
 
-    /* Base state for even (reversed) rows */
-    .service-row.reversed .image-wrapper {
-      transform: perspective(1000px) rotateY(5deg);
-    }
-
-    /* FIX: Ensure BOTH normal AND reversed rows flatten out on hover */
-    .image-wrapper:hover,
-    .service-row.reversed .image-wrapper:hover {
-      transform: perspective(1000px) rotateY(0deg) translateY(-10px);
-      box-shadow: 0 30px 50px rgba(0,0,0,0.12);
-    }
-
-    .image-wrapper img {
-      width: 100%;
-      height: auto;
-      display: block;
-      object-fit: cover;
-      aspect-ratio: 4/3;
-    }
-
-    /* --- Button --- */
+    /* --- CTA Button --- */
     .btn-primary {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       padding: 14px 28px;
-      background: var(--color-accent, #0066CC);
+      background: #2563eb;
       color: #ffffff;
       text-decoration: none;
       font-weight: 600;
       border-radius: 8px;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+
+      &:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+
+        .btn-arrow {
+          transform: translateX(4px);
+        }
+      }
     }
 
-    .btn-primary:hover {
-      background: var(--color-accent-hover, #0077ED);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(0, 102, 204, 0.2);
+    .btn-arrow {
+      transition: transform 0.25s ease;
     }
     
-    .mt-4 { margin-top: 1.5rem; }
+    .mt-4 { margin-top: 2rem; }
+
+    /* --- Multi-Layered Image Framing --- */
+    .image-frame-container {
+      position: relative;
+      background: linear-gradient(145deg, #ffffff, #f1f5f9);
+      padding: 14px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 28px 50px -15px rgba(37, 99, 235, 0.14);
+      }
+    }
+
+    .floating-status-pill {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    .status-indicator {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .image-wrapper {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 16/10;
+      background-color: #070b19;
+      background-image: linear-gradient(135deg, #070b19 0%, #1e3a8a 100%);
+    }
+
+    .image-wrapper img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .image-frame-container:hover .image-wrapper img {
+      transform: scale(1.03);
+    }
   `]
 })
 export class ServicesComponent {
+  activeModuleId: string = 'core-hr';
   
   detailedServices: DetailedService[] = [
     {
-      id: 'hcm', 
-      title: 'Oracle Fusion HCM', 
+      id: 'core-hr',
+      moduleCode: 'MODULE 01',
+      title: 'Core HR & Global Human Resources',
       icon: '👥',
-      leadDescription: 'Manage your most important asset — your people. End-to-end human capital management from hire to retire.',
-      paragraph: 'Empower your workforce with Oracle Fusion Cloud Human Capital Management (HCM). Our implementation strategy ensures that your HR teams can natively connect every human resource process. This provides a consistent experience across devices, enables one source of truth for HR data to improve decision-making, and empowers you with market-leading innovation to address your needs today and into the future.',
-      features: ['Core HR & Payroll', 'Talent Management', 'Workforce Compensation', 'Recruiting Cloud', 'Time & Labor', 'Performance Management'],
-      imageUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop'
+      statusBadge: '100% Redwood Compatible',
+      leadDescription: 'Architect a single source of truth for global workforce structures, person models, and automated employee journeys.',
+      paragraph: 'Oracle Fusion Cloud Core HR allows organizations to manage their global workforce from hire to retire with unparalleled clarity. Our certified functional consultants configure robust enterprise structures, position trees, and compliance rules. We ensure seamless employee and manager self-service, localized compliance across international borders, and integrated guided journeys that simplify everyday HR interactions.',
+      features: [
+        'Global Workforce Structures', 
+        'Position & Organization Trees', 
+        'Employee & Manager Self-Service', 
+        'Guided Journeys & Onboarding', 
+        'Health & Safety Incidents', 
+        'Workforce Predictions & Modeling'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1200&auto=format&fit=crop'
     },
     {
-      id: 'erp', 
-      title: 'Oracle Fusion ERP', 
-      icon: '📊',
-      leadDescription: 'Automate back-office operations, manage financial realities, and drive business model innovation.',
-      paragraph: 'Oracle Fusion Cloud Enterprise Resource Planning (ERP) is a complete, modern, cloud ERP suite that provides your teams with advanced capabilities. We help you implement AI to automate manual processes that slow your teams down, deploy analytics to react to market shifts in real time, and utilize automatic updates to stay current and gain a competitive advantage.',
-      features: ['Financials Cloud', 'Project Management', 'Risk Management', 'Compliance', 'Procurement', 'Revenue Management'],
-      imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop'
+      id: 'payroll',
+      moduleCode: 'MODULE 02',
+      title: 'Oracle Fusion Payroll & Compensation',
+      icon: '💳',
+      statusBadge: '99.98% Calculation Accuracy',
+      leadDescription: 'Automate localized multi-country payroll calculations, retroactive processing, and strategic total compensation.',
+      paragraph: 'Ensure accurate, on-time, and fully compliant compensation for your workforce with Oracle Fusion Global Payroll. We design complex Fast Formulas, setup retroactive pay processes, and integrate seamlessly with third-party banking networks. Our compensation experts tailor merit cycles, bonus distribution, and salary basis architectures to retain top performers.',
+      features: [
+        'Global Payroll Processing', 
+        'Fast Formulas Engineering', 
+        'Retroactive Pay Processing', 
+        'Salary Basis & Merit Review Cycles', 
+        'Total Compensation Statements', 
+        'Costing & GL Journal Mapping'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1200&auto=format&fit=crop'
     },
     {
-      id: 'scm', 
-      title: 'Oracle Fusion SCM', 
-      icon: '🔗',
-      leadDescription: 'Build resilient, agile, and sustainable supply chains tailored for modern global logistics.',
-      paragraph: 'Build a resilient and sustainable supply chain. Oracle Fusion Cloud Supply Chain & Manufacturing (SCM) connects your supply network with an integrated suite of cloud business applications designed and built to outpace change. We help you orchestrate your operations, optimize logistics, and ensure your manufacturing processes remain lean, agile, and cost-effective.',
-      features: ['Inventory Management', 'Manufacturing', 'Order Management', 'Logistics', 'Product Lifecycle', 'Supply Chain Planning'],
-      imageUrl: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1200&auto=format&fit=crop'
+      id: 'absence',
+      moduleCode: 'MODULE 03',
+      title: 'Time & Labor and Absence Management',
+      icon: '⏱️',
+      statusBadge: 'Automated Shift Roster Sync',
+      leadDescription: 'Streamline shift scheduling, multi-tier approvals, complex leave accruals, and regulatory compliance.',
+      paragraph: 'Manage diverse employee schedules, attendance capture, and localized leave rules effortlessly. We configure customized time card layouts, rule templates, and accrual plans tailored to collective bargaining agreements or regional statutory regulations. Integrated approval workflows and delegation matrices ensure management decisions remain frictionless.',
+      features: [
+        'Custom Time Card Layouts', 
+        'Time Entry Validation Rule Sets', 
+        'Accrual & Compensatory Plans', 
+        'Leave Donation Schemes', 
+        'Shift Roster Generation', 
+        'Manager Delegation Approvals'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?q=80&w=1200&auto=format&fit=crop'
     },
     {
-      id: 'epm', 
-      title: 'Oracle Fusion EPM', 
-      icon: '📈',
-      leadDescription: 'Connect enterprise planning, accelerate financial close, and make better decisions faster.',
-      paragraph: 'Navigate uncertainty with Oracle Fusion Cloud Enterprise Performance Management (EPM). We help finance teams model and plan across finance, HR, supply chain, and sales, streamline the financial close process, and drive better decisions. Gain the agility to adapt to any business scenario and outpace your competition with real-time strategic foresight.',
-      features: ['Enterprise Planning', 'Financial Consolidation', 'Profitability & Costing', 'Narrative Reporting', 'Account Reconciliation', 'Tax Reporting'],
-      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop'
+      id: 'talent',
+      moduleCode: 'MODULE 04',
+      title: 'Talent Management & Recruiting (ORC)',
+      icon: '🎯',
+      statusBadge: 'AI-Powered Candidate Match',
+      leadDescription: 'Attract high-caliber talent, align employee objectives, and cultivate future leaders with intelligent HCM.',
+      paragraph: 'From candidate sourcing with Oracle Recruiting Cloud (ORC) to goal alignment and succession planning, we build interconnected talent ecosystems. Foster employee growth with continuous feedback, AI-assisted candidate matching, talent review calibration meetings, and integrated Oracle Learning Cloud courses.',
+      features: [
+        'Oracle Recruiting Cloud (ORC)', 
+        'Automated Candidate Screening', 
+        'Continuous Goal Management', 
+        'Annual & Mid-Year Performance', 
+        'Talent Review & 9-Box Calibration', 
+        'Succession & Learning Paths'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1565688534245-05d6b5be184a?q=80&w=1200&auto=format&fit=crop'
     },
     {
-      id: 'cx', 
-      title: 'Oracle Fusion CX', 
-      icon: '🤝',
-      leadDescription: 'Transform customer experiences with connected data, intelligent insights, and tailored engagements.',
-      paragraph: 'Oracle Fusion Cloud Customer Experience (CX) connects data across advertising, marketing, sales, commerce, and service to provide a seamless customer journey. Our experts help you build comprehensive profiles of your customers, track every interaction, and deliver personalized experiences that drive brand loyalty and accelerate revenue growth.',
-      features: ['Sales Cloud', 'Service Cloud', 'Marketing Cloud', 'Commerce Cloud', 'Customer Data Platform', 'Loyalty & Rewards'],
-      imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&auto=format&fit=crop'
+      id: 'redwood',
+      moduleCode: 'MODULE 05',
+      title: 'Redwood UI & Visual Builder Studio (VBS)',
+      icon: '🎨',
+      statusBadge: 'Sub-Second Page Telemetry',
+      leadDescription: 'Customize and elevate your Oracle HCM user interface using Redwood design standards and VBS business rules.',
+      paragraph: 'Transform your user experience with Oracle Redwood UI. Our technical team leverages Oracle Visual Builder Studio (VBS) to build bespoke page extensions, configure Express & Advanced Business Rules, and create intuitive guided workflows that fit your exact corporate identity while maintaining 100% upgrade safety.',
+      features: [
+        'VBS Page Extensions', 
+        'Express & Advanced Business Rules', 
+        'Custom Fields & Dynamic Layouts', 
+        'Guided Journeys Personalization', 
+        'JavaScript Action Chains', 
+        'Zero Upgrade-Impact Extensibility'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=1200&auto=format&fit=crop'
+    },
+    {
+      id: 'integrations',
+      moduleCode: 'MODULE 06',
+      title: 'HCM Integrations & BI Reporting',
+      icon: '⚡',
+      statusBadge: 'Real-Time HDL & OIC Pipeline',
+      leadDescription: 'Execute robust data migrations, automated outbound extracts, and actionable enterprise BI analytics.',
+      paragraph: 'Bridge Oracle Fusion HCM with your entire IT landscape. We engineer high-throughput data loads via HCM Data Loader (HDL/HSDL), automated payroll and benefits outbound files using HCM Extracts, real-time REST API orchestrations via OIC, and executive dashboards with OTBI & BI Publisher.',
+      features: [
+        'HCM Data Loader (HDL/HSDL) Scripts', 
+        'Inbound & Outbound HCM Extracts', 
+        'Oracle Integration Cloud (OIC) Flows', 
+        'Real-Time REST & SOAP Services', 
+        'OTBI Subject Area Analytics', 
+        'Pixel-Perfect BI Publisher Reports'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop'
     }
   ];
+
+  scrollToModule(moduleId: string) {
+    this.activeModuleId = moduleId;
+    if (typeof document !== 'undefined') {
+      const el = document.getElementById(moduleId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }
+
+  onImgError(event: Event, moduleId: string) {
+    const img = event.target as HTMLImageElement;
+    // Elegant bespoke SVG fallback tailored to Oracle Fusion HCM module
+    img.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="375" viewBox="0 0 600 375" fill="none"><rect width="600" height="375" fill="%23070b19"/><rect x="40" y="40" width="520" height="295" rx="12" fill="%230f172a" stroke="%231e3a8a" stroke-width="2"/><text x="70" y="100" fill="%2360a5fa" font-family="sans-serif" font-size="20" font-weight="bold">Oracle Fusion HCM Cloud</text><text x="70" y="140" fill="%2394a3b8" font-family="sans-serif" font-size="16">${moduleId.toUpperCase()} Architecture</text><line x1="70" y1="170" x2="530" y2="170" stroke="%23334155" stroke-width="1.5"/><rect x="70" y="200" width="130" height="80" rx="8" fill="%231e293b"/><text x="90" y="235" fill="%2338bdf8" font-family="sans-serif" font-size="22" font-weight="bold">99.9%</text><text x="90" y="260" fill="%2394a3b8" font-family="sans-serif" font-size="12">Availability</text><rect x="220" y="200" width="130" height="80" rx="8" fill="%231e293b"/><text x="240" y="235" fill="%2310b981" font-family="sans-serif" font-size="22" font-weight="bold">Redwood</text><text x="240" y="260" fill="%2394a3b8" font-family="sans-serif" font-size="12">VBS Verified</text><rect x="370" y="200" width="160" height="80" rx="8" fill="%231e293b"/><text x="390" y="235" fill="%23f59e0b" font-family="sans-serif" font-size="22" font-weight="bold">Enterprise</text><text x="390" y="260" fill="%2394a3b8" font-family="sans-serif" font-size="12">Cloud Security</text></svg>`;
+  }
 }

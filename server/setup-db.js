@@ -24,10 +24,9 @@ async function setupDatabase() {
     console.log("Inserting Insights data...");
     await connection.execute(`
       INSERT INTO insights (title, excerpt, date, imageUrl) VALUES
-      ('Maximizing ROI with Oracle Fusion HCM', 'Discover strategies to optimize your human capital management deployment for long-term scalability.', 'October 12, 2026', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600&auto=format&fit=crop'),
-      ('Migrating Legacy ERP to the Cloud', 'A comprehensive roadmap for enterprises transitioning from on-premise systems to Oracle Cloud infrastructure.', 'September 28, 2026', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop'),
-      ('Supply Chain Resilience in Modern Logistics', 'How Oracle Fusion SCM modules are helping global logistics firms navigate complex supply network disruptions.', 'September 15, 2026', 'https://images.unsplash.com/photo-1586528116311-ad8ed7450862?q=80&w=600&auto=format&fit=crop')
-    `);
+      ('Maximizing ROI with Oracle Fusion HCM', 'Discover proven strategies to optimize your human capital management deployment for long-term scalability.', 'October 12, 2026', 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=800&auto=format&fit=crop'),
+      ('Migrating Legacy HRMS to Oracle Fusion HCM', 'A comprehensive roadmap for enterprises transitioning from on-premise systems to modern Oracle Cloud HCM.', 'September 28, 2026', 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop'),
+      ('Modernizing Employee Journeys with Redwood UI', 'How Oracle Redwood UI and Visual Builder Studio enable streamlined employee self-service.', 'September 15, 2026', 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=800&auto=format&fit=crop');
 
     // 3. Create the Team Table
     console.log("Creating 'team_members' table...");

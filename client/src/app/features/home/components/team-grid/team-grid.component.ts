@@ -1,33 +1,38 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, HostListener, inject, signal } from '@angular/core';
+import { FadeUpDirective } from '../../../../shared/directives/fade-up.directive';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { catchError, of } from 'rxjs';
+import { environment } from '../../../../../environments/environment';
 import { SectionHeadingComponent } from '../../../../shared/components/section-heading/section-heading.component';
 
 export interface TeamMember {
-  id: string;
+  id: string | number;
   name: string;
   title: string;
   bio: string;
   photoUrl: string;
+  linkedin?: string;
 }
 
 @Component({
   selector: 'app-team-grid',
   standalone: true,
-  imports: [CommonModule, SectionHeadingComponent],
+  imports: [CommonModule, SectionHeadingComponent, FadeUpDirective],
   template: `
     <section class="team-section">
       <div class="container">
         <app-section-heading 
           title="Our Leadership" 
-          subtitle="The architects behind our global enterprise delivery model."
+          subtitle="The architects behind our global Oracle Fusion HCM delivery model."
           align="center">
         </app-section-heading>
 
         <div class="team-grid">
-          <div class="team-card" *ngFor="let member of team()">
+          <div class="team-card" *ngFor="let member of team(); let i = index" appFadeUp [delay]="i * 120">
             
             <div class="photo-wrapper" (click)="openBio(member)">
-              <img [src]="member.photoUrl" [alt]="member.name" class="photo" loading="lazy">
+              <img [src]="member.photoUrl" [alt]="member.name" class="photo" loading="lazy" (error)="onImgError($event)">
               <div class="hover-action">
                 <span>View Profile</span>
               </div>
@@ -52,15 +57,15 @@ export interface TeamMember {
         
         <div class="modal-body">
           <div class="modal-photo-container">
-            <img [src]="selectedMember()?.photoUrl" [alt]="selectedMember()?.name" class="modal-photo">
+            <img [src]="selectedMember()?.photoUrl" [alt]="selectedMember()?.name" class="modal-photo" (error)="onImgError($event)">
           </div>
           <div class="modal-info">
             <h2>{{ selectedMember()?.name }}</h2>
             <p class="modal-title">{{ selectedMember()?.title }}</p>
             <div class="divider"></div>
             <p class="modal-bio">{{ selectedMember()?.bio }}</p>
-            <div class="socials">
-              <a href="#" aria-label="LinkedIn">in</a>
+            <div class="socials" *ngIf="selectedMember()?.linkedin">
+              <a [href]="selectedMember()?.linkedin" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile">in</a>
             </div>
           </div>
         </div>
@@ -71,7 +76,7 @@ export interface TeamMember {
     /* --- Main Section --- */
     .team-section { 
       padding: 6rem 0; 
-      background-color: #f8fafc; /* Light gray background */
+      background-color: #f8fafc;
       font-family: 'Inter', sans-serif;
     }
     
@@ -94,105 +99,119 @@ export interface TeamMember {
       transition: transform 0.3s ease;
     }
     
-    .team-card:hover {
-      transform: translateY(-5px); /* Entire card lifts slightly */
+    .team-card:hover { 
+      transform: translateY(-5px);
     }
-    
+
     .photo-wrapper {
-      position: relative; 
-      width: 200px; 
-      height: 200px; 
-      margin: 0 auto 1.5rem;
-      border-radius: 50%; 
-      overflow: hidden; 
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      cursor: pointer; /* Indicates it's clickable */
-      background-color: #e2e8f0; /* Fallback color if image is broken */
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      border: 4px solid #ffffff;
+      transition: all 0.3s ease;
     }
-    
+
+    .team-card:hover .photo-wrapper {
+      box-shadow: 0 15px 35px rgba(37, 99, 235, 0.2);
+      border-color: #2563eb;
+    }
+
     .photo { 
       width: 100%; 
       height: 100%; 
       object-fit: cover; 
-      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+      transition: transform 0.5s ease;
     }
 
-    /* The "View Profile" Hover Overlay */
+    .team-card:hover .photo {
+      transform: scale(1.08);
+    }
+
     .hover-action {
-      position: absolute; 
+      position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 168, 204, 0.85); /* Teal transparent */
-      color: #fff; 
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(2px);
       display: flex; justify-content: center; align-items: center;
-      opacity: 0; 
+      opacity: 0;
       transition: opacity 0.3s ease;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      font-size: 0.9rem;
-    }
-    
-    .photo-wrapper:hover .photo { transform: scale(1.1); }
-    .photo-wrapper:hover .hover-action { opacity: 1; }
-    
-    /* --- Info Section --- */
-    .info h3.clickable-name { 
-      font-size: 1.3rem; 
-      margin-bottom: 0.25rem; 
-      color: #001f3f; 
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    
-    .info h3.clickable-name:hover {
-      color: #00a8cc; /* Name turns teal on hover */
+      span {
+        color: #ffffff;
+        font-size: 0.85rem;
+        font-weight: 600;
+        background: #2563eb;
+        padding: 6px 14px;
+        border-radius: 20px;
+        transform: translateY(10px);
+        transition: transform 0.3s ease;
+      }
     }
 
-    .info .title { 
-      color: #64748b; 
-      font-weight: 500; 
+    .photo-wrapper:hover .hover-action {
+      opacity: 1;
+      span { transform: translateY(0); }
+    }
+
+    /* Text & Read More */
+    .info { padding: 0 10px; }
+    
+    .clickable-name { 
+      font-size: 1.35rem; 
+      color: #0f172a; 
+      margin-bottom: 5px; 
+      font-weight: 700;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .clickable-name:hover { color: #2563eb; }
+
+    .title { 
+      color: #2563eb; 
       font-size: 0.9rem; 
-      text-transform: uppercase; 
-      letter-spacing: 1px;
+      font-weight: 600; 
       margin-bottom: 12px;
+      letter-spacing: 0.3px;
     }
 
     .btn-read-more {
-      background: none;
-      border: none;
-      color: #00a8cc;
+      background: none; border: none;
+      color: #64748b;
+      font-size: 0.85rem;
       font-weight: 600;
-      font-size: 0.9rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      padding: 0;
-      transition: color 0.3s;
+      gap: 6px;
+      transition: all 0.2s;
+      padding: 4px 8px;
+      border-radius: 4px;
     }
 
-    .btn-read-more .arrow {
-      margin-left: 5px;
-      transition: transform 0.3s;
+    .btn-read-more .arrow { transition: transform 0.2s; }
+    
+    .btn-read-more:hover {
+      color: #0f172a;
+      .arrow { transform: translateX(4px); }
     }
 
-    .btn-read-more:hover { color: #001f3f; }
-    .btn-read-more:hover .arrow { transform: translateX(4px); }
-
-    /* =========================================
-       Modal (Read More Detail Section)
-       ========================================= */
+    /* --- Modal Overlay & Animation --- */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100vh;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(8px);
       z-index: 2000;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
-      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeIn 0.3s ease;
     }
 
     @keyframes fadeIn {
@@ -209,7 +228,7 @@ export interface TeamMember {
       overflow: hidden;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @keyframes slideUp {
@@ -286,43 +305,69 @@ export interface TeamMember {
     .socials a:hover { background: #2563eb; color: #fff; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(37,99,235,0.3);}
   `]
 })
-export class TeamGridComponent {
-  
-  // State to hold the currently clicked member for the modal
+export class TeamGridComponent implements OnInit {
+  private http = inject(HttpClient);
+
   selectedMember = signal<TeamMember | null>(null);
 
-  // 100% Manual Data - Replaced all photos with the dummy jeevan.png
-  team = signal<TeamMember[]>([
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.selectedMember()) {
+      this.closeBio();
+    }
+  }
+
+  onImgError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%232563eb"><circle cx="50" cy="38" r="22" opacity="0.8"/><circle cx="50" cy="98" r="40" opacity="0.6"/></svg>';
+  }
+
+  private fallbackTeam: TeamMember[] = [
     {
       id: '1', name: 'Jeevanantham R.', title: 'Founder & Director',
       bio: 'Jeevanantham R, the founder and director of Cloud Vantage Solutions is a lead Oracle HCM Cloud Solution Architect who brings over 20+ years of extensive experience and expertise to the table. With a strong commitment to delivering innovative solutions, he plays a pivotal role in spearheading the growth and success of our company. In his capacity, he oversees Service Delivery and Global operations. Prior to founding Cloud Vantage he held key positions at renowned companies, including Bahwan Cybertek, Hexaware Transsys and others.',
-      photoUrl: '/assets/jeevanantham.png' 
+      photoUrl: '/assets/jeevanantham.png',
+      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
     },
     {
       id: '2', name: 'Mahendran P', title: 'Delivery Head',
-      bio: 'With more than 18 years of overall IT experience in Oracle and related Technologies involving a spectrum of responsibilities, Mahendran P has Hands-on project implementation experience in Agile methodology. At Cloud Vantage Solutions, he leads the EBS Technical Competency that encapsules multiple tracks: EBS Technical, Fusion ERP, Fusion HCM and Fusion Integration (OIC/ICS/SOA). His expertise and leadership drive excellence across these critical areas.',
-      photoUrl: '/assets/mahendran.png'
+      bio: 'With more than 18 years of overall IT experience in Oracle and related Technologies involving a spectrum of responsibilities, Mahendran P has hands-on project implementation experience in Agile methodology. At Cloud Vantage Solutions, he leads the Oracle Fusion HCM Core Architecture, Fast Formulas, and Fusion Integration (OIC/ICS/SOA) competence tracks.',
+      photoUrl: '/assets/mahendran.png',
+      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
     },
     {
       id: '3', name: 'Ilampooranan C.S', title: 'Technical Head',
       bio: 'C. S. ILAMPOORANAN, who serves as technical lead forms an integral part of the Cloud Vantage Solutions team. With over two decades of experience in Oracle Developer Suite and Oracle EBS experience, he takes charge of implementing customised solutions for our clients. His deep understanding of Oracle HCM Cloud Suite, coupled with passion for technology, enables him to provide guidance and expertise in delivering highly effective solutions.',
-      photoUrl: '/assets/ilampooranan.png' 
+      photoUrl: '/assets/ilampooranan.png',
+      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
     },
     {
       id: '4', name: 'Srinivas A', title: 'Sales and Marketing Specialist',
-      bio: 'Srinivas A, our dedicated Sales and Marketing Specialist is driven by a. profound passion for identifying and delivering solutions that precisely align with our clients needs and expectations. In his role, he assumes responsibility for crafting and executing our sales strategy, fostering growth and undertaking business development initiatives that drive the success of Cloud Vantage Solutions.',
-      photoUrl: '/assets/srinivas.png' 
+      bio: 'Srinivas A, our dedicated Sales and Marketing Specialist is driven by a profound passion for identifying and delivering solutions that precisely align with our clients needs and expectations. In his role, he assumes responsibility for crafting and executing our sales strategy, fostering growth and undertaking business development initiatives that drive the success of Cloud Vantage Solutions.',
+      photoUrl: '/assets/srinivas.png',
+      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
     }
-  ]);
+  ];
 
-  // Methods to handle the Modal
+  team = signal<TeamMember[]>(this.fallbackTeam);
+
+  ngOnInit() {
+    this.http.get<TeamMember[]>(`${environment.apiUrl}/team`)
+      .pipe(catchError(() => of(this.fallbackTeam)))
+      .subscribe(data => {
+        if (data && data.length > 0) {
+          this.team.set(data);
+        }
+      });
+  }
+
   openBio(member: TeamMember) {
     this.selectedMember.set(member);
-    document.body.style.overflow = 'hidden'; // Prevents background scrolling when modal is open
+    document.body.style.overflow = 'hidden';
   }
 
   closeBio() {
     this.selectedMember.set(null);
-    document.body.style.overflow = 'auto'; // Restores background scrolling
+    document.body.style.overflow = 'auto';
   }
 }

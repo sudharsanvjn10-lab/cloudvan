@@ -1,32 +1,33 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CountUpDirective } from '../../../../shared/directives/count-up.directive';
 
 @Component({
   selector: 'app-stats-counter',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CountUpDirective],
   template: `
     <section class="stats-section">
       <div class="container">
         <div class="stats-grid">
           
           <div class="stat-item">
-            <h2 class="stat-number">20+</h2>
+            <h2 class="stat-number" [appCountUp]="20" [suffix]="'+'">20+</h2>
             <p class="stat-label">Years in Operation</p>
           </div>
 
           <div class="stat-item">
-            <h2 class="stat-number">30+</h2>
+            <h2 class="stat-number" [appCountUp]="30" [suffix]="'+'">30+</h2>
             <p class="stat-label">Successful Implementations</p>
           </div>
 
           <div class="stat-item">
-            <h2 class="stat-number">10+</h2>
+            <h2 class="stat-number" [appCountUp]="10" [suffix]="'+'">10+</h2>
             <p class="stat-label">Countries Served</p>
           </div>
 
           <div class="stat-item">
-            <h2 class="stat-number">5+</h2>
+            <h2 class="stat-number" [appCountUp]="5" [suffix]="'+'">5+</h2>
             <p class="stat-label">Cloud Offerings</p>
           </div>
 
@@ -37,7 +38,6 @@ import { CommonModule } from '@angular/common';
   styles: [`
     .stats-section {
       padding: 100px 0;
-      /* Uses the pure white surface color from your new Apple theme */
       background-color: var(--color-bg-surface, #FFFFFF); 
       position: relative;
       z-index: 2;
@@ -51,7 +51,6 @@ import { CommonModule } from '@angular/common';
 
     .stats-grid {
       display: grid;
-      /* Creates a flexible 4-column layout that gracefully stacks on mobile */
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 40px 20px;
       text-align: center;
@@ -62,7 +61,6 @@ import { CommonModule } from '@angular/common';
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      /* Subtle hover lift effect to match the rest of the site */
       transition: transform var(--transition-fluid, 0.4s ease);
     }
 
@@ -71,13 +69,13 @@ import { CommonModule } from '@angular/common';
     }
 
     .stat-number {
-      /* Massive, crisp numbers using clamp for perfect scaling on all devices */
       font-size: clamp(3.5rem, 6vw, 5rem);
       font-weight: 700;
       color: var(--color-primary, #1D1D1F);
       margin-bottom: 8px;
       line-height: 1;
-      letter-spacing: -0.04em; /* Tighter tracking for large numbers looks premium */
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
     }
 
     .stat-label {
@@ -85,20 +83,16 @@ import { CommonModule } from '@angular/common';
       font-weight: 600;
       color: var(--color-text-muted, #86868B);
       text-transform: uppercase;
-      letter-spacing: 0.1em; /* Wide spacing for small uppercase text */
+      letter-spacing: 0.1em;
       margin: 0;
     }
 
-    /* Responsive adjustments for mobile */
     @media (max-width: 768px) {
       .stats-section {
         padding: 60px 0;
       }
       .stats-grid {
         gap: 50px;
-      }
-      .stat-number {
-        margin-bottom: 4px;
       }
     }
   `]

@@ -25,14 +25,14 @@ import { environment } from '../../../../environments/environment';
         </div>
 
         <div class="footer-col">
-          <h3>Business Lines</h3>
+          <h3>Oracle HCM Tracks</h3>
           <ul>
-            <li><a routerLink="/services">Oracle Fusion HCM</a></li>
-            <li><a routerLink="/services">Oracle Fusion ERP</a></li>
-            <li><a routerLink="/services">Oracle Fusion SCM</a></li>
-            <li><a routerLink="/services">Oracle Fusion EPM</a></li>
-            <li><a routerLink="/services">Oracle Fusion CX</a></li>
-            <li><a routerLink="/services">Managed Services</a></li>
+            <li><a routerLink="/services" fragment="core-hr">Core HR & Global HR</a></li>
+            <li><a routerLink="/services" fragment="payroll">Payroll & Compensation</a></li>
+            <li><a routerLink="/services" fragment="absence">Time & Absence Management</a></li>
+            <li><a routerLink="/services" fragment="talent">Talent & Recruiting (ORC)</a></li>
+            <li><a routerLink="/services" fragment="redwood">Redwood & VBS Extensions</a></li>
+            <li><a routerLink="/services" fragment="integrations">HDL & BI Reporting</a></li>
           </ul>
         </div>
 
@@ -49,7 +49,7 @@ import { environment } from '../../../../environments/environment';
 
         <div class="footer-col">
           <h3>Stay Updated</h3>
-          <p>Subscribe to our newsletter for the latest Oracle cloud insights.</p>
+          <p>Subscribe to our newsletter for the latest Oracle Fusion HCM insights.</p>
           <form class="newsletter-form" (submit)="onSubscribe(emailInput.value, $event); emailInput.value=''">
             <input type="email" #emailInput placeholder="Email address" required>
             <button type="submit">→</button>

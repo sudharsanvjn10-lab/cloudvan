@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SectionHeadingComponent } from '../../shared/components/section-heading/section-heading.component';
 import { TeamGridComponent } from '../home/components/team-grid/team-grid.component';
+import { EnterpriseVerticalsComponent } from '../../shared/components/enterprise-verticals/enterprise-verticals.component';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, SectionHeadingComponent, TeamGridComponent],
+  imports: [CommonModule, SectionHeadingComponent, TeamGridComponent, EnterpriseVerticalsComponent],
   template: `
     <div class="inner-hero">
       <div class="container">
@@ -23,7 +24,7 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
             Cloud Vantage Solutions, is the most reliable and preferred partner in Oracle’s illustrious realm of HCM Cloud in the Middle Eastern region and USA. Our prestigious headquarters located in the vibrant city of Madurai radiates commitment while offshore development centres nestled in India specifically Chennai & Madurai amplify our global reach and prowess. 
             Driven by commitment and enthusiasm, our tireless pursuits of innovation propel us forward.</p>
            <p>Unleashing the power of Oracle HCM Cloud we facilitate organisations streamline their human capital management processes for unparalleled efficiency. We offer a comprehensive suite of functionalities encompassing from employee Experience to HR and Benefits, to Talent Management and Recruiting, to Workforce Management, HR analytics, payroll management and more.</p>
-            <p>In tandem with our proficiency in Oracle HCM, we broaden our scope to encompass a comprehensive suite of Oracle applications. These include Oracle ERP, Oracle SCM, and Oracle CX, collectively forming a robust portfolio of solutions.</p>
+            <p>Dedicated exclusively to Oracle Fusion HCM, we deliver tailored end-to-end human capital solutions encompassing Global HR, Payroll, Talent, Workforce Management, and Redwood UI extensions.</p>
             <p>At Cloud Vantage, we pride ourselves on our commitment to customer satisfaction. Our expert team collaborates closely with the clients to empower them with customised features and solutions that align with their unique business goals. We value transparency and open communication, building trust and long-term partnerships with our clients..</p>
             <p>Unlock the potential of innovation and discover the transformation with us.</p>
         </div>
@@ -32,7 +33,7 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
           <div class="mission-card">
             <h3>Our Mission</h3>
             <p>"We help manage the most important asset of any company — its people."</p>
-            <p class="sub">By deploying tailored Oracle Fusion HCM, ERP, and SCM solutions, we empower workforces and streamline complex operational realities.</p>
+            <p class="sub">By deploying tailored Oracle Fusion HCM solutions, we empower workforces and streamline complex human capital realities.</p>
           </div>
         </div>
       </div>
@@ -77,29 +78,7 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
       </div>
     </section>
 
-    <section class="trust-section">
-      <div class="container text-center">
-        <h2>Trusted by Global Leaders</h2>
-        <div class="title-underline"></div>
-        <p class="section-subtitle">We collaborate with top enterprises and strategic partners to deliver unparalleled Oracle Cloud solutions.</p>
-        
-        <div class="trust-grid">
-          <div class="trust-image-wrapper">
-            <h3 class="trust-heading">Our Valued Clients</h3>
-            <div class="image-box">
-              <img src="/assets/clients.png" alt="Cloud Vantage Clients" loading="lazy">
-            </div>
-          </div>
-
-          <div class="trust-image-wrapper">
-            <h3 class="trust-heading">Our Strategic Partners</h3>
-            <div class="image-box">
-              <img src="/assets/partners.png" alt="Cloud Vantage Partners" loading="lazy">
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <app-enterprise-verticals></app-enterprise-verticals>
 
     <section class="testimonials-section">
       <div class="container">
@@ -120,7 +99,7 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
 
           <div class="testimonial-card">
             <div class="quote-marks">"</div>
-            <p class="quote-text">The expertise their team brought to our complex ERP migration saved us hundreds of hours. They are not just consultants; they are true strategic partners invested in our growth.</p>
+            <p class="quote-text">The expertise their team brought to our complex Oracle Fusion HCM deployment and Payroll migration saved us hundreds of hours. They are not just consultants; they are true strategic partners invested in our growth.</p>
             <div class="author-info">
               <h4>Chief Financial Officer</h4>
               <span>Global Manufacturing Corp, USA</span>

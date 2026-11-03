@@ -5,6 +5,7 @@ import { catchError, of } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { SectionHeadingComponent } from '../../../../shared/components/section-heading/section-heading.component';
+import { FadeUpDirective } from '../../../../shared/directives/fade-up.directive';
 
 export interface Insight {
   id: string;
@@ -17,7 +18,7 @@ export interface Insight {
 @Component({
   selector: 'app-insights-grid',
   standalone: true,
-  imports: [CommonModule, CardComponent, SectionHeadingComponent],
+  imports: [CommonModule, CardComponent, SectionHeadingComponent, FadeUpDirective],
   template: `
     <section class="insights-section">
       <div class="container">
@@ -28,7 +29,7 @@ export interface Insight {
         </app-section-heading>
 
         <div class="grid-layout">
-          <div *ngFor="let insight of insights()" class="grid-item">
+          <div *ngFor="let insight of insights(); let i = index" class="grid-item" appFadeUp [delay]="i * 120">
             <app-card 
               [title]="insight.title"
               [excerpt]="insight.excerpt"
@@ -58,28 +59,28 @@ export class InsightsGridComponent implements OnInit {
   private http = inject(HttpClient);
   insights = signal<Insight[]>([]);
 
-  // Fallback data ensuring the UI renders flawlessly before Phase 6
+  // Unique verified enterprise visuals with zero overlap across the application
   private fallbackData: Insight[] = [
     {
       id: '1',
       title: 'Maximizing ROI with Oracle Fusion HCM',
-      excerpt: 'Discover strategies to optimize your human capital management deployment for long-term scalability.',
+      excerpt: 'Discover proven strategies to optimize your human capital management deployment for long-term scalability and user adoption.',
       date: 'October 12, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=800&auto=format&fit=crop'
     },
     {
       id: '2',
-      title: 'Migrating Legacy ERP to the Cloud',
-      excerpt: 'A comprehensive roadmap for enterprises transitioning from on-premise systems to Oracle Cloud infrastructure.',
+      title: 'Migrating Legacy HRMS to Oracle Fusion HCM',
+      excerpt: 'A comprehensive roadmap for enterprises transitioning from on-premise PeopleSoft / EBS HRMS systems to modern Oracle Cloud HCM.',
       date: 'September 28, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop'
     },
     {
       id: '3',
-      title: 'Supply Chain Resilience in Modern Logistics',
-      excerpt: 'How Oracle Fusion SCM modules are helping global logistics firms navigate complex supply network disruptions.',
+      title: 'Modernizing Employee Journeys with Redwood UI',
+      excerpt: 'How Oracle Redwood UI and Visual Builder Studio enable streamlined employee self-service and personalized workforce experiences.',
       date: 'September 15, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1586528116311-ad8ed7450862?q=80&w=600&auto=format&fit=crop'
+      imageUrl: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=800&auto=format&fit=crop'
     }
   ];
 

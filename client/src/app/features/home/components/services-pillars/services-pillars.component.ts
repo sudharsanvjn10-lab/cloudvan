@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FadeUpDirective } from '../../../../shared/directives/fade-up.directive';
 
 interface ServicePillar {
   id: string;
@@ -14,7 +15,7 @@ interface ServicePillar {
 @Component({
   selector: 'app-services-pillars',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FadeUpDirective],
   template: `
     <section class="services-mega-section">
       <div class="container section-header">
@@ -25,7 +26,7 @@ interface ServicePillar {
 
       <div class="container">
         <div class="cards-grid">
-          <div *ngFor="let pillar of pillars" class="glass-card">
+          <div *ngFor="let pillar of pillars; let i = index" class="glass-card" appFadeUp [delay]="i * 120">
             
             <div class="card-bg" [style.backgroundImage]="'url(' + pillar.imageUrl + ')'"></div>
             
@@ -254,34 +255,40 @@ interface ServicePillar {
 export class ServicesPillarsComponent {
   pillars: ServicePillar[] = [
     {
-      id: 'hcm', title: 'Oracle Fusion HCM', icon: '👥',
-      shortDesc: 'Manage your most important asset — your people. End-to-end human capital management from hire to retire.',
-      subLinks: ['Core HR & Payroll', 'Talent Management', 'Workforce Compensation', 'Recruiting Cloud'],
-      imageUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop'
+      id: 'core-hr', title: 'Core HR & Global Workforce', icon: '👥',
+      shortDesc: 'Establish enterprise workforce structures, person models, and automated employee journeys from hire to retire.',
+      subLinks: ['Workforce Structures', 'Position & Job Management', 'Journeys & Onboarding', 'Health & Safety'],
+      imageUrl: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=800&auto=format&fit=crop'
     },
     {
-      id: 'erp', title: 'Oracle Fusion ERP', icon: '📊',
-      shortDesc: 'Automate back-office operations, manage financial realities, and drive business model innovation.',
-      subLinks: ['Financials Cloud', 'Project Management', 'Risk Management', 'Compliance'],
-      imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop'
+      id: 'payroll', title: 'Payroll & Compensation', icon: '💳',
+      shortDesc: 'Automate localized multi-country payroll calculations, retroactive pay runs, Fast Formulas, and total rewards.',
+      subLinks: ['Global Payroll Processing', 'Fast Formulas Architecture', 'Salary Basis & Cycles', 'Total Compensation Statements'],
+      imageUrl: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800&auto=format&fit=crop'
     },
     {
-      id: 'scm', title: 'Oracle Fusion SCM', icon: '🔗',
-      shortDesc: 'Build resilient, agile, and sustainable supply chains tailored for modern global logistics.',
-      subLinks: ['Inventory Management', 'Manufacturing', 'Order Management', 'Logistics'],
-      imageUrl: 'https://images.unsplash.com/photo-1586528116311-ad8ed7450862?q=80&w=800&auto=format&fit=crop'
+      id: 'absence', title: 'Time & Absence Management', icon: '⏱️',
+      shortDesc: 'Simplify complex leave policies, shift scheduling, time card approvals, and automated accrual plan balances.',
+      subLinks: ['Time Card Rule Templates', 'Accrual & Donation Plans', 'Shift & Roster Scheduling', 'Absence Approvals & Delegation'],
+      imageUrl: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?q=80&w=800&auto=format&fit=crop'
     },
     {
-      id: 'epm', title: 'Oracle Fusion EPM', icon: '📈',
-      shortDesc: 'Connect enterprise planning, accelerate financial close, and make better decisions faster.',
-      subLinks: ['Enterprise Planning', 'Financial Consolidation', 'Profitability & Costing', 'Narrative Reporting'],
-      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'
+      id: 'talent', title: 'Talent & Recruiting (ORC)', icon: '🎯',
+      shortDesc: 'Attract top candidates with Oracle Recruiting Cloud, align employee goals, and optimize performance cycles.',
+      subLinks: ['Oracle Recruiting Cloud (ORC)', 'Goal & Performance Reviews', 'Succession Planning', 'Oracle Learning Cloud'],
+      imageUrl: 'https://images.unsplash.com/photo-1565688534245-05d6b5be184a?q=80&w=800&auto=format&fit=crop'
     },
     {
-      id: 'cx', title: 'Oracle Fusion CX', icon: '🤝',
-      shortDesc: 'Transform customer experiences with connected data, intelligent insights, and tailored engagements.',
-      subLinks: ['Sales Cloud', 'Service Cloud', 'Marketing Cloud', 'Commerce Cloud'],
-      imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop'
+      id: 'redwood', title: 'Redwood UI & VBS Extensions', icon: '🎨',
+      shortDesc: 'Design bespoke employee experiences utilizing Oracle Visual Builder Studio (VBS), JavaScript chains, and Business Rules.',
+      subLinks: ['Visual Builder Studio (VBS)', 'Express & Advanced Business Rules', 'Custom Guided Journeys', 'Modern Redwood Pages'],
+      imageUrl: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+      id: 'integrations', title: 'HDL & BI Reporting', icon: '⚡',
+      shortDesc: 'High-volume data migration with HDL/HSDL, scheduled HCM Extracts, REST APIs, and deep OTBI/BI Publisher reporting.',
+      subLinks: ['HCM Data Loader (HDL)', 'HCM Inbound/Outbound Extracts', 'REST/SOAP API Integrations', 'OTBI & BI Publisher Analytics'],
+      imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop'
     }
   ];
 }

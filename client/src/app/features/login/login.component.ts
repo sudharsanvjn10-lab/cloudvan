@@ -30,6 +30,14 @@ export interface JobApplication {
   created_at: string;
 }
 
+export interface AdminJob {
+  id: number;
+  title: string;
+  location: string;
+  type: string;
+  created_at?: string;
+}
+
 export interface AdminUser {
   id: number;
   email: string;
@@ -203,6 +211,61 @@ export interface AdminUser {
                 </tr>
               </tbody>
             </table>
+          </div>
+
+                    <!-- Jobs Management Tab -->
+          <div *ngIf="activeTab() === 'jobs'" class="user-management-grid">
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Job Title</th>
+                    <th>Location</th>
+                    <th>Type</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let job of jobs()">
+                    <td><strong>{{ job.title }}</strong></td>
+                    <td>{{ job.location }}</td>
+                    <td><span class="badge-role">{{ job.type }}</span></td>
+                    <td>
+                      <button class="btn-delete" (click)="onDeleteJob(job.id)">Delete</button>
+                    </td>
+                  </tr>
+                  <tr *ngIf="jobs().length === 0">
+                    <td colspan="4" class="empty-row">No active job openings created yet.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Create Job Card Form -->
+            <div class="action-card">
+              <h3>Post New HCM Job Opening</h3>
+              <form [formGroup]="createJobForm" (ngSubmit)="onCreateJobSubmit()">
+                <div class="form-group">
+                  <label>Job Title *</label>
+                  <input type="text" formControlName="title" placeholder="e.g. Oracle HCM Payroll Specialist">
+                </div>
+                <div class="form-group">
+                  <label>Location *</label>
+                  <input type="text" formControlName="location" placeholder="e.g. Chennai, India">
+                </div>
+                <div class="form-group">
+                  <label>Employment Type *</label>
+                  <select formControlName="type">
+                    <option value="Full-Time">Full-Time</option>
+                    <option value="Part-Time">Part-Time</option>
+                    <option value="Contract">Contract</option>
+                  </select>
+                </div>
+                <p *ngIf="jobCreateSuccess()" class="success-msg">Job opening published successfully!</p>
+                <p *ngIf="jobCreateError()" class="error-msg">{{ jobCreateError() }}</p>
+                <button type="submit" [disabled]="createJobForm.invalid" class="btn-action">Publish Job</button>
+              </form>
+            </div>
           </div>
 
           <!-- User Management Tab -->
@@ -456,18 +519,18 @@ export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   loginForm: FormGroup = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required]
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
+    password: ['', [Validators.required, Validators.maxLength(100)]]
   });
 
   createUserForm: FormGroup = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
+    password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
     privilege: ['Admin', Validators.required]
   });
 
   changePasswordForm: FormGroup = this.fb.group({
-    newPassword: ['', [Validators.required, Validators.minLength(6)]]
+    newPassword: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]]
   });
 
   isAuthenticated = signal<boolean>(false);
@@ -489,6 +552,27 @@ export class LoginComponent implements OnInit {
   messages = signal<ContactMessage[]>([]);
   subscribers = signal<NewsletterSubscriber[]>([]);
   users = signal<AdminUser[]>([]);
+  jobs = signal<AdminJob[]>([]);
+  jobCreateSuccess = signal(false);
+  jobCreateError = signal<string | null>(null);
+
+  createJobForm: FormGroup = this.fb.group({
+    title: ['', Validators.required],
+    location: ['', Validators.required],
+    type: ['Full-Time', Validators.required]
+  });
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return true;
+      const payload = JSON.parse(atob(parts[1]));
+      if (!payload.exp) return false;
+      return Date.now() >= payload.exp * 1000;
+    } catch {
+      return true;
+    }
+  }
 
   ngOnInit() {
     const token = localStorage.getItem('admin_token');
@@ -496,6 +580,10 @@ export class LoginComponent implements OnInit {
     const savedPrivilege = localStorage.getItem('admin_privilege');
     
     if (token && savedEmail && savedPrivilege) {
+      if (this.isTokenExpired(token)) {
+        this.onLogout();
+        return;
+      }
       this.isAuthenticated.set(true);
       this.loggedInUserEmail.set(savedEmail);
       this.loggedInUserPrivilege.set(savedPrivilege);
@@ -529,7 +617,7 @@ export class LoginComponent implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    this.http.get<{ contacts: ContactMessage[], subscribers: NewsletterSubscriber[], applications: JobApplication[], users: AdminUser[] }>(
+    this.http.get<{ contacts: ContactMessage[], subscribers: NewsletterSubscriber[], applications: JobApplication[], users: AdminUser[], jobs?: AdminJob[] }>(
       `${environment.apiUrl}/admin/data`,
       { headers }
     ).subscribe({
@@ -538,11 +626,43 @@ export class LoginComponent implements OnInit {
         this.messages.set(data.contacts || []);
         this.subscribers.set(data.subscribers || []);
         this.users.set(data.users || []);
+        this.jobs.set(data.jobs || []);
       },
       error: (err) => {
         console.error("Error querying administrative records:", err);
         this.onLogout();
       }
+    });
+  }
+
+    onCreateJobSubmit() {
+    if (this.createJobForm.valid) {
+      this.jobCreateSuccess.set(false);
+      this.jobCreateError.set(null);
+      this.http.post(`${environment.apiUrl}/admin/jobs`, this.createJobForm.value).subscribe({
+        next: () => {
+          this.jobCreateSuccess.set(true);
+          this.createJobForm.reset({ type: 'Full-Time' });
+          const token = localStorage.getItem('admin_token');
+          if (token) this.fetchAdminData(token);
+          setTimeout(() => this.jobCreateSuccess.set(false), 5000);
+        },
+        error: (err: any) => {
+          console.error("Failed to create job posting:", err);
+          this.jobCreateError.set(err.error?.error || 'Failed to create job posting');
+        }
+      });
+    }
+  }
+
+  onDeleteJob(id: number) {
+    if (!confirm('Are you sure you want to remove this job opening?')) return;
+    this.http.delete(`${environment.apiUrl}/admin/jobs/${id}`).subscribe({
+      next: () => {
+        const token = localStorage.getItem('admin_token');
+        if (token) this.fetchAdminData(token);
+      },
+      error: (err) => console.error("Error deleting job opening:", err)
     });
   }
 
