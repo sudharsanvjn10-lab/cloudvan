@@ -16,7 +16,7 @@ services:
 
   # Node.js Express API Backend
   - type: web
-    name: cloudvan-api
+    name: cloudvan
     env: node
     rootDir: server
     buildCommand: npm install
