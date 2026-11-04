@@ -2,17 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FadeUpDirective } from '../../shared/directives/fade-up.directive';
-
-interface DetailedService {
-  id: string;
-  moduleCode: string;
-  title: string;
-  statusBadge: string;
-  leadDescription: string;
-  paragraph: string;
-  features: string[];
-  imageUrl: string;
-}
+import { ContentService, DetailedService } from '../../core/services/content.service';
 
 @Component({
   selector: 'app-services',
@@ -503,6 +493,13 @@ interface DetailedService {
 })
 export class ServicesComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private contentService = inject(ContentService);
+
+  get detailedServices(): DetailedService[] {
+    return this.contentService.services();
+  }
+
+  activeModuleId: string = 'core-hr';
 
   ngOnInit() {
     this.route.fragment.subscribe(fragment => {
@@ -511,112 +508,6 @@ export class ServicesComponent implements OnInit {
       }
     });
   }
-  activeModuleId: string = 'core-hr';
-  
-  detailedServices: DetailedService[] = [
-    {
-      id: 'core-hr',
-      moduleCode: 'MODULE 01',
-      title: 'Core HR & Global Human Resources',
-      statusBadge: '100% Redwood Compatible',
-      leadDescription: 'Architect a single source of truth for global workforce structures, person models, and automated employee journeys.',
-      paragraph: 'Oracle Fusion Cloud Core HR allows organizations to manage their global workforce from hire to retire with unparalleled clarity. Our certified functional consultants configure robust enterprise structures, position trees, and compliance rules. We ensure seamless employee and manager self-service, localized compliance across international borders, and integrated guided journeys that simplify everyday HR interactions.',
-      features: [
-        'Global Workforce Structures', 
-        'Position & Organization Trees', 
-        'Employee & Manager Self-Service', 
-        'Guided Journeys & Onboarding', 
-        'Health & Safety Incidents', 
-        'Workforce Predictions & Modeling'
-      ],
-      imageUrl: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1200&auto=format&fit=crop'
-    },
-    {
-      id: 'payroll',
-      moduleCode: 'MODULE 02',
-      title: 'Oracle Fusion Payroll & Compensation',
-      statusBadge: '99.98% Calculation Accuracy',
-      leadDescription: 'Automate localized multi-country payroll calculations, retroactive processing, and strategic total compensation.',
-      paragraph: 'Ensure accurate, on-time, and fully compliant compensation for your workforce with Oracle Fusion Global Payroll. We design complex Fast Formulas, setup retroactive pay processes, and integrate seamlessly with third-party banking networks. Our compensation experts tailor merit cycles, bonus distribution, and salary basis architectures to retain top performers.',
-      features: [
-        'Global Payroll Processing', 
-        'Fast Formulas Engineering', 
-        'Retroactive Pay Processing', 
-        'Salary Basis & Merit Review Cycles', 
-        'Total Compensation Statements', 
-        'Costing & GL Journal Mapping'
-      ],
-      imageUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop'
-    },
-    {
-      id: 'absence',
-      moduleCode: 'MODULE 03',
-      title: 'Time & Labor and Absence Management',
-      statusBadge: 'Automated Shift Roster Sync',
-      leadDescription: 'Streamline shift scheduling, multi-tier approvals, complex leave accruals, and regulatory compliance.',
-      paragraph: 'Manage diverse employee schedules, attendance capture, and localized leave rules effortlessly. We configure customized time card layouts, rule templates, and accrual plans tailored to collective bargaining agreements or regional statutory regulations. Integrated approval workflows and delegation matrices ensure management decisions remain frictionless.',
-      features: [
-        'Custom Time Card Layouts', 
-        'Time Entry Validation Rule Sets', 
-        'Accrual & Compensatory Plans', 
-        'Leave Donation Schemes', 
-        'Shift Roster Generation', 
-        'Manager Delegation Approvals'
-      ],
-      imageUrl: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?q=80&w=1200&auto=format&fit=crop'
-    },
-    {
-      id: 'talent',
-      moduleCode: 'MODULE 04',
-      title: 'Talent Management & Recruiting (ORC)',
-      statusBadge: 'AI-Powered Candidate Match',
-      leadDescription: 'Attract high-caliber talent, align employee objectives, and cultivate future leaders with intelligent HCM.',
-      paragraph: 'From candidate sourcing with Oracle Recruiting Cloud (ORC) to goal alignment and succession planning, we build interconnected talent ecosystems. Foster employee growth with continuous feedback, AI-assisted candidate matching, talent review calibration meetings, and integrated Oracle Learning Cloud courses.',
-      features: [
-        'Oracle Recruiting Cloud (ORC)', 
-        'Automated Candidate Screening', 
-        'Continuous Goal Management', 
-        'Annual & Mid-Year Performance', 
-        'Talent Review & 9-Box Calibration', 
-        'Succession & Learning Paths'
-      ],
-      imageUrl: 'https://images.unsplash.com/photo-1565688534245-05d6b5be184a?q=80&w=1200&auto=format&fit=crop'
-    },
-    {
-      id: 'redwood',
-      moduleCode: 'MODULE 05',
-      title: 'Redwood UI & Visual Builder Studio (VBS)',
-      statusBadge: 'Sub-Second Page Telemetry',
-      leadDescription: 'Customize and elevate your Oracle HCM user interface using Redwood design standards and VBS business rules.',
-      paragraph: 'Transform your user experience with Oracle Redwood UI. Our technical team leverages Oracle Visual Builder Studio (VBS) to build bespoke page extensions, configure Express & Advanced Business Rules, and create intuitive guided workflows that fit your exact corporate identity while maintaining 100% upgrade safety.',
-      features: [
-        'VBS Page Extensions', 
-        'Express & Advanced Business Rules', 
-        'Custom Fields & Dynamic Layouts', 
-        'Guided Journeys Personalization', 
-        'JavaScript Action Chains', 
-        'Zero Upgrade-Impact Extensibility'
-      ],
-      imageUrl: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=1200&auto=format&fit=crop'
-    },
-    {
-      id: 'integrations',
-      moduleCode: 'MODULE 06',
-      title: 'HCM Integrations & BI Reporting',
-      statusBadge: 'Real-Time HDL & OIC Pipeline',
-      leadDescription: 'Execute robust data migrations, automated outbound extracts, and actionable enterprise BI analytics.',
-      paragraph: 'Bridge Oracle Fusion HCM with your entire IT landscape. We engineer high-throughput data loads via HCM Data Loader (HDL/HSDL), automated payroll and benefits outbound files using HCM Extracts, real-time REST API orchestrations via OIC, and executive dashboards with OTBI & BI Publisher.',
-      features: [
-        'HCM Data Loader (HDL/HSDL) Scripts', 
-        'Inbound & Outbound HCM Extracts', 
-        'Oracle Integration Cloud (OIC) Flows', 
-        'Real-Time REST & SOAP Services', 
-        'OTBI Subject Area Analytics', 
-        'Pixel-Perfect BI Publisher Reports'
-      ],
-      imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop'
-    }
-  ];
 
   scrollToModule(moduleId: string) {
     this.activeModuleId = moduleId;

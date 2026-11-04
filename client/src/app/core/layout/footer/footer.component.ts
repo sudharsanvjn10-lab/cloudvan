@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ContentService } from '../../services/content.service';
 
 @Component({
   selector: 'app-footer',
@@ -15,12 +16,12 @@ import { environment } from '../../../../environments/environment';
           <span class="logo-text">Cloud <span>Vantage</span> <em class="brand-suffix">solutions</em></span>
           <p class="mission">We are committed to providing our customers with exceptional service while offering our employees the best training.</p>
           <div class="address-block">
-            <strong>HQ:</strong> Registered Office, Madurai - 625 402, Tamil Nadu, India.<br>
-            <strong>Offshore Centers:</strong> Pallikaranai, Chennai - 600117, Tamil Nadu, India.<br>
+            <strong>HQ:</strong> {{ companyInfo().hqAddress }}<br>
+            <strong>Offshore Centers:</strong> {{ companyInfo().offshoreAddress }}<br>
           </div>
           <div class="contact-info">
-            <a href="mailto:contact@cloud-vantage.com">contact&#64;cloud-vantage.com</a>
-            <a href="tel:+919940098685">+91 99400 98685</a>
+            <a [href]="'mailto:' + companyInfo().email">{{ companyInfo().email }}</a>
+            <a [href]="'tel:' + companyInfo().phone">{{ companyInfo().phone }}</a>
           </div>
           <div class="live-row">
             <span class="live-dot" aria-hidden="true"></span>
@@ -307,6 +308,8 @@ import { environment } from '../../../../environments/environment';
 })
 export class FooterComponent implements OnInit, OnDestroy {
   private http = inject(HttpClient);
+  private contentService = inject(ContentService);
+  companyInfo = this.contentService.companyInfo;
   currentYear = new Date().getFullYear();
   subscribed = false;
   subscribeError = false;

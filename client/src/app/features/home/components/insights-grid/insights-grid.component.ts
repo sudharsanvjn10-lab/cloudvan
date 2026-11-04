@@ -1,19 +1,11 @@
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { catchError, of } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { SectionHeadingComponent } from '../../../../shared/components/section-heading/section-heading.component';
 import { FadeUpDirective } from '../../../../shared/directives/fade-up.directive';
+import { ContentService, Insight } from '../../../../core/services/content.service';
 
-export interface Insight {
-  id: string;
-  title: string;
-  excerpt: string;
-  date: string;
-  imageUrl: string;
-}
+export type { Insight };
 
 @Component({
   selector: 'app-insights-grid',
@@ -56,41 +48,10 @@ export interface Insight {
     }
   `]
 })
-export class InsightsGridComponent implements OnInit {
-  private http = inject(HttpClient);
-  insights = signal<Insight[]>([]);
+export class InsightsGridComponent {
+  private contentService = inject(ContentService);
+  insights = this.contentService.insights;
 
   /* The /insights page already has a hero title, so it hides this heading to avoid a duplicate. */
   @Input() showHeading = true;
-
-  // Unique verified enterprise visuals with zero overlap across the application
-  private fallbackData: Insight[] = [
-    {
-      id: '1',
-      title: 'Maximizing ROI with Oracle Fusion HCM',
-      excerpt: 'Discover proven strategies to optimize your human capital management deployment for long-term scalability and user adoption.',
-      date: 'October 12, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'
-    },
-    {
-      id: '2',
-      title: 'Migrating Legacy HRMS to Oracle Fusion HCM',
-      excerpt: 'A comprehensive roadmap for enterprises transitioning from on-premise PeopleSoft / EBS HRMS systems to modern Oracle Cloud HCM.',
-      date: 'September 28, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop'
-    },
-    {
-      id: '3',
-      title: 'Modernizing Employee Journeys with Redwood UI',
-      excerpt: 'How Oracle Redwood UI and Visual Builder Studio enable streamlined employee self-service and personalized workforce experiences.',
-      date: 'September 15, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800&auto=format&fit=crop'
-    }
-  ];
-
-  ngOnInit() {
-    this.http.get<Insight[]>(`${environment.apiUrl}/insights`)
-      .pipe(catchError(() => of(this.fallbackData)))
-      .subscribe(data => this.insights.set(data));
-  }
 }

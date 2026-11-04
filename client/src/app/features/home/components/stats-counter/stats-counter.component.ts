@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CountUpDirective } from '../../../../shared/directives/count-up.directive';
+import { ContentService } from '../../../../core/services/content.service';
 
 @Component({
   selector: 'app-stats-counter',
@@ -11,24 +12,9 @@ import { CountUpDirective } from '../../../../shared/directives/count-up.directi
       <div class="container">
         <div class="stats-grid">
           
-          <div class="stat-item">
-            <h2 class="stat-number" [appCountUp]="20" [suffix]="'+'">20+</h2>
-            <p class="stat-label">Years in Operation</p>
-          </div>
-
-          <div class="stat-item">
-            <h2 class="stat-number" [appCountUp]="30" [suffix]="'+'">30+</h2>
-            <p class="stat-label">Successful Implementations</p>
-          </div>
-
-          <div class="stat-item">
-            <h2 class="stat-number" [appCountUp]="10" [suffix]="'+'">10+</h2>
-            <p class="stat-label">Countries Served</p>
-          </div>
-
-          <div class="stat-item">
-            <h2 class="stat-number" [appCountUp]="5" [suffix]="'+'">5+</h2>
-            <p class="stat-label">Cloud Offerings</p>
+          <div class="stat-item" *ngFor="let stat of stats">
+            <h2 class="stat-number" [appCountUp]="stat.number" [suffix]="stat.suffix">{{ stat.number }}{{ stat.suffix }}</h2>
+            <p class="stat-label">{{ stat.label }}</p>
           </div>
 
         </div>
@@ -124,4 +110,10 @@ import { CountUpDirective } from '../../../../shared/directives/count-up.directi
     }
   `]
 })
-export class StatsCounterComponent {}
+export class StatsCounterComponent {
+  private contentService = inject(ContentService);
+
+  get stats() {
+    return this.contentService.stats();
+  }
+}

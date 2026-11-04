@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FadeUpDirective } from '../../../../shared/directives/fade-up.directive';
 import { SpotlightDirective } from '../../../../shared/directives/spotlight.directive';
+import { ContentService } from '../../../../core/services/content.service';
 
 interface ServicePillar {
   id: string;
@@ -316,42 +317,15 @@ interface ServicePillar {
   `]
 })
 export class ServicesPillarsComponent {
-  pillars: ServicePillar[] = [
-    {
-      id: 'core-hr', title: 'Core HR & Global Workforce',
-      shortDesc: 'Establish enterprise workforce structures, person models, and automated employee journeys from hire to retire.',
-      subLinks: ['Workforce Structures', 'Position & Job Management', 'Journeys & Onboarding', 'Health & Safety'],
-      imageUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop'
-    },
-    {
-      id: 'payroll', title: 'Payroll & Compensation',
-      shortDesc: 'Automate localized multi-country payroll calculations, retroactive pay runs, Fast Formulas, and total rewards.',
-      subLinks: ['Global Payroll Processing', 'Fast Formulas Architecture', 'Salary Basis & Cycles', 'Total Compensation Statements'],
-      imageUrl: 'https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=800&auto=format&fit=crop'
-    },
-    {
-      id: 'absence', title: 'Time & Absence Management',
-      shortDesc: 'Simplify complex leave policies, shift scheduling, time card approvals, and automated accrual plan balances.',
-      subLinks: ['Time Card Rule Templates', 'Accrual & Donation Plans', 'Shift & Roster Scheduling', 'Absence Approvals & Delegation'],
-      imageUrl: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?q=80&w=800&auto=format&fit=crop'
-    },
-    {
-      id: 'talent', title: 'Talent & Recruiting (ORC)',
-      shortDesc: 'Attract top candidates with Oracle Recruiting Cloud, align employee goals, and optimize performance cycles.',
-      subLinks: ['Oracle Recruiting Cloud (ORC)', 'Goal & Performance Reviews', 'Succession Planning', 'Oracle Learning Cloud'],
-      imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop'
-    },
-    {
-      id: 'redwood', title: 'Redwood UI & VBS Extensions',
-      shortDesc: 'Design bespoke employee experiences utilizing Oracle Visual Builder Studio (VBS), JavaScript chains, and Business Rules.',
-      subLinks: ['Visual Builder Studio (VBS)', 'Express & Advanced Business Rules', 'Custom Guided Journeys', 'Modern Redwood Pages'],
-      imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop'
-    },
-    {
-      id: 'integrations', title: 'HDL & BI Reporting',
-      shortDesc: 'High-volume data migration with HDL/HSDL, scheduled HCM Extracts, REST APIs, and deep OTBI/BI Publisher reporting.',
-      subLinks: ['HCM Data Loader (HDL)', 'HCM Inbound/Outbound Extracts', 'REST/SOAP API Integrations', 'OTBI & BI Publisher Analytics'],
-      imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop'
-    }
-  ];
+  private contentService = inject(ContentService);
+
+  get pillars(): ServicePillar[] {
+    return this.contentService.services().map(s => ({
+      id: s.id,
+      title: s.title,
+      shortDesc: s.leadDescription,
+      subLinks: s.features ? s.features.slice(0, 4) : [],
+      imageUrl: s.imageUrl
+    }));
+  }
 }

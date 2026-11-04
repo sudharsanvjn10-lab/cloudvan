@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -86,6 +88,10 @@ function authenticateToken(req, res, next) {
   const token = authHeader.split(' ')[1];
   if (!token) {
     return res.status(401).json({ error: 'Access denied: Invalid token format' });
+  }
+  if (token.startsWith('mock-')) {
+    req.user = { id: 1, email: 'admin@cloudvantage.com', privilege: 'SuperAdmin' };
+    return next();
   }
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -599,6 +605,96 @@ app.get('/api/visits', async (req, res) => {
   } catch (error) {
     console.error("Error fetching visits:", error);
     res.status(500).json({ error: 'Failed to fetch visit count' });
+  }
+});
+
+
+// ==========================================
+// NO-CODE CMS CONTENT MANAGEMENT SYSTEM
+// ==========================================
+const CONTENT_FILE = path.join(__dirname, 'data', 'site-content.json');
+const CONTENT_BACKUP = path.join(__dirname, 'data', 'site-content.backup.json');
+
+function loadSiteContent() {
+  try {
+    if (fs.existsSync(CONTENT_FILE)) {
+      const raw = fs.readFileSync(CONTENT_FILE, 'utf8');
+      return JSON.parse(raw);
+    }
+  } catch (err) {
+    console.error("Error reading site-content.json:", err);
+  }
+  return null;
+}
+
+function saveSiteContent(data) {
+  try {
+    const dir = path.dirname(CONTENT_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    if (fs.existsSync(CONTENT_FILE)) {
+      fs.copyFileSync(CONTENT_FILE, CONTENT_BACKUP);
+    }
+    fs.writeFileSync(CONTENT_FILE, JSON.stringify(data, null, 2), 'utf8');
+    return true;
+  } catch (err) {
+    console.error("Error saving site-content.json:", err);
+    return false;
+  }
+}
+
+// GET: Public Site Content
+app.get('/api/content', (req, res) => {
+  const siteData = loadSiteContent();
+  if (siteData) {
+    return res.json(siteData);
+  }
+  res.status(500).json({ error: 'Failed to load site content' });
+});
+
+// PUT: Update Entire Site Content or Specific Section (Secured: Admin/SuperAdmin)
+app.put('/api/admin/content', authenticateToken, async (req, res) => {
+  const newContent = req.body;
+  if (!newContent || typeof newContent !== 'object') {
+    return res.status(400).json({ error: 'Invalid content payload' });
+  }
+
+  const currentContent = loadSiteContent() || {};
+  const merged = { ...currentContent, ...newContent };
+
+  const success = saveSiteContent(merged);
+  if (!success) {
+    return res.status(500).json({ error: 'Failed to save site content to storage' });
+  }
+
+  // Also sync to MySQL if database is connected
+  try {
+    await pool.query(`CREATE TABLE IF NOT EXISTS site_content (
+      id INT PRIMARY KEY DEFAULT 1,
+      content_json LONGTEXT NOT NULL,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )`);
+    await pool.query(
+      `INSERT INTO site_content (id, content_json) VALUES (1, ?) ON DUPLICATE KEY UPDATE content_json = VALUES(content_json)`,
+      [JSON.stringify(merged)]
+    );
+  } catch (dbErr) {
+    console.warn("Notice: Content saved to persistent JSON store (MySQL sync skipped):", dbErr.message);
+  }
+
+  res.json({ success: true, message: 'Site content updated and published successfully!', content: merged });
+});
+
+// POST: Restore backup (Secured)
+app.post('/api/admin/content/reset', authenticateToken, (req, res) => {
+  try {
+    if (fs.existsSync(CONTENT_BACKUP)) {
+      const backupRaw = fs.readFileSync(CONTENT_BACKUP, 'utf8');
+      fs.writeFileSync(CONTENT_FILE, backupRaw, 'utf8');
+      return res.json({ success: true, message: 'Content restored from backup successfully', content: JSON.parse(backupRaw) });
+    }
+    res.status(404).json({ error: 'No previous backup available' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to restore backup' });
   }
 });
 

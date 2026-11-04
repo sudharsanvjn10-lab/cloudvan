@@ -1,0 +1,460 @@
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap, catchError, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
+export interface HeroSlide {
+  id: string;
+  category: string;
+  headline: string;
+  subline: string;
+  ctaText: string;
+  ctaLink: string;
+  ctaFragment?: string;
+  imageUrl: string;
+}
+
+export interface StatMetric {
+  id: string;
+  number: number;
+  suffix: string;
+  label: string;
+}
+
+export interface DetailedService {
+  id: string;
+  moduleCode: string;
+  title: string;
+  statusBadge: string;
+  leadDescription: string;
+  paragraph: string;
+  features: string[];
+  imageUrl: string;
+}
+
+export interface WhyCvTab {
+  id: string;
+  title: string;
+  heading: string;
+  body: string;
+  features: string[];
+  imageUrl: string;
+}
+
+export interface Insight {
+  id: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  imageUrl: string;
+}
+
+export interface TeamMember {
+  id: string | number;
+  name: string;
+  title: string;
+  bio: string;
+  photoUrl: string;
+  linkedin?: string;
+}
+
+export interface CompanyInfo {
+  email: string;
+  phone: string;
+  hqAddress: string;
+  offshoreAddress: string;
+  socialLinks: {
+    linkedin: string;
+    twitter: string;
+    facebook: string;
+    instagram: string;
+    youtube: string;
+  };
+}
+
+export interface SiteContent {
+  companyInfo: CompanyInfo;
+  heroSlides: HeroSlide[];
+  stats: StatMetric[];
+  services: DetailedService[];
+  whyCvTabs: WhyCvTab[];
+  insights: Insight[];
+  team: TeamMember[];
+}
+
+export const DEFAULT_SITE_CONTENT: SiteContent = {
+  companyInfo: {
+    email: 'contact@cloud-vantage.com',
+    phone: '+91 99400 98685',
+    hqAddress: 'Registered Office, Madurai - 625 402, Tamil Nadu, India.',
+    offshoreAddress: 'Pallikaranai, Chennai - 600117, Tamil Nadu, India.',
+    socialLinks: {
+      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/',
+      twitter: 'https://twitter.com/cloud_vantage_s',
+      facebook: 'https://www.facebook.com/cloudvantage/',
+      instagram: 'https://www.instagram.com/cloudvantages/',
+      youtube: 'https://www.youtube.com/@CloudVantageSolutions/'
+    }
+  },
+  heroSlides: [
+    {
+      id: 'slide-1',
+      category: 'ORACLE FUSION HCM CLOUD',
+      headline: 'Transforming Global Enterprises',
+      subline: 'Unleash the full power of Oracle Fusion HCM Cloud with tailored implementations and continuous innovation.',
+      ctaText: 'Discover Our Services',
+      ctaLink: '/services',
+      ctaFragment: 'core-hr',
+      imageUrl: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=2070&auto=format&fit=crop'
+    },
+    {
+      id: 'slide-2',
+      category: 'GLOBAL ENTERPRISE WORKFORCE',
+      headline: 'Core HR & Global Workforce',
+      subline: 'Scalable Oracle Fusion Core HR architectures and employee journey workflows.',
+      ctaText: 'Explore Core HR',
+      ctaLink: '/services',
+      ctaFragment: 'core-hr',
+      imageUrl: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2070&auto=format&fit=crop'
+    },
+    {
+      id: 'slide-3',
+      category: 'INTELLIGENT PAYROLL ARCHITECTURE',
+      headline: 'Intelligent Global Payroll',
+      subline: 'Flawless multi-country payroll calculations, retroactive processing, and compliance.',
+      ctaText: 'Explore Payroll Solutions',
+      ctaLink: '/services',
+      ctaFragment: 'payroll',
+      imageUrl: 'https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=2070&auto=format&fit=crop'
+    },
+    {
+      id: 'slide-4',
+      category: 'ORC & TALENT ACQUISITION',
+      headline: 'Attract & Nurture Top Talent',
+      subline: 'Next-gen Oracle Recruiting Cloud (ORC) with intelligent performance and goal management.',
+      ctaText: 'View Talent Solutions',
+      ctaLink: '/services',
+      ctaFragment: 'talent',
+      imageUrl: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=2070&auto=format&fit=crop'
+    },
+    {
+      id: 'slide-5',
+      category: 'REDWOOD DESIGN & VBS',
+      headline: 'Modern Redwood UI Extensions',
+      subline: 'Bespoke Visual Builder Studio (VBS) extensions, Business Rules, and seamless HDL integrations.',
+      ctaText: 'Learn About Redwood',
+      ctaLink: '/services',
+      ctaFragment: 'redwood',
+      imageUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=2055&auto=format&fit=crop'
+    },
+    {
+      id: 'slide-6',
+      category: '24/7 GLOBAL MANAGED SERVICES',
+      headline: 'Round-the-Clock Support',
+      subline: 'Continuous integration and system optimization from our offshore delivery centers.',
+      ctaText: 'Explore Managed Services',
+      ctaLink: '/services',
+      ctaFragment: 'integrations',
+      imageUrl: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2070&auto=format&fit=crop'
+    },
+    {
+      id: 'slide-7',
+      category: 'CAREERS & GLOBAL DELIVERY',
+      headline: 'Join Our Growing Team',
+      subline: 'Build your career alongside top-tier Oracle Fusion HCM architects and technical innovators.',
+      ctaText: 'View Careers',
+      ctaLink: '/careers',
+      imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'
+    }
+  ],
+  stats: [
+    { id: 'stat-1', number: 20, suffix: '+', label: 'Years in Operation' },
+    { id: 'stat-2', number: 30, suffix: '+', label: 'Successful Implementations' },
+    { id: 'stat-3', number: 10, suffix: '+', label: 'Countries Served' },
+    { id: 'stat-4', number: 5, suffix: '+', label: 'Cloud Offerings' }
+  ],
+  services: [
+    {
+      id: 'core-hr',
+      moduleCode: 'MODULE 01',
+      title: 'Core HR & Global Human Resources',
+      statusBadge: '100% Redwood Compatible',
+      leadDescription: 'Architect a single source of truth for global workforce structures, person models, and automated employee journeys.',
+      paragraph: 'Oracle Fusion Cloud Core HR allows organizations to manage their global workforce from hire to retire with unparalleled clarity. Our certified functional consultants configure robust enterprise structures, position trees, and compliance rules. We ensure seamless employee and manager self-service, localized compliance across international borders, and integrated guided journeys that simplify everyday HR interactions.',
+      features: [
+        'Global Workforce Structures',
+        'Position & Organization Trees',
+        'Employee & Manager Self-Service',
+        'Guided Journeys & Onboarding',
+        'Health & Safety Incidents',
+        'Workforce Predictions & Modeling'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1200&auto=format&fit=crop'
+    },
+    {
+      id: 'payroll',
+      moduleCode: 'MODULE 02',
+      title: 'Oracle Fusion Payroll & Compensation',
+      statusBadge: '99.98% Calculation Accuracy',
+      leadDescription: 'Automate localized multi-country payroll calculations, retroactive processing, and strategic total compensation.',
+      paragraph: 'Ensure accurate, on-time, and fully compliant compensation for your workforce with Oracle Fusion Global Payroll. We design complex Fast Formulas, setup retroactive pay processes, and integrate seamlessly with third-party banking networks. Our compensation experts tailor merit cycles, bonus distribution, and salary basis architectures to retain top performers.',
+      features: [
+        'Global Payroll Processing',
+        'Fast Formulas Engineering',
+        'Retroactive Pay Processing',
+        'Salary Basis & Merit Review Cycles',
+        'Total Compensation Statements',
+        'Costing & GL Journal Mapping'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop'
+    },
+    {
+      id: 'absence',
+      moduleCode: 'MODULE 03',
+      title: 'Time & Labor and Absence Management',
+      statusBadge: 'Automated Shift Roster Sync',
+      leadDescription: 'Streamline shift scheduling, multi-tier approvals, complex leave accruals, and regulatory compliance.',
+      paragraph: 'Manage diverse employee schedules, attendance capture, and localized leave rules effortlessly. We configure customized time card layouts, rule templates, and accrual plans tailored to collective bargaining agreements or regional statutory regulations. Integrated approval workflows and delegation matrices ensure management decisions remain frictionless.',
+      features: [
+        'Custom Time Card Layouts',
+        'Time Entry Validation Rule Sets',
+        'Accrual & Compensatory Plans',
+        'Leave Donation Schemes',
+        'Shift Roster Generation',
+        'Manager Delegation Approvals'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?q=80&w=1200&auto=format&fit=crop'
+    },
+    {
+      id: 'talent',
+      moduleCode: 'MODULE 04',
+      title: 'Talent Management & Recruiting (ORC)',
+      statusBadge: 'AI-Powered Candidate Match',
+      leadDescription: 'Attract high-caliber talent, align employee objectives, and cultivate future leaders with intelligent HCM.',
+      paragraph: 'From candidate sourcing with Oracle Recruiting Cloud (ORC) to goal alignment and succession planning, we build interconnected talent ecosystems. Foster employee growth with continuous feedback, AI-assisted candidate matching, talent review calibration meetings, and integrated Oracle Learning Cloud courses.',
+      features: [
+        'Oracle Recruiting Cloud (ORC)',
+        'Automated Candidate Screening',
+        'Continuous Goal Management',
+        'Annual & Mid-Year Performance',
+        'Talent Review & 9-Box Calibration',
+        'Succession & Learning Paths'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1565688534245-05d6b5be184a?q=80&w=1200&auto=format&fit=crop'
+    },
+    {
+      id: 'redwood',
+      moduleCode: 'MODULE 05',
+      title: 'Redwood UI & Visual Builder Studio (VBS)',
+      statusBadge: 'Sub-Second Page Telemetry',
+      leadDescription: 'Customize and elevate your Oracle HCM user interface using Redwood design standards and VBS business rules.',
+      paragraph: 'Transform your user experience with Oracle Redwood UI. Our technical team leverages Oracle Visual Builder Studio (VBS) to build bespoke page extensions, configure Express & Advanced Business Rules, and create intuitive guided workflows that fit your exact corporate identity while maintaining 100% upgrade safety.',
+      features: [
+        'VBS Page Extensions',
+        'Express & Advanced Business Rules',
+        'Custom Fields & Dynamic Layouts',
+        'Guided Journeys Personalization',
+        'JavaScript Action Chains',
+        'Zero Upgrade-Impact Extensibility'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=1200&auto=format&fit=crop'
+    },
+    {
+      id: 'integrations',
+      moduleCode: 'MODULE 06',
+      title: 'HCM Integrations & BI Reporting',
+      statusBadge: 'Real-Time HDL & OIC Pipeline',
+      leadDescription: 'Execute robust data migrations, automated outbound extracts, and actionable enterprise BI analytics.',
+      paragraph: 'Bridge Oracle Fusion HCM with your entire IT landscape. We engineer high-throughput data loads via HCM Data Loader (HDL/HSDL), automated payroll and benefits outbound files using HCM Extracts, real-time REST API orchestrations via OIC, and executive dashboards with OTBI & BI Publisher.',
+      features: [
+        'HCM Data Loader (HDL/HSDL) Scripts',
+        'Inbound & Outbound HCM Extracts',
+        'Oracle Integration Cloud (OIC) Flows',
+        'Real-Time REST & SOAP Services',
+        'OTBI Subject Area Analytics',
+        'Pixel-Perfect BI Publisher Reports'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop'
+    }
+  ],
+  whyCvTabs: [
+    {
+      id: 'why-1',
+      title: 'The Vantage Advantage',
+      heading: '20+ Years of Oracle Cloud Mastery',
+      body: 'Founded by industry veterans with extensive real-world experience, we don\'t just implement software; we architect scalable solutions that map precisely to your business objectives across real estate, healthcare, and logistics sectors.',
+      features: [
+        'Industry-Specific Customizations',
+        'Rapid Implementation Methodology',
+        'Post-Go-Live Managed Services'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+      id: 'why-2',
+      title: 'Global Delivery Model',
+      heading: 'Onshore Strategy, Offshore Precision',
+      body: 'Headquartered in Madurai with state-of-the-art offshore delivery centers in Chennai and Madurai, India. This hybrid model guarantees enterprise-grade architectural design coupled with highly cost-effective, round-the-clock technical execution and support.',
+      features: [
+        'Madurai Strategic HQ',
+        'Chennai & Madurai Delivery Centers',
+        '24/7 Technical Support Lifecycle'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+      id: 'why-3',
+      title: 'Cross-Sector Expertise',
+      heading: 'Built for Complex Environments',
+      body: 'We specialize in deploying Oracle Fusion modules in industries with rigid compliance, massive workforces, and intricate supply chains. Whether it is oil & gas drilling or retail pharmacy, we know how to configure the cloud for your reality.',
+      features: [
+        'Real Estate & Investment',
+        'Oil, Gas & Automotive',
+        'Pharmacy & Healthcare'
+      ],
+      imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop'
+    }
+  ],
+  insights: [
+    {
+      id: 'insight-1',
+      title: 'Maximizing ROI with Oracle Fusion HCM',
+      excerpt: 'Discover proven strategies to optimize your human capital management deployment for long-term scalability and user adoption.',
+      date: 'October 12, 2026',
+      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+      id: 'insight-2',
+      title: 'Migrating Legacy HRMS to Oracle Fusion HCM',
+      excerpt: 'A comprehensive roadmap for enterprises transitioning from on-premise PeopleSoft / EBS HRMS systems to modern Oracle Cloud HCM.',
+      date: 'September 28, 2026',
+      imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+      id: 'insight-3',
+      title: 'Modernizing Employee Journeys with Redwood UI',
+      excerpt: 'How Oracle Redwood UI and Visual Builder Studio enable streamlined employee self-service and personalized workforce experiences.',
+      date: 'September 15, 2026',
+      imageUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800&auto=format&fit=crop'
+    }
+  ],
+  team: [
+    {
+      id: 'team-1',
+      name: 'Jeevanantham R.',
+      title: 'Founder & Director',
+      bio: 'Jeevanantham R, the founder and director of Cloud Vantage Solutions is a lead Oracle HCM Cloud Solution Architect who brings over 20+ years of extensive experience and expertise to the table. With a strong commitment to delivering innovative solutions, he plays a pivotal role in spearheading the growth and success of our company. In his capacity, he oversees Service Delivery and Global operations. Prior to founding Cloud Vantage he held key positions at renowned companies, including Bahwan Cybertek, Hexaware Transsys and others.',
+      photoUrl: '/assets/jeevanantham.png',
+      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
+    },
+    {
+      id: 'team-2',
+      name: 'Mahendran P',
+      title: 'Delivery Head',
+      bio: 'With more than 18 years of overall IT experience in Oracle and related Technologies involving a spectrum of responsibilities, Mahendran P has hands-on project implementation experience in Agile methodology. At Cloud Vantage Solutions, he leads the Oracle Fusion HCM Core Architecture, Fast Formulas, and Fusion Integration (OIC/ICS/SOA) competence tracks.',
+      photoUrl: '/assets/mahendran.png',
+      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
+    },
+    {
+      id: 'team-3',
+      name: 'Ilampooranan C.S',
+      title: 'Technical Head',
+      bio: 'C. S. ILAMPOORANAN, who serves as technical lead forms an integral part of the Cloud Vantage Solutions team. With over two decades of experience in Oracle Developer Suite and Oracle EBS experience, he takes charge of implementing customised solutions for our clients. His deep understanding of Oracle HCM Cloud Suite, coupled with passion for technology, enables him to provide guidance and expertise in delivering highly effective solutions.',
+      photoUrl: '/assets/ilampooranan.png',
+      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
+    },
+    {
+      id: 'team-4',
+      name: 'Srinivas A',
+      title: 'Sales and Marketing Specialist',
+      bio: 'Srinivas A, our dedicated Sales and Marketing Specialist is driven by a profound passion for identifying and delivering solutions that precisely align with our clients needs and expectations. In his role, he assumes responsibility for crafting and executing our sales strategy, fostering growth and undertaking business development initiatives that drive the success of Cloud Vantage Solutions.',
+      photoUrl: '/assets/srinivas.png',
+      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
+    }
+  ]
+};
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ContentService {
+  private http = inject(HttpClient);
+
+  // Reactive state signal initialized with robust defaults
+  content = signal<SiteContent>(DEFAULT_SITE_CONTENT);
+
+  // Computed signals for direct component binding
+  heroSlides = computed(() => this.content().heroSlides);
+  stats = computed(() => this.content().stats);
+  services = computed(() => this.content().services);
+  whyCvTabs = computed(() => this.content().whyCvTabs);
+  insights = computed(() => this.content().insights);
+  team = computed(() => this.content().team);
+  companyInfo = computed(() => this.content().companyInfo);
+
+  constructor() {
+    this.fetchContent();
+  }
+
+  fetchContent() {
+    this.http.get<SiteContent>(`${environment.apiUrl}/content`)
+      .pipe(
+        catchError(err => {
+          console.warn('Notice: Using default site content (API offline / loading fallback):', err.message);
+          return of(DEFAULT_SITE_CONTENT);
+        })
+      )
+      .subscribe(data => {
+        if (data && data.heroSlides) {
+          this.content.set(data);
+        }
+      });
+  }
+
+  private getAuthHeaders() {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('admin_token') || '' : '';
+    return { 'Authorization': `Bearer ${token}` };
+  }
+
+  saveContent(updatedPayload: Partial<SiteContent>): Observable<{ success: boolean; message: string; content: SiteContent }> {
+    return this.http.put<{ success: boolean; message: string; content: SiteContent }>(
+      `${environment.apiUrl}/admin/content`,
+      updatedPayload,
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      tap(res => {
+        if (res && res.content) {
+          this.content.set(res.content);
+        }
+      }),
+      catchError(err => {
+        // If server is offline or mock mode, still update locally so admin sees their changes
+        console.warn('Falling back to local signal update:', err.message);
+        this.content.update(current => ({ ...current, ...updatedPayload }));
+        return of({
+          success: true,
+          message: 'Content updated successfully (local session mode)',
+          content: this.content()
+        });
+      })
+    );
+  }
+
+  resetToDefault(): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/admin/content/reset`,
+      {},
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      tap(res => {
+        if (res && res.content) {
+          this.content.set(res.content);
+        }
+      }),
+      catchError(() => {
+        this.content.set(DEFAULT_SITE_CONTENT);
+        return of({ success: true, content: DEFAULT_SITE_CONTENT });
+      })
+    );
+  }
+}

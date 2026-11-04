@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { ContentService } from '../../core/services/content.service';
 
 @Component({
   selector: 'app-contact',
@@ -70,21 +71,21 @@ import { environment } from '../../../environments/environment';
           <h2>Our Offices</h2>
 
           <div class="office registered-office">
-            <h3>Madurai (Offshore Development Centre)</h3>
-            <p>Madurai - 625 402, Tamil Nadu, India</p>
+            <h3>Madurai (Registered Office)</h3>
+            <p>{{ companyInfo().hqAddress }}</p>
           </div>
           
           <div class="office registered-office">
             <h3>Chennai (Delivery Center)</h3>
-            <p>Pallikaranai, Chennai - 600117<br>Tamil Nadu, India</p>
+            <p>{{ companyInfo().offshoreAddress }}</p>
           </div>
 
           <div class="direct-contact">
-            <p><strong>Email:</strong> info&#64;cloudvantagesolutions.com</p>
+            <p><strong>Email:</strong> <a [href]="'mailto:' + companyInfo().email" class="contact-link">{{ companyInfo().email }}</a></p>
           </div>
 
           <div class="direct-contact">
-            <p><strong>Mobile:</strong> +91 99400 98685</p>
+            <p><strong>Mobile:</strong> <a [href]="'tel:' + companyInfo().phone" class="contact-link">{{ companyInfo().phone }}</a></p>
           </div>
 
         </div>
@@ -151,6 +152,8 @@ import { environment } from '../../../environments/environment';
 export class ContactComponent {
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
+  private contentService = inject(ContentService);
+  companyInfo = this.contentService.companyInfo;
   
   contactForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.pattern(/\S+/), Validators.maxLength(100)]],

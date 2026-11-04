@@ -1,19 +1,10 @@
-import { Component, OnInit, HostListener, inject, signal } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { FadeUpDirective } from '../../../../shared/directives/fade-up.directive';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { catchError, of } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
 import { SectionHeadingComponent } from '../../../../shared/components/section-heading/section-heading.component';
+import { ContentService, TeamMember } from '../../../../core/services/content.service';
 
-export interface TeamMember {
-  id: string | number;
-  name: string;
-  title: string;
-  bio: string;
-  photoUrl: string;
-  linkedin?: string;
-}
+export type { TeamMember };
 
 @Component({
   selector: 'app-team-grid',
@@ -305,9 +296,9 @@ export interface TeamMember {
     .socials a:hover { background: #2563eb; color: #fff; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(37,99,235,0.3);}
   `]
 })
-export class TeamGridComponent implements OnInit {
-  private http = inject(HttpClient);
-
+export class TeamGridComponent {
+  private contentService = inject(ContentService);
+  team = this.contentService.team;
   selectedMember = signal<TeamMember | null>(null);
 
   @HostListener('document:keydown.escape')
@@ -320,45 +311,6 @@ export class TeamGridComponent implements OnInit {
   onImgError(event: Event) {
     const img = event.target as HTMLImageElement;
     img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%232563eb"><circle cx="50" cy="38" r="22" opacity="0.8"/><circle cx="50" cy="98" r="40" opacity="0.6"/></svg>';
-  }
-
-  private fallbackTeam: TeamMember[] = [
-    {
-      id: '1', name: 'Jeevanantham R.', title: 'Founder & Director',
-      bio: 'Jeevanantham R, the founder and director of Cloud Vantage Solutions is a lead Oracle HCM Cloud Solution Architect who brings over 20+ years of extensive experience and expertise to the table. With a strong commitment to delivering innovative solutions, he plays a pivotal role in spearheading the growth and success of our company. In his capacity, he oversees Service Delivery and Global operations. Prior to founding Cloud Vantage he held key positions at renowned companies, including Bahwan Cybertek, Hexaware Transsys and others.',
-      photoUrl: '/assets/jeevanantham.png',
-      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
-    },
-    {
-      id: '2', name: 'Mahendran P', title: 'Delivery Head',
-      bio: 'With more than 18 years of overall IT experience in Oracle and related Technologies involving a spectrum of responsibilities, Mahendran P has hands-on project implementation experience in Agile methodology. At Cloud Vantage Solutions, he leads the Oracle Fusion HCM Core Architecture, Fast Formulas, and Fusion Integration (OIC/ICS/SOA) competence tracks.',
-      photoUrl: '/assets/mahendran.png',
-      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
-    },
-    {
-      id: '3', name: 'Ilampooranan C.S', title: 'Technical Head',
-      bio: 'C. S. ILAMPOORANAN, who serves as technical lead forms an integral part of the Cloud Vantage Solutions team. With over two decades of experience in Oracle Developer Suite and Oracle EBS experience, he takes charge of implementing customised solutions for our clients. His deep understanding of Oracle HCM Cloud Suite, coupled with passion for technology, enables him to provide guidance and expertise in delivering highly effective solutions.',
-      photoUrl: '/assets/ilampooranan.png',
-      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
-    },
-    {
-      id: '4', name: 'Srinivas A', title: 'Sales and Marketing Specialist',
-      bio: 'Srinivas A, our dedicated Sales and Marketing Specialist is driven by a profound passion for identifying and delivering solutions that precisely align with our clients needs and expectations. In his role, he assumes responsibility for crafting and executing our sales strategy, fostering growth and undertaking business development initiatives that drive the success of Cloud Vantage Solutions.',
-      photoUrl: '/assets/srinivas.png',
-      linkedin: 'https://www.linkedin.com/company/cloud-vantage-solutions/'
-    }
-  ];
-
-  team = signal<TeamMember[]>(this.fallbackTeam);
-
-  ngOnInit() {
-    this.http.get<TeamMember[]>(`${environment.apiUrl}/team`)
-      .pipe(catchError(() => of(this.fallbackTeam)))
-      .subscribe(data => {
-        if (data && data.length > 0) {
-          this.team.set(data);
-        }
-      });
   }
 
   openBio(member: TeamMember) {
