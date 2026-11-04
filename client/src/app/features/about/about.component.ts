@@ -11,7 +11,7 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
     <div class="inner-hero">
       <div class="container">
         <h1>About Cloud Vantage</h1>
-        <p>Architecting enterprise futures across Chennai, and Madurai.</p>
+        <p>Architecting enterprise futures across Chennai and Madurai.</p>
       </div>
     </div>
 
@@ -24,7 +24,7 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
             Driven by commitment and enthusiasm, our tireless pursuits of innovation propel us forward.</p>
            <p>Unleashing the power of Oracle HCM Cloud we facilitate organisations streamline their human capital management processes for unparalleled efficiency. We offer a comprehensive suite of functionalities encompassing from employee Experience to HR and Benefits, to Talent Management and Recruiting, to Workforce Management, HR analytics, payroll management and more.</p>
             <p>Dedicated exclusively to Oracle Fusion HCM, we deliver tailored end-to-end human capital solutions encompassing Global HR, Payroll, Talent, Workforce Management, and Redwood UI extensions.</p>
-            <p>At Cloud Vantage, we pride ourselves on our commitment to customer satisfaction. Our expert team collaborates closely with the clients to empower them with customised features and solutions that align with their unique business goals. We value transparency and open communication, building trust and long-term partnerships with our clients..</p>
+            <p>At Cloud Vantage, we pride ourselves on our commitment to customer satisfaction. Our expert team collaborates closely with the clients to empower them with customised features and solutions that align with their unique business goals. We value transparency and open communication, building trust and long-term partnerships with our clients.</p>
             <p>Unlock the potential of innovation and discover the transformation with us.</p>
         </div>
         
@@ -47,7 +47,12 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
         
         <div class="vvm-grid">
           <div class="vvm-card">
-            <div class="icon-circle">👁️</div>
+            <div class="icon-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </div>
             <h3>Our Vision</h3>
             <p>To emerge as a globally preeminent consulting firm and the most preferred 
               partner for organisations, fostering an inclusive vibrant environment where 
@@ -56,7 +61,13 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
           </div>
 
           <div class="vvm-card">
-            <div class="icon-circle">🎯</div>
+            <div class="icon-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <circle cx="12" cy="12" r="5"></circle>
+                <circle cx="12" cy="12" r="1"></circle>
+              </svg>
+            </div>
             <h3>Our Mission</h3>
             <p>Empowering organizations, realize immense potential by meticulously crafting 
               innovative Cloud Solutions through unrestrained commitment and unwavering 
@@ -64,7 +75,11 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
           </div>
 
           <div class="vvm-card">
-            <div class="icon-circle">⭐</div>
+            <div class="icon-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="m12 3 2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8L3.5 9.2l5.9-.9L12 3Z"></path>
+              </svg>
+            </div>
             <h3>Our Core Values</h3>
             <ul class="values-list">
               <li><strong>Innovation:</strong> Embracing future-ready technologies.</li>
@@ -136,16 +151,6 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
   `,
   styles: [`
     /* --- EXISTING STYLES --- */
-    .inner-hero {
-      background: linear-gradient(to right, var(--color-primary), #0c3866);
-      padding: 120px 0 60px;
-      color: var(--color-white);
-      text-align: center;
-      
-      h1 { font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: 1rem; color: #fff; }
-      p { font-size: 1.25rem; color: var(--color-accent); }
-    }
-
     .about-content {
       padding: 6rem 0;
       background-color: var(--color-gray-50);
@@ -183,18 +188,18 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
         left: 20px;
         font-size: 8rem;
         color: rgba(255,255,255,0.05);
-        font-family: serif;
+        font-family: var(--font-heading, "Outfit", sans-serif);
       }
 
       h3 { color: var(--color-accent); font-size: 1.5rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 1px;}
       p { font-size: 1.5rem; font-weight: 600; line-height: 1.4; margin-bottom: 1.5rem; font-style: italic; }
-      .sub { font-size: 1rem; font-weight: 400; color: #a0aec0; font-style: normal; }
+      .sub { font-size: 1rem; font-weight: 400; color: var(--text-muted, #64748b); font-style: normal; }
     }
 
     /* --- NEW SHARED STYLES --- */
     .text-center { text-align: center; }
     .section-header h2 { font-size: 2.5rem; color: var(--color-primary); margin-bottom: 10px; }
-    .title-underline { width: 60px; height: 4px; background-color: var(--color-accent, #00a8cc); margin: 0 auto 40px; border-radius: 2px; }
+    .title-underline { width: 60px; height: 4px; background-color: var(--color-accent, #2563eb); margin: 0 auto 40px; border-radius: 2px; }
     .section-subtitle { font-size: 1.15rem; color: var(--text-muted, #475569); max-width: 700px; margin: 0 auto 50px; line-height: 1.6; }
 
     /* --- NEW: VISION, MISSION, VALUES STYLES --- */
@@ -221,17 +226,17 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
       &:hover {
         transform: translateY(-5px);
         box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-        border-color: var(--color-accent, #00a8cc);
+        border-color: var(--color-accent, #2563eb);
       }
 
       .icon-circle {
         width: 70px; height: 70px;
-        background: rgba(0, 168, 204, 0.1);
-        color: var(--color-accent);
-        font-size: 2rem;
+        background: rgba(37, 99, 235, 0.12);
+        color: var(--color-accent, #2563eb);
         display: flex; align-items: center; justify-content: center;
         border-radius: 50%;
         margin: 0 auto 20px;
+        svg { width: 30px; height: 30px; display: block; }
       }
 
       h3 { color: var(--color-primary); font-size: 1.5rem; margin-bottom: 15px; }
@@ -293,7 +298,7 @@ import { TeamGridComponent } from '../home/components/team-grid/team-grid.compon
 
       .quote-marks {
         position: absolute; top: 20px; right: 30px;
-        font-size: 6rem; font-family: serif; color: rgba(255,255,255,0.05); line-height: 1;
+        font-size: 6rem; font-family: var(--font-heading, "Outfit", sans-serif); color: rgba(255,255,255,0.05); line-height: 1;
       }
 
       .quote-text {

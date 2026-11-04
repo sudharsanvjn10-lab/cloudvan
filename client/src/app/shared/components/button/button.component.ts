@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
       align-items: center;
       justify-content: center;
       padding: 12px 26px;
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font-sans);
       font-weight: 600;
       font-size: 1rem;
       border: 2px solid transparent;

@@ -1,0 +1,7 @@
+# Cloud Vantage Solutions Robots Configuration (Search Engine Standards)
+User-agent: *
+Allow: /
+Disallow: /login
+
+# Sitemaps
+Sitemap: https://cloudvan-ui.onrender.com/sitemap.xml

@@ -16,7 +16,9 @@ interface Slide {
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <section class="hero" aria-label="Oracle Fusion HCM Cloud Solutions Carousel">
+    <section class="hero" aria-label="Oracle Fusion HCM Cloud Solutions Carousel"
+      (mouseenter)="pauseAutoAdvance()" (mouseleave)="resumeAutoAdvance()"
+      (focusin)="pauseAutoAdvance()" (focusout)="resumeAutoAdvance()">
       
       <div 
         class="slide" 
@@ -32,13 +34,25 @@ interface Slide {
             <span class="pill-dot"></span>
             <span>{{ slide.category }}</span>
           </div>
-          <h1 class="fade-up delay-1">{{ slide.headline }}</h1>
+          <h1 class="hero-title" [attr.aria-label]="slide.headline">
+            <span class="word" *ngFor="let w of words(slide.headline); let i = index"
+                  [style.animationDelay]="(120 + i * 70) + 'ms'" aria-hidden="true">{{ w }}&nbsp;</span>
+          </h1>
           <p class="fade-up delay-2">{{ slide.subline }}</p>
           <a [routerLink]="slide.ctaLink" class="btn primary fade-up delay-3">
             {{ slide.ctaText }}
           </a>
         </div>
       </div>
+
+      <div class="hero-atmo" aria-hidden="true">
+        <div class="aurora a1"></div>
+        <div class="aurora a2"></div>
+        <div class="aurora a3"></div>
+        <div class="grid-overlay"></div>
+      </div>
+
+      <div class="scroll-cue" aria-hidden="true"><span></span></div>
 
       <button class="control prev" (click)="manualNavigation(-1)" aria-label="Previous Slide">&#10094;</button>
       <button class="control next" (click)="manualNavigation(1)" aria-label="Next Slide">&#10095;</button>
@@ -55,27 +69,27 @@ interface Slide {
 
       <div class="hero-socials">
         <span class="social-label">Connect:</span>
-        <a href="https://www.linkedin.com/company/cloud-vantage-solutions/" target="_blank" title="LinkedIn">
+        <a href="https://www.linkedin.com/company/cloud-vantage-solutions/" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="Cloud Vantage LinkedIn">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
             <path d="M0 1.146C0 .513.52 0 1.161 0h13.678C15.48 0 16 .513 16 1.146v13.708c0 .633-.52 1.146-1.161 1.146H1.161C.52 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
           </svg>
         </a>
-        <a href="https://twitter.com/cloud_vantage_s" target="_blank" title="X (Twitter)">
+        <a href="https://twitter.com/cloud_vantage_s" target="_blank" rel="noopener noreferrer" title="X (Twitter)" aria-label="Cloud Vantage Twitter">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
             <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/>
           </svg>
         </a>
-        <a href="https://www.facebook.com/cloudvantage/" target="_blank" title="Facebook">
+        <a href="https://www.facebook.com/cloudvantage/" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="Cloud Vantage Facebook">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
             <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
           </svg>
         </a>
-        <a href="https://www.instagram.com/cloudvantages/" target="_blank" title="Instagram">
+        <a href="https://www.instagram.com/cloudvantages/" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Cloud Vantage Instagram">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
             <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.999 0zm.08 1.44h.027c1.736.007 2.18.008 2.888.04.662.031 1.018.143 1.258.236a2.4 2.4 0 0 1 .896.582c.263.263.446.6.582.896.093.24.205.596.236 1.258.03.708.031 1.15.031 2.888s-.001 2.18-.03 2.888c-.031.662-.143 1.018-.236 1.258a2.4 2.4 0 0 1-.582.896 2.4 2.4 0 0 1-.896.582c-.24.093-.596.205-1.258.236-.708.03-1.15.031-2.888.031s-2.18-.001-2.888-.03c-.662-.031-1.018-.143-1.258-.236a2.4 2.4 0 0 1-.896-.582 2.4 2.4 0 0 1-.582-.896c-.093-.24-.205-.596-.236-1.258-.03-.708-.031-1.15-.031-2.888s.001-2.18.03-2.888c.031-.662.143-1.018.236-1.258a2.4 2.4 0 0 1 .582-.896 2.4 2.4 0 0 1 .896-.582c.24-.093.596-.205 1.258-.236.708-.03 1.15-.03 2.888-.03zm-.08 2.72a3.84 3.84 0 1 0 0 7.68 3.84 3.84 0 0 0 0-7.68zm0 1.44a2.4 2.4 0 1 1 0 4.8 2.4 2.4 0 0 1 0-4.8zm3.202-1.762a1.08 1.08 0 1 0 0 2.16 1.08 1.08 0 0 0 0-2.16z"/>
           </svg>
         </a>
-        <a href="https://www.youtube.com/@CloudVantageSolutions/" target="_blank" title="YouTube">
+        <a href="https://www.youtube.com/@CloudVantageSolutions/" target="_blank" rel="noopener noreferrer" title="YouTube" aria-label="Cloud Vantage YouTube">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
             <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.104 1.981l-.066.162a1.97 1.97 0 0 1-1.414 1.419c-1.112.303-5.28.332-6.11.335a70.4 70.4 0 0 1-.166 0c-.822-.003-4.987-.033-6.11-.335a1.99 1.99 0 0 1-1.415-1.419C.13 9.78.057 9.278.01 8.76a30.1 30.1 0 0 1-.01-.104l-.022-.261-.008-.104a36.4 36.4 0 0 1-.074-1.957V7.07c.002-.194.01-1.108.104-1.981l.066-.162a1.97 1.97 0 0 1 1.415-1.42c1.11-.303 5.28-.332 6.11-.335h.166zm-1.57 6.82l3.86-2.217-3.86-2.217v4.435z"/>
           </svg>
@@ -108,6 +122,8 @@ interface Slide {
       &.active {
         opacity: 1;
         z-index: 2;
+        animation: kenburns 26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        will-change: transform;
       }
     }
 
@@ -116,12 +132,12 @@ interface Slide {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: linear-gradient(90deg, rgba(7, 11, 25, 0.94) 0%, rgba(10, 17, 38, 0.82) 50%, rgba(10, 17, 38, 0.45) 100%);
+      background: linear-gradient(90deg, rgba(7, 11, 25, 0.96) 0%, rgba(10, 17, 38, 0.88) 55%, rgba(10, 17, 38, 0.55) 100%);
     }
 
     .slide-content {
       position: relative;
-      z-index: 3;
+      z-index: 4;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -130,15 +146,13 @@ interface Slide {
       max-width: 840px;
 
       h1 { 
-        font-size: clamp(2.5rem, 5vw, 4.5rem); 
-        color: #fff; 
+        font-size: clamp(2.4rem, 4.6vw, 4.2rem); 
+        color: #ffffff; 
         margin-bottom: 1.25rem; 
-        line-height: 1.15;
-        font-weight: 700;
-        letter-spacing: -0.03em;
-        background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        line-height: 1.12;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        text-shadow: 0 2px 18px rgba(7, 11, 25, 0.55), 0 1px 3px rgba(7, 11, 25, 0.4);
       }
 
       p { 
@@ -301,10 +315,13 @@ interface Slide {
     }
 
     @media (max-width: 768px) {
-      .hero-socials { display: none; }
-      .control { width: 42px; height: 42px; font-size: 1rem; }
-      .control.prev { left: 12px; }
-      .control.next { right: 12px; }
+      .hero-socials, .scroll-cue { display: none; }
+      /* Arrows used to cover the headline/paragraph on phones.
+         The dots stay tappable, so navigation is still available. */
+      .control { display: none; }
+      .hero { min-height: 560px; }
+      .indicators { bottom: 22px; }
+      .aurora { filter: blur(48px); }
     }
 
     .fade-up {
@@ -321,6 +338,127 @@ interface Slide {
         opacity: 1;
         transform: translateY(0);
       }
+    }
+
+    /* ---- Live background atmosphere ---- */
+    .hero-atmo {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      overflow: hidden;
+    }
+
+    .aurora {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(72px);
+      will-change: transform;
+    }
+
+    .a1 {
+      width: 540px; height: 540px;
+      left: -140px; top: -100px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.55) 0%, transparent 70%);
+      animation: driftA 22s ease-in-out infinite alternate;
+    }
+
+    .a2 {
+      width: 640px; height: 640px;
+      right: -180px; top: 8%;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.38) 0%, transparent 70%);
+      animation: driftB 28s ease-in-out infinite alternate;
+    }
+
+    .a3 {
+      width: 500px; height: 500px;
+      left: 32%; bottom: -200px;
+      background: radial-gradient(circle, rgba(147, 197, 253, 0.30) 0%, transparent 70%);
+      animation: driftC 32s ease-in-out infinite alternate;
+    }
+
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.09) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+      background-size: 72px 72px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 28% 42%, #000 0%, transparent 72%);
+      mask-image: radial-gradient(ellipse 70% 60% at 28% 42%, #000 0%, transparent 72%);
+    }
+
+    @keyframes driftA {
+      0% { transform: translate3d(0, 0, 0) scale(1); }
+      100% { transform: translate3d(80px, 60px, 0) scale(1.15); }
+    }
+    @keyframes driftB {
+      0% { transform: translate3d(0, 0, 0) scale(1.1); }
+      100% { transform: translate3d(-90px, 40px, 0) scale(0.95); }
+    }
+    @keyframes driftC {
+      0% { transform: translate3d(0, 0, 0) scale(0.95); }
+      100% { transform: translate3d(60px, -50px, 0) scale(1.12); }
+    }
+
+    @keyframes kenburns {
+      from { transform: scale(1) translate3d(0, 0, 0); }
+      to { transform: scale(1.08) translate3d(1.2%, -0.8%, 0); }
+    }
+
+    .hero-title {
+      margin-bottom: 0;
+    }
+
+    .word {
+      display: inline-block;
+      opacity: 0;
+      color: #ffffff;
+      -webkit-text-fill-color: #ffffff;
+      text-shadow: 0 2px 18px rgba(7, 11, 25, 0.55), 0 1px 3px rgba(7, 11, 25, 0.4);
+      animation: wordRise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      will-change: transform, opacity;
+    }
+
+    @keyframes wordRise {
+      from { opacity: 0; transform: translateY(22px) rotateX(28deg); }
+      to { opacity: 1; transform: translateY(0) rotateX(0); }
+    }
+
+    .pill-dot {
+      animation: pulseDot 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.55); }
+      50% { box-shadow: 0 0 0 7px rgba(56, 189, 248, 0); }
+    }
+
+    .scroll-cue {
+      position: absolute;
+      left: 32px;
+      bottom: 28px;
+      z-index: 10;
+      width: 2px;
+      height: 56px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+    }
+
+    .scroll-cue span {
+      position: absolute;
+      left: 0;
+      top: -40%;
+      width: 100%;
+      height: 40%;
+      background: linear-gradient(to bottom, transparent, #93c5fd);
+      animation: cueDrop 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes cueDrop {
+      to { top: 120%; }
     }
   `]
 })
@@ -388,8 +526,17 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
     }
   ];
 
+  words(headline: string): string[] {
+    return headline.split(' ');
+  }
+
+  private prefersReducedMotion = typeof window !== 'undefined'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   ngOnInit() {
-    this.startAutoAdvance();
+    if (!this.prefersReducedMotion) {
+      this.startAutoAdvance();
+    }
     this.destroyRef.onDestroy(() => this.stopAutoAdvance());
   }
 
@@ -406,7 +553,22 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
   stopAutoAdvance() {
     if (this.autoAdvanceTimer) {
       clearInterval(this.autoAdvanceTimer);
+      this.autoAdvanceTimer = null;
     }
+  }
+
+  /* WCAG 2.2.2: pause while the user is hovering or tabbing through the hero */
+  pauseAutoAdvance() {
+    this.stopAutoAdvance();
+  }
+
+  /* Manual navigation no longer freezes the carousel forever - it restarts the timer */
+  resumeAutoAdvance() {
+    if (this.prefersReducedMotion) {
+      return;
+    }
+    this.stopAutoAdvance();
+    this.startAutoAdvance();
   }
 
   nextSlide() {
@@ -414,7 +576,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
   }
 
   manualNavigation(direction: number) {
-    this.stopAutoAdvance();
+    this.resumeAutoAdvance();
     const newIndex = this.currentSlide() + direction;
     if (newIndex < 0) {
       this.currentSlide.set(this.slides.length - 1);
@@ -426,7 +588,7 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
   }
 
   goToSlide(index: number) {
-    this.stopAutoAdvance();
     this.currentSlide.set(index);
+    this.resumeAutoAdvance();
   }
 }

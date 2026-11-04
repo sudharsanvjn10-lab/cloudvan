@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FadeUpDirective } from '../../../../shared/directives/fade-up.directive';
+import { SpotlightDirective } from '../../../../shared/directives/spotlight.directive';
 
 interface ServicePillar {
   id: string;
   title: string;
-  icon: string;
   shortDesc: string;
   subLinks: string[];
   imageUrl: string;
@@ -15,7 +15,7 @@ interface ServicePillar {
 @Component({
   selector: 'app-services-pillars',
   standalone: true,
-  imports: [CommonModule, RouterModule, FadeUpDirective],
+  imports: [CommonModule, RouterModule, FadeUpDirective, SpotlightDirective],
   template: `
     <section class="services-mega-section">
       <div class="container section-header">
@@ -26,7 +26,7 @@ interface ServicePillar {
 
       <div class="container">
         <div class="cards-grid">
-          <div *ngFor="let pillar of pillars; let i = index" class="glass-card" appFadeUp [delay]="i * 120">
+          <div *ngFor="let pillar of pillars; let i = index" class="glass-card" appFadeUp appSpotlight [delay]="i * 120">
             
             <div class="card-bg" [style.backgroundImage]="'url(' + pillar.imageUrl + ')'"></div>
             
@@ -34,7 +34,37 @@ interface ServicePillar {
 
             <div class="card-content">
               <div class="icon-wrapper">
-                <span class="icon">{{ pillar.icon }}</span>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true" [ngSwitch]="pillar.id">
+                  <g *ngSwitchCase="'core-hr'">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </g>
+                  <g *ngSwitchCase="'payroll'">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <path d="M2 10h20"></path>
+                  </g>
+                  <g *ngSwitchCase="'absence'">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M12 7v5l3 2"></path>
+                  </g>
+                  <g *ngSwitchCase="'talent'">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <circle cx="12" cy="12" r="1"></circle>
+                  </g>
+                  <g *ngSwitchCase="'redwood'">
+                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                    <path d="M3 9h18"></path>
+                    <path d="M9 21V9"></path>
+                  </g>
+                  <g *ngSwitchCase="'integrations'">
+                    <path d="M13 2 3 14h8l-1 8 10-12h-8l1-8Z"></path>
+                  </g>
+                </svg>
               </div>
               
               <h3>{{ pillar.title }}</h3>
@@ -48,7 +78,7 @@ interface ServicePillar {
               
               <div class="spacer"></div>
               
-              <a routerLink="/services" class="btn outline mt-4">Learn More</a>
+              <a [routerLink]="['/services']" [fragment]="pillar.id" class="btn outline mt-4">Learn More</a>
             </div>
             
           </div>
@@ -62,7 +92,7 @@ interface ServicePillar {
       /* Dark background makes the glass effect visible and premium */
       background-color: var(--color-primary, #0F172A); 
       color: #ffffff;
-      font-family: 'Inter', sans-serif;
+      
     }
 
     .container {
@@ -94,7 +124,7 @@ interface ServicePillar {
       .underline { 
         width: 60px; 
         height: 4px; 
-        background: var(--color-accent, #00a8cc); 
+        background: var(--color-accent, #2563eb); 
         border-radius: 2px;
       }
     }
@@ -160,22 +190,55 @@ interface ServicePillar {
     }
 
     .glass-card:hover .card-bg {
-      transform: scale(1.1); /* Slow zoom on image */
+      transform: scale(1.1);
       opacity: 0.15;
+    }
+
+    /* Cursor spotlight (driven by appSpotlight) */
+    .glass-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 2;
+      background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 20%), rgba(147, 197, 253, 0.16), transparent 65%);
+      opacity: 0;
+      transition: opacity 0.45s ease;
+    }
+
+    .glass-card:hover::after {
+      opacity: 1;
     }
 
     /* --- Typography & Elements inside Card --- */
     .icon-wrapper {
-      margin-bottom: 20px;
-      .icon {
-        font-size: 2.5rem;
-        display: inline-block;
-        transition: transform 0.4s ease;
-      }
+      width: 56px;
+      height: 56px;
+      margin-bottom: 22px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(37, 99, 235, 0.14);
+      border: 1px solid rgba(147, 197, 253, 0.22);
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .icon {
+      width: 26px;
+      height: 26px;
+      display: block;
+      color: var(--color-accent-soft, #93c5fd);
+      transition: transform 0.4s ease;
+    }
+
+    .glass-card:hover .icon-wrapper {
+      background: rgba(37, 99, 235, 0.22);
+      border-color: rgba(147, 197, 253, 0.4);
     }
 
     .glass-card:hover .icon {
-      transform: scale(1.15) rotate(5deg); /* Playful icon bump */
+      transform: scale(1.08);
     }
 
     h3 {
@@ -207,7 +270,7 @@ interface ServicePillar {
         cursor: default;
 
         .arrow {
-          color: var(--color-accent, #00a8cc);
+          color: var(--color-accent, #2563eb);
           margin-right: 10px;
           font-weight: bold;
           transition: transform 0.3s ease;
@@ -242,10 +305,10 @@ interface ServicePillar {
       background: transparent;
 
       &:hover { 
-        background: var(--color-accent, #00a8cc); 
-        border-color: var(--color-accent, #00a8cc);
+        background: var(--color-accent, #2563eb); 
+        border-color: var(--color-accent, #2563eb);
         color: #ffffff; 
-        box-shadow: 0 4px 15px rgba(0, 168, 204, 0.3);
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
       }
     }
     
@@ -255,37 +318,37 @@ interface ServicePillar {
 export class ServicesPillarsComponent {
   pillars: ServicePillar[] = [
     {
-      id: 'core-hr', title: 'Core HR & Global Workforce', icon: '👥',
+      id: 'core-hr', title: 'Core HR & Global Workforce',
       shortDesc: 'Establish enterprise workforce structures, person models, and automated employee journeys from hire to retire.',
       subLinks: ['Workforce Structures', 'Position & Job Management', 'Journeys & Onboarding', 'Health & Safety'],
       imageUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop'
     },
     {
-      id: 'payroll', title: 'Payroll & Compensation', icon: '💳',
+      id: 'payroll', title: 'Payroll & Compensation',
       shortDesc: 'Automate localized multi-country payroll calculations, retroactive pay runs, Fast Formulas, and total rewards.',
       subLinks: ['Global Payroll Processing', 'Fast Formulas Architecture', 'Salary Basis & Cycles', 'Total Compensation Statements'],
       imageUrl: 'https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=800&auto=format&fit=crop'
     },
     {
-      id: 'absence', title: 'Time & Absence Management', icon: '⏱️',
+      id: 'absence', title: 'Time & Absence Management',
       shortDesc: 'Simplify complex leave policies, shift scheduling, time card approvals, and automated accrual plan balances.',
       subLinks: ['Time Card Rule Templates', 'Accrual & Donation Plans', 'Shift & Roster Scheduling', 'Absence Approvals & Delegation'],
       imageUrl: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?q=80&w=800&auto=format&fit=crop'
     },
     {
-      id: 'talent', title: 'Talent & Recruiting (ORC)', icon: '🎯',
+      id: 'talent', title: 'Talent & Recruiting (ORC)',
       shortDesc: 'Attract top candidates with Oracle Recruiting Cloud, align employee goals, and optimize performance cycles.',
       subLinks: ['Oracle Recruiting Cloud (ORC)', 'Goal & Performance Reviews', 'Succession Planning', 'Oracle Learning Cloud'],
       imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop'
     },
     {
-      id: 'redwood', title: 'Redwood UI & VBS Extensions', icon: '🎨',
+      id: 'redwood', title: 'Redwood UI & VBS Extensions',
       shortDesc: 'Design bespoke employee experiences utilizing Oracle Visual Builder Studio (VBS), JavaScript chains, and Business Rules.',
       subLinks: ['Visual Builder Studio (VBS)', 'Express & Advanced Business Rules', 'Custom Guided Journeys', 'Modern Redwood Pages'],
       imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop'
     },
     {
-      id: 'integrations', title: 'HDL & BI Reporting', icon: '⚡',
+      id: 'integrations', title: 'HDL & BI Reporting',
       shortDesc: 'High-volume data migration with HDL/HSDL, scheduled HCM Extracts, REST APIs, and deep OTBI/BI Publisher reporting.',
       subLinks: ['HCM Data Loader (HDL)', 'HCM Inbound/Outbound Extracts', 'REST/SOAP API Integrations', 'OTBI & BI Publisher Analytics'],
       imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop'

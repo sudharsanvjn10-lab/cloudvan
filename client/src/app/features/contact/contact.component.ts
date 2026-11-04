@@ -27,28 +27,28 @@ import { environment } from '../../../environments/environment';
             <input type="text" formControlName="website" style="display:none !important" tabindex="-1" autocomplete="off" aria-hidden="true">
 
             <div class="form-group">
-              <label>Name *</label>
-              <input type="text" formControlName="name" placeholder="John Doe">
+              <label for="contact-name">Name *</label>
+              <input id="contact-name" type="text" formControlName="name" placeholder="John Doe">
             </div>
 
             <div class="form-group">
-              <label>Company / Organization</label>
-              <input type="text" formControlName="company" placeholder="Your Company Name">
+              <label for="contact-company">Company / Organization</label>
+              <input id="contact-company" type="text" formControlName="company" placeholder="Your Company Name">
             </div>
 
             <div class="form-group">
-              <label>Corporate Email *</label>
-              <input type="email" formControlName="email" placeholder="john@company.com">
+              <label for="contact-email">Corporate Email *</label>
+              <input id="contact-email" type="email" formControlName="email" placeholder="john@company.com">
             </div>
 
             <div class="form-group">
-              <label>Phone Number *</label>
-              <input type="tel" formControlName="phone" placeholder="+1 234 567 8900">
+              <label for="contact-phone">Phone Number *</label>
+              <input id="contact-phone" type="tel" formControlName="phone" placeholder="+1 234 567 8900">
             </div>
 
             <div class="form-group">
-              <label>Message *</label>
-              <textarea formControlName="message" rows="5" placeholder="How can we help you with Oracle Fusion HCM?"></textarea>
+              <label for="contact-message">Message *</label>
+              <textarea id="contact-message" formControlName="message" rows="5" placeholder="How can we help you with Oracle Fusion HCM?"></textarea>
             </div>
 
             <div *ngIf="errorMessage()" class="error-banner">
@@ -70,12 +70,12 @@ import { environment } from '../../../environments/environment';
           <h2>Our Offices</h2>
 
           <div class="office registered-office">
-            <h3>🇮🇳 Madurai (Offshore Development Centre)</h3>
-            <p>Madurai - 625 402, Tamil Nadu, India.<br>Tamil Nadu, India</p>
+            <h3>Madurai (Offshore Development Centre)</h3>
+            <p>Madurai - 625 402, Tamil Nadu, India</p>
           </div>
           
           <div class="office registered-office">
-            <h3>🇮🇳 Chennai (Delivery Center)</h3>
+            <h3>Chennai (Delivery Center)</h3>
             <p>Pallikaranai, Chennai - 600117<br>Tamil Nadu, India</p>
           </div>
 
@@ -92,21 +92,15 @@ import { environment } from '../../../environments/environment';
     </section>
   `,
   styles: [`
-    .inner-hero {
-      background: linear-gradient(to right, var(--color-primary, #0b0f19), #0c3866);
-      padding: 120px 0 60px; color: #fff; text-align: center;
-      h1 { font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: 1rem; color: #fff;}
-      p { font-size: 1.25rem; color: var(--color-accent, #3b82f6); }
-    }
     .contact-wrapper { padding: 5rem 0; }
     .contact-grid { display: grid; grid-template-columns: 1fr; gap: 4rem; @media (min-width: 900px) { grid-template-columns: 3fr 2fr; } }
     
     .form-section {
       background: #fff; padding: 2.5rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
       h2 { color: var(--color-primary, #0b0f19); margin-bottom: 1.5rem; }
-      .form-group { margin-bottom: 1.5rem; label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--color-primary, #0b0f19); } input, textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 4px; font-family: inherit; &:focus { outline: none; border-color: var(--color-accent, #2563eb); } } }
+      .form-group { margin-bottom: 1.5rem; label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--color-primary, #0b0f19); } input, textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--color-line, #e2e8f0); border-radius: 8px; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; &:focus { outline: none; border-color: var(--color-accent, #2563eb); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); } } }
       .submit-btn { 
-        background: var(--color-primary, #0b0f19); 
+        background: var(--color-accent, #2563eb); 
         color: #fff; 
         border: none; 
         padding: 12px 28px; 
@@ -118,7 +112,8 @@ import { environment } from '../../../environments/environment';
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        &:hover:not(:disabled) { background: var(--color-accent, #2563eb); } 
+        box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.5);
+        &:hover:not(:disabled) { background: var(--color-accent-hover, #3b82f6); } 
         &:disabled { opacity: 0.6; cursor: not-allowed; } 
       }
       .btn-loading { display: flex; align-items: center; gap: 8px; }
@@ -145,6 +140,7 @@ import { environment } from '../../../environments/environment';
         p { color: #64748b; line-height: 1.6; } 
       }
       .direct-contact { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e2e8f0; p { color: var(--color-primary, #0b0f19); font-size: 1.05rem; } }
+      .contact-link { color: var(--color-accent, #2563eb); text-decoration: none; font-weight: 500; transition: color 0.2s; &:hover { color: #1d4ed8; text-decoration: underline; } }
     }
 
     @keyframes spin {

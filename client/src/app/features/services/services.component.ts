@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FadeUpDirective } from '../../shared/directives/fade-up.directive';
 
 interface DetailedService {
   id: string;
   moduleCode: string;
   title: string;
-  icon: string;
   statusBadge: string;
   leadDescription: string;
   paragraph: string;
@@ -58,7 +57,37 @@ interface DetailedService {
           <div class="text-block">
             <div class="module-meta">
               <span class="module-code">{{ service.moduleCode }}</span>
-              <div class="icon-box">{{ service.icon }}</div>
+              <div class="icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" [ngSwitch]="service.id">
+                  <g *ngSwitchCase="'core-hr'">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </g>
+                  <g *ngSwitchCase="'payroll'">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <path d="M2 10h20"></path>
+                  </g>
+                  <g *ngSwitchCase="'absence'">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M12 7v5l3 2"></path>
+                  </g>
+                  <g *ngSwitchCase="'talent'">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <circle cx="12" cy="12" r="1"></circle>
+                  </g>
+                  <g *ngSwitchCase="'redwood'">
+                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                    <path d="M3 9h18"></path>
+                    <path d="M9 21V9"></path>
+                  </g>
+                  <g *ngSwitchCase="'integrations'">
+                    <path d="M13 2 3 14h8l-1 8 10-12h-8l1-8Z"></path>
+                  </g>
+                </svg>
+              </div>
             </div>
             
             <h2>{{ service.title }}</h2>
@@ -114,8 +143,8 @@ interface DetailedService {
     :host {
       display: block;
       background-color: var(--color-white, #FFFFFF); 
-      color: var(--color-text-main, #1D1D1F); 
-      font-family: 'Inter', sans-serif;
+      color: var(--text-main, #0f172a); 
+      
       min-height: 100vh;
     }
 
@@ -129,7 +158,7 @@ interface DetailedService {
     .services-header {
       padding: 130px 0 60px; 
       text-align: center;
-      background: linear-gradient(135deg, #070b19 0%, #0c1a30 50%, #1e3a8a 100%);
+      background: linear-gradient(135deg, var(--color-primary-dark, #070b19) 0%, var(--color-primary, #0b0f19) 50%, #1e3a8a 100%);
       color: #ffffff;
       position: relative;
     }
@@ -282,15 +311,16 @@ interface DetailedService {
     }
 
     .icon-box {
-      font-size: 1.5rem;
-      width: 40px;
-      height: 40px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
+      width: 44px;
+      height: 44px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: #2563eb;
+      svg { width: 22px; height: 22px; display: block; }
     }
 
     .text-block h2 {
@@ -471,7 +501,16 @@ interface DetailedService {
     }
   `]
 })
-export class ServicesComponent {
+export class ServicesComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+
+  ngOnInit() {
+    this.route.fragment.subscribe(fragment => {
+      if (fragment) {
+        setTimeout(() => this.scrollToModule(fragment), 120);
+      }
+    });
+  }
   activeModuleId: string = 'core-hr';
   
   detailedServices: DetailedService[] = [
@@ -479,7 +518,6 @@ export class ServicesComponent {
       id: 'core-hr',
       moduleCode: 'MODULE 01',
       title: 'Core HR & Global Human Resources',
-      icon: '👥',
       statusBadge: '100% Redwood Compatible',
       leadDescription: 'Architect a single source of truth for global workforce structures, person models, and automated employee journeys.',
       paragraph: 'Oracle Fusion Cloud Core HR allows organizations to manage their global workforce from hire to retire with unparalleled clarity. Our certified functional consultants configure robust enterprise structures, position trees, and compliance rules. We ensure seamless employee and manager self-service, localized compliance across international borders, and integrated guided journeys that simplify everyday HR interactions.',
@@ -497,7 +535,6 @@ export class ServicesComponent {
       id: 'payroll',
       moduleCode: 'MODULE 02',
       title: 'Oracle Fusion Payroll & Compensation',
-      icon: '💳',
       statusBadge: '99.98% Calculation Accuracy',
       leadDescription: 'Automate localized multi-country payroll calculations, retroactive processing, and strategic total compensation.',
       paragraph: 'Ensure accurate, on-time, and fully compliant compensation for your workforce with Oracle Fusion Global Payroll. We design complex Fast Formulas, setup retroactive pay processes, and integrate seamlessly with third-party banking networks. Our compensation experts tailor merit cycles, bonus distribution, and salary basis architectures to retain top performers.',
@@ -515,7 +552,6 @@ export class ServicesComponent {
       id: 'absence',
       moduleCode: 'MODULE 03',
       title: 'Time & Labor and Absence Management',
-      icon: '⏱️',
       statusBadge: 'Automated Shift Roster Sync',
       leadDescription: 'Streamline shift scheduling, multi-tier approvals, complex leave accruals, and regulatory compliance.',
       paragraph: 'Manage diverse employee schedules, attendance capture, and localized leave rules effortlessly. We configure customized time card layouts, rule templates, and accrual plans tailored to collective bargaining agreements or regional statutory regulations. Integrated approval workflows and delegation matrices ensure management decisions remain frictionless.',
@@ -533,7 +569,6 @@ export class ServicesComponent {
       id: 'talent',
       moduleCode: 'MODULE 04',
       title: 'Talent Management & Recruiting (ORC)',
-      icon: '🎯',
       statusBadge: 'AI-Powered Candidate Match',
       leadDescription: 'Attract high-caliber talent, align employee objectives, and cultivate future leaders with intelligent HCM.',
       paragraph: 'From candidate sourcing with Oracle Recruiting Cloud (ORC) to goal alignment and succession planning, we build interconnected talent ecosystems. Foster employee growth with continuous feedback, AI-assisted candidate matching, talent review calibration meetings, and integrated Oracle Learning Cloud courses.',
@@ -551,7 +586,6 @@ export class ServicesComponent {
       id: 'redwood',
       moduleCode: 'MODULE 05',
       title: 'Redwood UI & Visual Builder Studio (VBS)',
-      icon: '🎨',
       statusBadge: 'Sub-Second Page Telemetry',
       leadDescription: 'Customize and elevate your Oracle HCM user interface using Redwood design standards and VBS business rules.',
       paragraph: 'Transform your user experience with Oracle Redwood UI. Our technical team leverages Oracle Visual Builder Studio (VBS) to build bespoke page extensions, configure Express & Advanced Business Rules, and create intuitive guided workflows that fit your exact corporate identity while maintaining 100% upgrade safety.',
@@ -569,7 +603,6 @@ export class ServicesComponent {
       id: 'integrations',
       moduleCode: 'MODULE 06',
       title: 'HCM Integrations & BI Reporting',
-      icon: '⚡',
       statusBadge: 'Real-Time HDL & OIC Pipeline',
       leadDescription: 'Execute robust data migrations, automated outbound extracts, and actionable enterprise BI analytics.',
       paragraph: 'Bridge Oracle Fusion HCM with your entire IT landscape. We engineer high-throughput data loads via HCM Data Loader (HDL/HSDL), automated payroll and benefits outbound files using HCM Extracts, real-time REST API orchestrations via OIC, and executive dashboards with OTBI & BI Publisher.',

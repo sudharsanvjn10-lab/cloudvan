@@ -35,7 +35,17 @@ export interface JobPosition {
         <div class="job-card" *ngFor="let job of jobs(); let i = index" appFadeUp [delay]="i * 120">
           <div class="job-info">
             <h3>{{ job.title }}</h3>
-            <span>📍 {{ job.location }} | 💼 {{ job.type }}</span>
+            <span class="job-meta">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              {{ job.location }}
+              <span class="meta-divider" aria-hidden="true">&middot;</span>
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+              {{ job.type }}
+            </span>
           </div>
           <button class="btn-apply" (click)="openApplyModal(job.title)">Apply Now</button>
         </div>
@@ -90,13 +100,7 @@ export interface JobPosition {
     </div>
   `,
   styles: [`
-    .inner-hero {
-      background: linear-gradient(to right, var(--color-primary, #0b0f19), #0c3866);
-      padding: 120px 0 60px; color: #fff; text-align: center;
-      h1 { font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: 1rem; color: #fff;}
-      p { font-size: 1.25rem; color: var(--color-accent, #3b82f6); }
-    }
-    .careers-content { padding: 5rem 0; max-width: 800px; margin: 0 auto; }
+    .careers-content { padding: 5rem 0; max-width: 920px; margin: 0 auto; }
     .intro { text-align: center; margin-bottom: 3rem; h2 { color: var(--color-primary, #0b0f19); margin-bottom: 1rem;} p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.6;} }
     .job-card {
       display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 1.5rem 2rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid #e2e8f0;
@@ -107,8 +111,11 @@ export interface JobPosition {
       }
       @media (max-width: 600px) { flex-direction: column; align-items: flex-start; gap: 1rem; }
       h3 { color: var(--color-primary, #0b0f19); margin-bottom: 0.5rem; font-size: 1.15rem; }
-      span { color: #718096; font-size: 0.9rem; }
-      .btn-apply { background: var(--color-primary, #0b0f19); color: #fff; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.3s; &:hover { background: var(--color-accent, #2563eb); color: #fff; transform: translateY(-1px); } }
+      span { color: var(--text-muted, #64748b); font-size: 0.9rem; }
+      .job-meta { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+      .meta-icon { width: 16px; height: 16px; flex: none; color: #94a3b8; }
+      .meta-divider { color: #cbd5e1; margin: 0 4px; }
+      .btn-apply { background: var(--color-accent, #2563eb); color: #fff; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.3s; &:hover { background: var(--color-accent-hover, #3b82f6); color: #fff; transform: translateY(-1px); } }
     }
 
     /* Modal Styling with Sleek Glassmorphism Backdrop */
@@ -181,7 +188,7 @@ export interface JobPosition {
       .form-group {
         margin-bottom: 1.25rem;
         label { display: block; margin-bottom: 0.4rem; font-weight: 600; color: #0f172a; font-size: 0.95rem; }
-        input { width: 100%; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-family: inherit; font-size: 0.95rem; &:focus { outline: none; border-color: #2563eb; } }
+        input { width: 100%; padding: 12px; border: 1px solid var(--color-line, #e2e8f0); border-radius: 6px; font-family: inherit; font-size: 0.95rem; &:focus { outline: none; border-color: #2563eb; } }
         .field-hint { display: block; margin-top: 4px; font-size: 0.8rem; color: #64748b; }
       }
       .btn-submit-app {

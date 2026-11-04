@@ -13,7 +13,8 @@ import { CommonModule } from '@angular/common';
           <p>Delivering measurable business value through deep technical expertise and strategic global deployment.</p>
         </div>
 
-        <div class="tab-interface">
+         <div class="tab-interface"
+              (mouseenter)="stopAutoCycle()" (mouseleave)="startAutoCycle()">
           <div class="tab-nav" role="tablist">
             <button 
               *ngFor="let tab of tabs; let i = index"
@@ -39,7 +40,10 @@ import { CommonModule } from '@angular/common';
                   <p>{{ tab.body }}</p>
                   <ul class="feature-list" *ngIf="tab.features">
                     <li *ngFor="let feature of tab.features">
-                      <span class="check">✓</span> {{ feature }}
+                      <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      {{ feature }}
                     </li>
                   </ul>
                 </div>
@@ -93,18 +97,24 @@ import { CommonModule } from '@angular/common';
       button {
         background: transparent;
         border: none;
-        color: #a0aec0;
-        padding: 1.5rem 2rem;
+        color: var(--color-on-dark-muted, #94a3b8);
+        padding: 1rem 1.25rem;
         text-align: left;
         font-family: inherit;
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s;
         border-bottom: 2px solid transparent;
-        white-space: nowrap;
+        white-space: normal;
+        flex: 1 1 33%;
+        min-width: 0;
+        line-height: 1.35;
 
         @media (min-width: 1024px) {
+          flex: none;
+          padding: 1.5rem 2rem;
+          font-size: 1.1rem;
           border-bottom: none;
           border-left: 4px solid transparent;
           white-space: normal;
@@ -165,7 +175,7 @@ import { CommonModule } from '@angular/common';
       li {
         display: flex; align-items: center; gap: 10px;
         margin-bottom: 0.75rem; color: var(--text-main); font-weight: 600;
-        .check { color: var(--color-accent); font-weight: bold; background: var(--color-primary); padding: 2px 6px; border-radius: 50%; font-size: 0.8rem; }
+        .check { width: 18px; height: 18px; flex: none; color: #fff; background: var(--color-accent, #2563eb); padding: 3px; border-radius: 50%; }
       }
     }
 
@@ -174,17 +184,38 @@ import { CommonModule } from '@angular/common';
       min-height: 300px;
       background-size: cover;
       background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Slow living zoom on the tab photo */
+    .image-content::before {
+      content: '';
+      position: absolute;
+      inset: -4%;
+      background-image: inherit;
+      background-size: cover;
+      background-position: center;
+      animation: slowZoom 16s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    @keyframes slowZoom {
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(16px); filter: blur(6px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
     }
   `]
 })
 export class WhyCloudVantageComponent implements OnInit, OnDestroy {
   activeTab = signal(0);
   private autoCycleInterval: any;
+  private prefersReducedMotion = typeof window !== 'undefined'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   tabs = [
     {
@@ -220,9 +251,10 @@ export class WhyCloudVantageComponent implements OnInit, OnDestroy {
 
   startAutoCycle() {
     this.stopAutoCycle();
+    if (this.prefersReducedMotion) return;
     this.autoCycleInterval = setInterval(() => {
       this.activeTab.update(current => (current + 1) % this.tabs.length);
-    }, 5000); // Switch tab every 5 seconds
+    }, 6000);
   }
 
   stopAutoCycle() {
@@ -234,6 +266,6 @@ export class WhyCloudVantageComponent implements OnInit, OnDestroy {
 
   selectTab(index: number) {
     this.activeTab.set(index);
-    this.stopAutoCycle(); // Pause auto-rotation once user interacts manually
+    this.startAutoCycle(); // restart the timer rather than killing it forever
   }
 }

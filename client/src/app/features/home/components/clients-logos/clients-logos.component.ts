@@ -29,7 +29,7 @@ import { CommonModule } from '@angular/common';
     .clients-header {
       margin-bottom: 3rem;
       h2 { font-size: 2rem; color: var(--color-white); margin-bottom: 0.5rem; }
-      p { color: #a0aec0; font-size: 1.1rem; }
+      p { color: var(--color-on-dark-muted, #94a3b8); font-size: 1.1rem; }
     }
     .industry-chips {
       display: flex;

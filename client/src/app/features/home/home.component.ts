@@ -70,7 +70,7 @@ import { TeamGridComponent } from './components/team-grid/team-grid.component';
     .trust-section {
       background-color: #f8fafc;
       padding: 80px 24px;
-      font-family: 'Inter', sans-serif;
+      
     }
 
     .container {
@@ -83,6 +83,7 @@ import { TeamGridComponent } from './components/team-grid/team-grid.component';
     }
 
     .section-title {
+      font-family: var(--font-heading, 'Outfit', sans-serif);
       font-size: 2.5rem;
       color: #0f172a;
       margin-bottom: 10px;
@@ -93,7 +94,7 @@ import { TeamGridComponent } from './components/team-grid/team-grid.component';
     .title-underline {
       width: 60px;
       height: 4px;
-      background-color: var(--color-accent, #00a8cc);
+      background-color: var(--color-accent, #2563eb);
       margin: 0 auto 20px;
       border-radius: 2px;
     }

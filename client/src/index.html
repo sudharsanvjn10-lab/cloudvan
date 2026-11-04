@@ -14,15 +14,60 @@
   <meta property="og:url" content="https://cloudvan-ui.onrender.com/">
   <meta property="og:title" content="Cloud Vantage Solutions | Oracle Fusion HCM Specialists">
   <meta property="og:description" content="Premier consulting partner exclusively dedicated to Oracle Fusion HCM implementations, Global Payroll, Talent, and Redwood UI extensions.">
-  <meta property="og:image" content="https://cloudvan-ui.onrender.com/assets/logo.png">
+  <meta property="og:image" content="https://cloudvan-ui.onrender.com/assets/logo-official.png">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Cloud Vantage Solutions | Oracle Fusion HCM Specialists">
   <meta name="twitter:description" content="Premier consulting partner exclusively dedicated to Oracle Fusion HCM implementations, Global Payroll, Talent, and Redwood UI extensions.">
-  <meta name="twitter:image" content="https://cloudvan-ui.onrender.com/assets/logo.png">
+  <meta name="twitter:image" content="https://cloudvan-ui.onrender.com/assets/logo-official.png">
 
-  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="icon" type="image/png" href="assets/logo-official.png">
+  <link rel="canonical" href="https://cloudvan-ui.onrender.com/">
+
+  <!-- Schema.org JSON-LD Structured Data: Tier-1 Enterprise Standard -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Cloud Vantage Solutions",
+    "url": "https://cloudvan-ui.onrender.com/",
+    "logo": "https://cloudvan-ui.onrender.com/assets/logo-official.png",
+    "image": "https://cloudvan-ui.onrender.com/assets/logo-official.png",
+    "description": "Enterprise consulting, implementation, and support exclusively dedicated to Oracle Fusion Cloud HCM, Global Payroll, Talent, and Redwood UI extensions.",
+    "telephone": "+919940098685",
+    "email": "contact@cloud-vantage.com",
+    "address": [
+      {
+        "@type": "PostalAddress",
+        "streetAddress": "Registered Office",
+        "addressLocality": "Madurai",
+        "postalCode": "625402",
+        "addressRegion": "Tamil Nadu",
+        "addressCountry": "IN"
+      },
+      {
+        "@type": "PostalAddress",
+        "streetAddress": "Offshore Center, Pallikaranai",
+        "addressLocality": "Chennai",
+        "postalCode": "600117",
+        "addressRegion": "Tamil Nadu",
+        "addressCountry": "IN"
+      }
+    ],
+    "sameAs": [
+      "https://www.linkedin.com/company/cloud-vantage-solutions/",
+      "https://twitter.com/cloud_vantage_s"
+    ],
+    "priceRange": "$$$$"
+  }
+  </script>
+
+
+  <!-- Google Fonts: Inter & Outfit (Tier-1 Enterprise Corporate Standard) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Minimal Preloader Styles (Vanilla CSS) -->
   <style>
@@ -33,7 +78,7 @@
       justify-content: center;
       min-height: 100vh;
       background: linear-gradient(135deg, #0b0f19 0%, #161e2f 100%);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       color: #ffffff;
       margin: 0;
     }
@@ -43,10 +88,16 @@
       gap: 12px;
       margin-bottom: 24px;
     }
-    .preloader-brand img {
-      width: 48px;
-      height: 48px;
-      object-fit: contain;
+    .preloader-logo {
+      height: 72px;
+      width: auto;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px -8px rgba(37, 99, 235, 0.6);
+    }
+    .preloader-tile {
+      display: block;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px -6px rgba(37, 99, 235, 0.55);
     }
     .preloader-title {
       font-size: 1.4rem;
@@ -81,8 +132,8 @@
   <app-root>
     <div class="initial-preloader">
       <div class="preloader-brand">
-        <img src="assets/logo.png" alt="Cloud Vantage Solutions">
-        <div class="preloader-title">Cloud Vantage <span>Solutions</span></div>
+        <img class="preloader-logo" src="assets/logo-official.png" alt="Cloud Vantage logo">
+        
       </div>
       <div class="preloader-spinner"></div>
       <p class="preloader-text">Loading Oracle Fusion HCM Portal...</p>

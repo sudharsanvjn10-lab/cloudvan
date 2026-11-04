@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
@@ -23,6 +23,7 @@ export interface Insight {
     <section class="insights-section">
       <div class="container">
         <app-section-heading 
+          *ngIf="showHeading"
           title="Latest Insights" 
           subtitle="Expert perspectives on Oracle Cloud, digital transformation, and enterprise strategy."
           align="center">
@@ -58,6 +59,9 @@ export interface Insight {
 export class InsightsGridComponent implements OnInit {
   private http = inject(HttpClient);
   insights = signal<Insight[]>([]);
+
+  /* The /insights page already has a hero title, so it hides this heading to avoid a duplicate. */
+  @Input() showHeading = true;
 
   // Unique verified enterprise visuals with zero overlap across the application
   private fallbackData: Insight[] = [

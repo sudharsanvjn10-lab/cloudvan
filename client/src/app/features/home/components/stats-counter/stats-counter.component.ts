@@ -38,9 +38,25 @@ import { CountUpDirective } from '../../../../shared/directives/count-up.directi
   styles: [`
     .stats-section {
       padding: 100px 0;
-      background-color: var(--color-bg-surface, #FFFFFF); 
+      background-color: var(--color-bg-surface, #FFFFFF);
       position: relative;
       z-index: 2;
+      overflow: hidden;
+    }
+
+    /* Live shimmer line across the top of the stat band */
+    .stats-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--color-accent), var(--color-cyan), transparent);
+      background-size: 200% 100%;
+      animation: sheen 6s linear infinite;
+    }
+
+    @keyframes sheen {
+      to { background-position: 200% 0; }
     }
 
     .container {
@@ -71,7 +87,8 @@ import { CountUpDirective } from '../../../../shared/directives/count-up.directi
     .stat-number {
       font-size: clamp(3.5rem, 6vw, 5rem);
       font-weight: 700;
-      color: var(--color-primary, #1D1D1F);
+      color: var(--color-ink, #0f172a);
+      font-family: var(--font-heading, 'Outfit', sans-serif);
       margin-bottom: 8px;
       line-height: 1;
       letter-spacing: -0.04em;
@@ -81,18 +98,28 @@ import { CountUpDirective } from '../../../../shared/directives/count-up.directi
     .stat-label {
       font-size: 0.9rem;
       font-weight: 600;
-      color: var(--color-text-muted, #86868B);
+      color: var(--text-muted, #64748b);
       text-transform: uppercase;
       letter-spacing: 0.1em;
       margin: 0;
     }
 
+    /* 2x2 on phones: four stacked stats used to fill a whole screen of scroll */
     @media (max-width: 768px) {
       .stats-section {
-        padding: 60px 0;
+        padding: 56px 0;
       }
       .stats-grid {
-        gap: 50px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 36px 16px;
+      }
+      .stat-number {
+        font-size: clamp(2.5rem, 12vw, 3.25rem);
+      }
+      .stat-label {
+        font-size: 0.76rem;
+        letter-spacing: 0.08em;
+        line-height: 1.35;
       }
     }
   `]

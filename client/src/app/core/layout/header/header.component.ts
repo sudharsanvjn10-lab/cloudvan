@@ -11,10 +11,8 @@ import { filter } from 'rxjs';
     <header [class.scrolled]="isScrolled || !isHomePage">
       <div class="container header-inner">
 
-        <a routerLink="/" class="brand-container" (click)="onHomeClick($event)">
-          <div class="logo-wrapper">
-            <img src="/assets/logo.png" alt="Cloud Vantage Logo" class="brand-logo">
-          </div>
+        <a routerLink="/" class="brand-container" (click)="onHomeClick($event)" aria-label="Cloud Vantage Solutions — Home">
+          <img src="/assets/logo-official.png" alt="Cloud Vantage Solutions logo" class="brand-mark" fetchpriority="high" decoding="async">
           <span class="brand-text">
             <span class="first-line">Cloud Vantage</span>
             <span class="second-line">Solutions</span>
@@ -26,7 +24,7 @@ import { filter } from 'rxjs';
           <a routerLink="/services" routerLinkActive="active">Services</a>
           <a routerLink="/insights" routerLinkActive="active">Insights</a>
           <a routerLink="/careers" routerLinkActive="active">Careers</a>
-          <a routerLink="/contact" class="nav-btn action-btn">Contact Us</a>
+          <a routerLink="/contact" class="nav-btn action-btn primary-cta">Contact Us</a>
         </nav>
 
         <div class="right-actions">
@@ -48,7 +46,7 @@ import { filter } from 'rxjs';
           </button>
 
           <a href="https://partner-finder.oracle.com/?CompanyNumber=4-101008251043&page=shell&shell=partner-finder&partner-finder=partner-finder-profile" 
-             target="_blank" class="oracle-partner-link">
+             target="_blank" rel="noopener noreferrer" class="oracle-partner-link" aria-label="Oracle Partner Profile">
             <img src="/assets/oracle-partner.png" alt="Oracle Partner Badge" class="oracle-badge">
           </a>
 
@@ -62,12 +60,10 @@ import { filter } from 'rxjs';
       <div class="mobile-drawer" [class.open]="isMobileMenuOpen">
         <div class="drawer-header">
           <div class="brand-container" style="gap: 8px;">
-            <div class="logo-wrapper" style="width: 80px; height: 80px; border: none;">
-              <img src="/assets/logo.png" alt="Cloud Vantage Logo" class="brand-logo" style="filter: none;">
-            </div>
-            <span class="logo-text" style="display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15;">
-              <span style="font-weight: 700;">Cloud <span style="color: var(--color-accent, #2563EB);">Vantage</span></span>
-              <span style="font-size: 0.55em; font-weight: 600; color: #64748b; text-transform: none; margin-left: 56px;">Solutions</span>
+            <img src="/assets/logo-official.png" alt="Cloud Vantage Solutions logo" class="brand-mark drawer-mark" loading="lazy" decoding="async">
+            <span class="brand-text">
+              <span class="first-line">Cloud Vantage</span>
+              <span class="second-line">Solutions</span>
             </span>
           </div>
           <button class="close-btn" (click)="toggleMenu()" aria-label="Close menu">&times;</button>
@@ -108,7 +104,7 @@ import { filter } from 'rxjs';
       width: 100%;
       z-index: 1000;
       background: transparent;
-      padding: 24px 0;
+      padding: 16px 0;
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -116,7 +112,7 @@ import { filter } from 'rxjs';
       background: rgba(30, 41, 59, 0.75); /* Slate transparent */
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      padding: 12px 0;
+      padding: 10px 0;
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
@@ -138,27 +134,54 @@ import { filter } from 'rxjs';
       flex-shrink: 0;
     }
 
-    .logo-wrapper {
-      height: 60px;
-      padding: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.04); 
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .brand-mark {
+      height: 64px;
+      width: auto;
+      display: block;
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      flex-shrink: 0;
-      transition: all 0.3s ease;
+      filter: drop-shadow(0 2px 6px rgba(11, 15, 25, 0.4));
+      transition: transform 0.3s ease;
     }
 
+    .drawer-mark {
+      height: 52px;
+    }
+
+    .brand-container:hover .brand-mark {
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    .brand-tile {
+      width: 46px;
+      height: 46px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px -4px rgba(37, 99, 235, 0.45);
+      transition: transform 0.3s ease;
+    }
+
+    .drawer-tile {
+      width: 40px;
+      height: 40px;
+    }
+
+    .brand-container:hover .brand-tile {
+      transform: translateY(-1px) scale(1.03);
+    }
+
+    /* .logo-wrapper retired: transparent mark sits directly in the header */
+
     .brand-logo {
-      height: 100%;
+      height: 42px;
       width: auto;
       object-fit: contain;
       display: block;
-      filter: drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.7)); 
+      filter: drop-shadow(0 2px 6px rgba(11, 15, 25, 0.45));
       transition: transform 0.3s ease;
+    }
+
+    .drawer-logo {
+      height: 34px;
     }
 
     .brand-text {
@@ -169,26 +192,23 @@ import { filter } from 'rxjs';
     }
 
     .first-line {
-      font-size: 1.4rem;
-      font-weight: 700;
+      font-size: 1.45rem;
+      font-weight: 800;
       color: #ffffff;
       white-space: nowrap;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.3px;
+      line-height: 1.1;
+      text-shadow: 0 1px 8px rgba(11, 15, 25, 0.4);
     }
 
     .second-line {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #cbd5e1;
-      text-transform: none;
-      -webkit-text-fill-color: #cbd5e1; /* Override parent webkit text fill transparent */
-      opacity: 0.8;
-      margin-left: 75px; /* Offset to start exactly under the V in Vantage */
-      margin-top: 1px;
-      letter-spacing: 0.5px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #bfdbfe;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-top: 2px;
+      text-shadow: 0 1px 6px rgba(11, 15, 25, 0.4);
     }
 
     /* --- Center: Desktop Navigation --- */
@@ -221,7 +241,7 @@ import { filter } from 'rxjs';
     .desktop-nav a.active:not(.action-btn) {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #38bdf8;
+      color: #60a5fa;
       transform: translateY(-2px);
     }
 
@@ -232,9 +252,9 @@ import { filter } from 'rxjs';
       left: 12px;
       right: 12px;
       height: 2px;
-      background: #38bdf8;
+      background: #3b82f6;
       border-radius: 2px;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
     }
 
     /* --- Shared Action Button Styling (Login & Contact Us) --- */
@@ -265,6 +285,18 @@ import { filter } from 'rxjs';
 
     .desktop-nav .nav-btn {
       margin-left: 8px; 
+    }
+
+    /* One clear primary action in the header */
+    .action-btn.primary-cta {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.32);
+    }
+
+    .action-btn.primary-cta:hover {
+      background: var(--color-accent-hover);
+      border-color: var(--color-accent-hover);
     }
 
     /* --- Right Actions Wrapper --- */
@@ -411,7 +443,7 @@ import { filter } from 'rxjs';
     }
 
     .mobile-nav a:hover {
-      color: #38bdf8;
+      color: #60a5fa;
     }
 
     .mobile-login-link {

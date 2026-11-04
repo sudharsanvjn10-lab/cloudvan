@@ -38,10 +38,17 @@ import { CommonModule } from '@angular/common';
       }
 
       .underline {
-        width: 60px;
-        height: 4px;
-        background-color: var(--color-accent);
+        width: 64px;
+        height: 3px;
+        background: var(--grad-accent);
+        border-radius: 2px;
+        animation: drawIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
+    }
+
+    @keyframes drawIn {
+      from { transform: scaleX(0); opacity: 0; }
+      to { transform: scaleX(1); opacity: 1; }
     }
   `]
 })

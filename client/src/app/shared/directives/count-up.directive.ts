@@ -23,8 +23,13 @@ export class CountUpDirective implements OnInit {
       return;
     }
 
-    // Set initial zero display
-    this.renderer.setProperty(this.el.nativeElement, 'textContent', `${this.prefix}0${this.suffix}`);
+    // Keep the rendered final value until the counter is actually visible.
+    this.renderer.setProperty(this.el.nativeElement, 'textContent', `${this.prefix}${this.targetValue}${this.suffix}`);
+
+    // Reduced motion: show the number, never animate it.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {

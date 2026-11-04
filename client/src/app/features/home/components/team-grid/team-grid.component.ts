@@ -77,7 +77,7 @@ export interface TeamMember {
     .team-section { 
       padding: 6rem 0; 
       background-color: #f8fafc;
-      font-family: 'Inter', sans-serif;
+      
     }
     
     .container {
