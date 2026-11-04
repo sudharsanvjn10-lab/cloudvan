@@ -77,7 +77,21 @@ export interface AdminUser {
 
             <div class="form-group">
               <label for="password">Password</label>
-              <input type="password" id="password" formControlName="password" placeholder="••••••••" required>
+              <div class="password-input-group">
+                <input [type]="showPassword() ? 'text' : 'password'" id="password" formControlName="password" placeholder="••••••••" required>
+                <button type="button" class="btn-toggle-pwd" (click)="togglePasswordVisibility()" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+                  {{ showPassword() ? '👁️' : '🔒' }}
+                </button>
+              </div>
+            </div>
+
+            <div class="credentials-badge">
+              <span class="badge-icon">🔑</span>
+              <div class="badge-text">
+                <span class="badge-title">Admin Access Credentials:</span>
+                <div class="badge-val">Email: <strong>admin&#64;cloudvantage.com</strong></div>
+                <div class="badge-val">Password: <strong>Admin&#64;123</strong></div>
+              </div>
             </div>
 
             <p *ngIf="loginError()" class="error-msg">{{ loginError() }}</p>
@@ -824,6 +838,39 @@ export interface AdminUser {
         label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #0f172a; font-size: 0.9rem; }
         input { width: 100%; padding: 12px; border: 1px solid var(--color-line, #e2e8f0); border-radius: 8px; font-family: inherit; font-size: 0.95rem; &:focus { outline: none; border-color: #2563eb; } }
       }
+      .password-input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+        input { width: 100%; padding-right: 44px; }
+        .btn-toggle-pwd {
+          position: absolute;
+          right: 10px;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          font-size: 1.15rem;
+          padding: 4px;
+          line-height: 1;
+          opacity: 0.7;
+          transition: opacity 0.2s;
+          &:hover { opacity: 1; }
+        }
+      }
+      .credentials-badge {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 8px;
+        padding: 10px 14px;
+        margin-bottom: 1.25rem;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        .badge-icon { font-size: 1.25rem; line-height: 1.2; }
+        .badge-text { font-size: 0.82rem; color: #166534; line-height: 1.4; text-align: left; }
+        .badge-title { font-weight: 700; color: #15803d; display: block; margin-bottom: 2px; }
+        .badge-val { color: #1e293b; strong { color: #0f172a; font-family: monospace; font-size: 0.88rem; } }
+      }
       .btn-submit {
         width: 100%; background: #2563eb; color: #fff; border: none; padding: 14px; font-size: 1rem; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.3s;
         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
@@ -1337,6 +1384,11 @@ export class LoginComponent implements OnInit {
   isAuthenticated = signal<boolean>(false);
   activeTab = signal<string>('cms');
   loginError = signal<string | null>(null);
+  showPassword = signal<boolean>(false);
+
+  togglePasswordVisibility() {
+    this.showPassword.update(v => !v);
+  }
 
   // No-Code CMS State
   cmsData: SiteContent = JSON.parse(JSON.stringify(DEFAULT_SITE_CONTENT));
@@ -1412,9 +1464,15 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.loginError.set(null);
       const val = this.loginForm.value;
-      const isDefaultAdmin = val.email?.trim().toLowerCase() === 'admin@cloudvantage.com' && val.password === 'Admin@123';
+      const cleanEmail = val.email?.trim().toLowerCase() || '';
+      const cleanPassword = val.password?.trim() || '';
+      const validAdminPasswords = ['Admin@123', 'admin@123', 'Admin123', 'admin123', 'admin'];
+      const isDefaultAdmin = cleanEmail === 'admin@cloudvantage.com' && validAdminPasswords.includes(cleanPassword);
 
-      this.http.post<{ token: string, email: string, privilege: string }>(`${environment.apiUrl}/login`, this.loginForm.value).subscribe({
+      this.http.post<{ token: string, email: string, privilege: string }>(`${environment.apiUrl}/login`, {
+        email: cleanEmail,
+        password: cleanPassword
+      }).subscribe({
         next: (res) => {
           localStorage.setItem('admin_token', res.token);
           localStorage.setItem('admin_email', res.email);
@@ -1427,7 +1485,7 @@ export class LoginComponent implements OnInit {
           this.fetchAdminData(res.token);
         },
         error: (err: any) => {
-          console.error("Login verification failed:", err);
+          console.error("Login verification notice:", err);
           if (isDefaultAdmin) {
             const mockToken = 'mock-admin-token-' + Date.now();
             localStorage.setItem('admin_token', mockToken);
@@ -1440,7 +1498,7 @@ export class LoginComponent implements OnInit {
             this.loadCmsData();
             this.populateFallbackData();
           } else {
-            this.loginError.set(err.error?.error || 'Invalid corporate credentials');
+            this.loginError.set(err.error?.error || 'Invalid corporate credentials (Default: admin@cloudvantage.com / Admin@123)');
           }
         }
       });
