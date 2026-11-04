@@ -1,9 +1,15 @@
 import { Component, OnInit, OnDestroy, signal, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ContentService, HeroSlide } from '../../../../core/services/content.service';
 
-type Slide = HeroSlide;
+interface Slide {
+  category: string;
+  headline: string;
+  subline: string;
+  ctaText: string;
+  ctaLink: string;
+  imageUrl: string;
+}
 
 @Component({
   selector: 'app-hero-carousel',
@@ -460,11 +466,65 @@ export class HeroCarouselComponent implements OnInit, OnDestroy {
   currentSlide = signal<number>(0);
   private autoAdvanceTimer: any;
   private destroyRef = inject(DestroyRef);
-  private contentService = inject(ContentService);
 
-  get slides(): Slide[] {
-    return this.contentService.heroSlides();
-  }
+  slides: Slide[] = [
+    {
+      category: "ORACLE FUSION HCM CLOUD",
+      headline: "Transforming Global Enterprises",
+      subline: "Unleash the full power of Oracle Fusion HCM Cloud with tailored implementations and continuous innovation.",
+      ctaText: "Discover Our Services",
+      ctaLink: "/services",
+      imageUrl: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      category: "GLOBAL ENTERPRISE WORKFORCE",
+      headline: "Core HR & Global Workforce",
+      subline: "Scalable Oracle Fusion Core HR architectures and employee journey workflows.",
+      ctaText: "Explore Core HR",
+      ctaLink: "/services",
+      imageUrl: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      category: "INTELLIGENT PAYROLL ARCHITECTURE",
+      headline: "Intelligent Global Payroll",
+      subline: "Flawless multi-country payroll calculations, retroactive processing, and compliance.",
+      ctaText: "Explore Payroll Solutions",
+      ctaLink: "/services",
+      imageUrl: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      category: "ORC & TALENT ACQUISITION",
+      headline: "Attract & Nurture Top Talent",
+      subline: "Next-gen Oracle Recruiting Cloud (ORC) with intelligent performance and goal management.",
+      ctaText: "View Talent Solutions",
+      ctaLink: "/services",
+      imageUrl: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      category: "REDWOOD DESIGN & VBS",
+      headline: "Modern Redwood UI Extensions",
+      subline: "Bespoke Visual Builder Studio (VBS) extensions, Business Rules, and seamless HDL integrations.",
+      ctaText: "Learn About Redwood",
+      ctaLink: "/services",
+      imageUrl: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=2055&auto=format&fit=crop"
+    },
+    {
+      category: "24/7 GLOBAL MANAGED SERVICES",
+      headline: "Round-the-Clock Support",
+      subline: "Continuous integration and system optimization from our offshore delivery centers.",
+      ctaText: "Explore Managed Services",
+      ctaLink: "/services",
+      imageUrl: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      category: "CAREERS & GLOBAL DELIVERY",
+      headline: "Join Our Growing Team",
+      subline: "Build your career alongside top-tier Oracle Fusion HCM architects and technical innovators.",
+      ctaText: "View Careers",
+      ctaLink: "/careers",
+      imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+    }
+  ];
 
   words(headline: string): string[] {
     return headline.split(' ');

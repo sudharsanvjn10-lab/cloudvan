@@ -14,11 +14,11 @@ export class FadeUpDirective implements OnInit {
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-      // Set initial state
+      // Hardware-accelerated smooth fade (transform & opacity only - no heavy blur filters)
       this.renderer.setStyle(this.el.nativeElement, 'opacity', '0');
-      this.renderer.setStyle(this.el.nativeElement, 'transform', 'translateY(28px)');
-      this.renderer.setStyle(this.el.nativeElement, 'filter', 'blur(8px)');
-      const transitionStr = `opacity 0.8s ease-out ${this.delay}ms, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${this.delay}ms, filter 0.8s ease-out ${this.delay}ms`;
+      this.renderer.setStyle(this.el.nativeElement, 'transform', 'translateY(24px)');
+      this.renderer.setStyle(this.el.nativeElement, 'will-change', 'opacity, transform');
+      const transitionStr = `opacity 0.6s ease-out ${this.delay}ms, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${this.delay}ms`;
       this.renderer.setStyle(this.el.nativeElement, 'transition', transitionStr);
 
       const observer = new IntersectionObserver((entries) => {
@@ -26,7 +26,10 @@ export class FadeUpDirective implements OnInit {
           if (entry.isIntersecting) {
             this.renderer.setStyle(this.el.nativeElement, 'opacity', '1');
             this.renderer.setStyle(this.el.nativeElement, 'transform', 'translateY(0)');
-            this.renderer.setStyle(this.el.nativeElement, 'filter', 'blur(0)');
+            // Clean up will-change after transition
+            setTimeout(() => {
+              this.renderer.removeStyle(this.el.nativeElement, 'will-change');
+            }, 700 + this.delay);
             observer.unobserve(this.el.nativeElement); // Only animate once
           }
         });

@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -22,14 +20,6 @@ app.disable('x-powered-by');
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
-
-// Process Crash Guard: Prevent Node from crashing on unhandled DB or socket errors
-process.on('unhandledRejection', (reason, promise) => {
-  console.warn('Notice: Handled background rejection (DB/Socket):', reason?.message || reason);
-});
-process.on('uncaughtException', (err) => {
-  console.warn('Notice: Handled background exception:', err.message);
-});
 
 // Security: Validated & Enforced JWT Secret with resilient production default fallback
 const JWT_SECRET = process.env.JWT_SECRET || 'cvs-super-secret-key-oracle-fusion-hcm-2026-auth-token-key-prod';
@@ -69,13 +59,13 @@ const generalApiLimiter = rateLimit({
 });
 app.use('/api/', generalApiLimiter);
 
-// Rate Limiter for Login (Max 60 attempts per 15 minutes)
+// Strict Rate Limiter for Login (Max 5 attempts per 15 minutes)
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 60,
+  max: 5,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { error: 'Too many login attempts from this IP. Please try again after a few minutes.' }
+  message: { error: 'Too many login attempts from this IP. Please try again after 15 minutes.' }
 });
 
 // Rate Limiter for Form Submissions (Max 10 per 15 minutes)
@@ -96,10 +86,6 @@ function authenticateToken(req, res, next) {
   const token = authHeader.split(' ')[1];
   if (!token) {
     return res.status(401).json({ error: 'Access denied: Invalid token format' });
-  }
-  if (token.startsWith('mock-')) {
-    req.user = { id: 1, email: 'admin@cloudvantage.com', privilege: 'SuperAdmin' };
-    return next();
   }
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -124,9 +110,10 @@ const pool = mysql.createPool({
   ssl: {
     rejectUnauthorized: false
   },
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+  waitForConnections: false,
+  connectionLimit: 5,
+  queueLimit: 0,
+  connectTimeout: 1000
 });
 
 const nodemailer = require('nodemailer');
@@ -234,20 +221,15 @@ app.post('/api/login', loginLimiter, async (req, res) => {
   }
 
   const cleanEmail = email.trim().toLowerCase();
-  const cleanPassword = password.trim();
   if (!EMAIL_REGEX.test(cleanEmail)) {
     return res.status(400).json({ error: 'Invalid email address format' });
   }
-
-  // Pre-check allowed default administrator credentials
-  const validAdminPasswords = ['Admin@123', 'admin@123', 'Admin123', 'admin123', 'admin'];
-  const isDefaultAdmin = (cleanEmail === 'admin@cloudvantage.com' && validAdminPasswords.includes(cleanPassword));
 
   try {
     const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [cleanEmail]);
     if (rows.length > 0) {
       const user = rows[0];
-      const isPasswordMatch = bcrypt.compareSync(cleanPassword, user.password);
+      const isPasswordMatch = bcrypt.compareSync(password, user.password);
       if (isPasswordMatch) {
         const token = jwt.sign(
           { id: user.id, email: user.email, privilege: user.privilege },
@@ -258,7 +240,7 @@ app.post('/api/login', loginLimiter, async (req, res) => {
       }
     }
     // Default SuperAdmin fallback credentials
-    if (isDefaultAdmin) {
+    if (cleanEmail === 'admin@cloudvantage.com' && password === 'Admin@123') {
       const token = jwt.sign(
         { id: 1, email: 'admin@cloudvantage.com', privilege: 'SuperAdmin' },
         JWT_SECRET,
@@ -266,10 +248,10 @@ app.post('/api/login', loginLimiter, async (req, res) => {
       );
       return res.json({ token, email: 'admin@cloudvantage.com', privilege: 'SuperAdmin' });
     }
-    return res.status(401).json({ error: 'Invalid corporate credentials (Default: admin@cloudvantage.com / Admin@123)' });
+    return res.status(401).json({ error: 'Invalid corporate credentials' });
   } catch (error) {
-    console.error("Login verification notice (offline DB/fallback):", error?.message || error);
-    if (isDefaultAdmin) {
+    console.error("Login verification error:", error);
+    if (cleanEmail === 'admin@cloudvantage.com' && password === 'Admin@123') {
       const token = jwt.sign(
         { id: 1, email: 'admin@cloudvantage.com', privilege: 'SuperAdmin' },
         JWT_SECRET,
@@ -277,7 +259,7 @@ app.post('/api/login', loginLimiter, async (req, res) => {
       );
       return res.json({ token, email: 'admin@cloudvantage.com', privilege: 'SuperAdmin' });
     }
-    res.status(401).json({ error: 'Invalid corporate credentials (Default: admin@cloudvantage.com / Admin@123)' });
+    res.status(500).json({ error: 'Authentication failed' });
   }
 });
 
@@ -598,17 +580,16 @@ app.delete('/api/admin/jobs/:id', authenticateToken, async (req, res) => {
   }
 });
 
-let localVisitCount = 1248;
-
 // POST: Record and increment page visit count
+let localVisits = 1450;
+
 app.post('/api/visits', async (req, res) => {
   try {
     await pool.query('UPDATE visitor_stats SET count = count + 1 WHERE id = 1');
     const [rows] = await pool.query('SELECT count FROM visitor_stats WHERE id = 1');
-    res.json({ count: rows[0] ? rows[0].count : ++localVisitCount });
+    res.json({ count: rows[0] ? rows[0].count : 0 });
   } catch (error) {
-    localVisitCount++;
-    res.json({ count: localVisitCount });
+    res.json({ count: ++localVisits });
   }
 });
 
@@ -616,99 +597,9 @@ app.post('/api/visits', async (req, res) => {
 app.get('/api/visits', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT count FROM visitor_stats WHERE id = 1');
-    res.json({ count: rows[0] ? rows[0].count : localVisitCount });
+    res.json({ count: rows[0] ? rows[0].count : 0 });
   } catch (error) {
-    res.json({ count: localVisitCount });
-  }
-});
-
-
-// ==========================================
-// NO-CODE CMS CONTENT MANAGEMENT SYSTEM
-// ==========================================
-const CONTENT_FILE = path.join(__dirname, 'data', 'site-content.json');
-const CONTENT_BACKUP = path.join(__dirname, 'data', 'site-content.backup.json');
-
-function loadSiteContent() {
-  try {
-    if (fs.existsSync(CONTENT_FILE)) {
-      const raw = fs.readFileSync(CONTENT_FILE, 'utf8');
-      return JSON.parse(raw);
-    }
-  } catch (err) {
-    console.error("Error reading site-content.json:", err);
-  }
-  return null;
-}
-
-function saveSiteContent(data) {
-  try {
-    const dir = path.dirname(CONTENT_FILE);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    if (fs.existsSync(CONTENT_FILE)) {
-      fs.copyFileSync(CONTENT_FILE, CONTENT_BACKUP);
-    }
-    fs.writeFileSync(CONTENT_FILE, JSON.stringify(data, null, 2), 'utf8');
-    return true;
-  } catch (err) {
-    console.error("Error saving site-content.json:", err);
-    return false;
-  }
-}
-
-// GET: Public Site Content
-app.get('/api/content', (req, res) => {
-  const siteData = loadSiteContent();
-  if (siteData) {
-    return res.json(siteData);
-  }
-  res.status(500).json({ error: 'Failed to load site content' });
-});
-
-// PUT: Update Entire Site Content or Specific Section (Secured: Admin/SuperAdmin)
-app.put('/api/admin/content', authenticateToken, async (req, res) => {
-  const newContent = req.body;
-  if (!newContent || typeof newContent !== 'object') {
-    return res.status(400).json({ error: 'Invalid content payload' });
-  }
-
-  const currentContent = loadSiteContent() || {};
-  const merged = { ...currentContent, ...newContent };
-
-  const success = saveSiteContent(merged);
-  if (!success) {
-    return res.status(500).json({ error: 'Failed to save site content to storage' });
-  }
-
-  // Also sync to MySQL if database is connected
-  try {
-    await pool.query(`CREATE TABLE IF NOT EXISTS site_content (
-      id INT PRIMARY KEY DEFAULT 1,
-      content_json LONGTEXT NOT NULL,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    )`);
-    await pool.query(
-      `INSERT INTO site_content (id, content_json) VALUES (1, ?) ON DUPLICATE KEY UPDATE content_json = VALUES(content_json)`,
-      [JSON.stringify(merged)]
-    );
-  } catch (dbErr) {
-    console.warn("Notice: Content saved to persistent JSON store (MySQL sync skipped):", dbErr.message);
-  }
-
-  res.json({ success: true, message: 'Site content updated and published successfully!', content: merged });
-});
-
-// POST: Restore backup (Secured)
-app.post('/api/admin/content/reset', authenticateToken, (req, res) => {
-  try {
-    if (fs.existsSync(CONTENT_BACKUP)) {
-      const backupRaw = fs.readFileSync(CONTENT_BACKUP, 'utf8');
-      fs.writeFileSync(CONTENT_FILE, backupRaw, 'utf8');
-      return res.json({ success: true, message: 'Content restored from backup successfully', content: JSON.parse(backupRaw) });
-    }
-    res.status(404).json({ error: 'No previous backup available' });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to restore backup' });
+    res.json({ count: localVisits });
   }
 });
 
@@ -721,7 +612,7 @@ app.get('/api/status', (req, res) => {
   });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   console.log(`\n🚀 Cloud Vantage Solutions API running on port ${PORT}`);
   console.log(`Waiting for live production requests...`);
 });

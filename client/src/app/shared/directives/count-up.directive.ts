@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnInit, Renderer2, inject, PLATFORM_ID } from '@angular/core';
+import { Directive, ElementRef, Input, OnInit, Renderer2, inject, PLATFORM_ID, NgZone } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 @Directive({
@@ -14,6 +14,7 @@ export class CountUpDirective implements OnInit {
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
   private platformId = inject(PLATFORM_ID);
+  private ngZone = inject(NgZone);
   private hasAnimated = false;
 
   ngOnInit() {
@@ -35,7 +36,9 @@ export class CountUpDirective implements OnInit {
       entries.forEach(entry => {
         if (entry.isIntersecting && !this.hasAnimated) {
           this.hasAnimated = true;
-          this.animateCount();
+          this.ngZone.runOutsideAngular(() => {
+            this.animateCount();
+          });
           observer.unobserve(this.el.nativeElement);
         }
       });

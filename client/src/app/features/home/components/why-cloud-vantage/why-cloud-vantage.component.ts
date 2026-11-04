@@ -1,6 +1,5 @@
-import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ContentService } from '../../../../core/services/content.service';
 
 @Component({
   selector: 'app-why-cloud-vantage',
@@ -217,11 +216,30 @@ export class WhyCloudVantageComponent implements OnInit, OnDestroy {
   private autoCycleInterval: any;
   private prefersReducedMotion = typeof window !== 'undefined'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  private contentService = inject(ContentService);
 
-  get tabs() {
-    return this.contentService.whyCvTabs();
-  }
+  tabs = [
+    {
+      title: 'The Vantage Advantage',
+      heading: '20+ Years of Oracle Cloud Mastery',
+      body: 'Founded by industry veterans with extensive real-world experience, we don\'t just implement software; we architect scalable solutions that map precisely to your business objectives across real estate, healthcare, and logistics sectors.',
+      features: ['Industry-Specific Customizations', 'Rapid Implementation Methodology', 'Post-Go-Live Managed Services'],
+      imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+      title: 'Global Delivery Model',
+      heading: 'Onshore Strategy, Offshore Precision',
+      body: 'Headquartered in Madurai with state-of-the-art offshore delivery centers in Chennai and Madurai, India. This hybrid model guarantees enterprise-grade architectural design coupled with highly cost-effective, round-the-clock technical execution and support.',
+      features: ['Madurai Strategic HQ', 'Chennai & Madurai Delivery Centers', '24/7 Technical Support Lifecycle'],
+      imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop'
+    },
+    {
+      title: 'Cross-Sector Expertise',
+      heading: 'Built for Complex Environments',
+      body: 'We specialize in deploying Oracle Fusion modules in industries with rigid compliance, massive workforces, and intricate supply chains. Whether it is oil & gas drilling or retail pharmacy, we know how to configure the cloud for your reality.',
+      features: ['Real Estate & Investment', 'Oil, Gas & Automotive', 'Pharmacy & Healthcare'],
+      imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop'
+    }
+  ];
 
   ngOnInit() {
     this.startAutoCycle();

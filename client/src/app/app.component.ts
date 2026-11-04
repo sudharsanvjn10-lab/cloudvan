@@ -101,6 +101,7 @@ import { fadeAnimation } from './route-animations';
 export class AppComponent implements OnInit {
   showScrollBtn = false;
   scrollProgress = 0;
+  private isScrolling = false;
 
   ngOnInit() {
     // Dialogflow messenger loaded and styled via native custom elements in index.html head
@@ -108,15 +109,16 @@ export class AppComponent implements OnInit {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    const yOffset = window.pageYOffset || document.documentElement.scrollTop;
-    this.showScrollBtn = yOffset > 300;
+    if (!this.isScrolling) {
+      this.isScrolling = true;
+      requestAnimationFrame(() => {
+        const yOffset = window.pageYOffset || document.documentElement.scrollTop;
+        this.showScrollBtn = yOffset > 300;
 
-    // Calculate scroll progress percentage
-    const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    if (docHeight > 0) {
-      this.scrollProgress = (yOffset / docHeight) * 100;
-    } else {
-      this.scrollProgress = 0;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        this.scrollProgress = docHeight > 0 ? (yOffset / docHeight) * 100 : 0;
+        this.isScrolling = false;
+      });
     }
   }
 
