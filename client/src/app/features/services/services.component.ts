@@ -529,7 +529,7 @@ export class ServicesComponent implements OnInit {
         'Health & Safety Incidents', 
         'Workforce Predictions & Modeling'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1200&auto=format&fit=crop'
+      imageUrl: 'assets/images/photo-1497215728101-856f4ea42174.webp'
     },
     {
       id: 'payroll',
@@ -546,7 +546,7 @@ export class ServicesComponent implements OnInit {
         'Total Compensation Statements', 
         'Costing & GL Journal Mapping'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop'
+      imageUrl: 'assets/images/photo-1554224155-8d04cb21cd6c.webp'
     },
     {
       id: 'absence',
@@ -563,7 +563,7 @@ export class ServicesComponent implements OnInit {
         'Shift Roster Generation', 
         'Manager Delegation Approvals'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?q=80&w=1200&auto=format&fit=crop'
+      imageUrl: 'assets/images/photo-1506784365847-bbad939e9335.webp'
     },
     {
       id: 'talent',
@@ -580,7 +580,7 @@ export class ServicesComponent implements OnInit {
         'Talent Review & 9-Box Calibration', 
         'Succession & Learning Paths'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1565688534245-05d6b5be184a?q=80&w=1200&auto=format&fit=crop'
+      imageUrl: 'assets/images/photo-1565688534245-05d6b5be184a.webp'
     },
     {
       id: 'redwood',
@@ -597,7 +597,7 @@ export class ServicesComponent implements OnInit {
         'JavaScript Action Chains', 
         'Zero Upgrade-Impact Extensibility'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=1200&auto=format&fit=crop'
+      imageUrl: 'assets/images/photo-1581291518857-4e27b48ff24e.webp'
     },
     {
       id: 'integrations',
@@ -614,7 +614,7 @@ export class ServicesComponent implements OnInit {
         'OTBI Subject Area Analytics', 
         'Pixel-Perfect BI Publisher Reports'
       ],
-      imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop'
+      imageUrl: 'assets/images/photo-1558494949-ef010cbdcc31.webp'
     }
   ];
 

@@ -70,27 +70,36 @@ export class InsightsGridComponent implements OnInit {
       title: 'Maximizing ROI with Oracle Fusion HCM',
       excerpt: 'Discover proven strategies to optimize your human capital management deployment for long-term scalability and user adoption.',
       date: 'October 12, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop'
+      imageUrl: 'assets/images/photo-1551288049-bebda4e38f71.webp'
     },
     {
       id: '2',
       title: 'Migrating Legacy HRMS to Oracle Fusion HCM',
       excerpt: 'A comprehensive roadmap for enterprises transitioning from on-premise PeopleSoft / EBS HRMS systems to modern Oracle Cloud HCM.',
       date: 'September 28, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop'
+      imageUrl: 'assets/images/photo-1451187580459-43490279c0fa.webp'
     },
     {
       id: '3',
       title: 'Modernizing Employee Journeys with Redwood UI',
       excerpt: 'How Oracle Redwood UI and Visual Builder Studio enable streamlined employee self-service and personalized workforce experiences.',
       date: 'September 15, 2026',
-      imageUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800&auto=format&fit=crop'
+      imageUrl: 'assets/images/photo-1507238691740-187a5b1d37b8.webp'
     }
   ];
 
   ngOnInit() {
     this.http.get<Insight[]>(`${environment.apiUrl}/insights`)
       .pipe(catchError(() => of(this.fallbackData)))
-      .subscribe(data => this.insights.set(data));
+      .subscribe(data => this.insights.set(data.map(insight => {
+        // Existing database rows may still contain the original hosted image URL.
+        const photo = insight.imageUrl?.match(/^https:\/\/images\.unsplash\.com\/(photo-[a-zA-Z0-9-]+)/)?.[1];
+        const localPhotos = this.fallbackData.map(item => item.imageUrl);
+        const localImage = photo ? 'assets/images/' + photo + '.webp' : insight.imageUrl;
+        return {
+          ...insight,
+          imageUrl: localPhotos.includes(localImage) ? localImage : insight.imageUrl
+        };
+      })));
   }
 }
