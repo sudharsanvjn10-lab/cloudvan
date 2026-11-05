@@ -1,15 +1,12 @@
 const mysql = require('mysql2/promise');
+const { databaseOptions } = require('./database-options');
 require('dotenv').config();
 
 async function updateDatabase() {
   console.log("Connecting to Aiven MySQL database to update content...");
+  let connection;
   try {
-    const connection = await mysql.createConnection({
-      uri: process.env.DATABASE_URL ? process.env.DATABASE_URL.replace('?ssl-mode=REQUIRED', '') : undefined,
-      ssl: {
-        rejectUnauthorized: false
-      }
-    });
+    connection = await mysql.createConnection(databaseOptions());
 
     // 1. UPDATE TEAM BIOS
     console.log("Updating Team Bios...");
@@ -25,10 +22,13 @@ async function updateDatabase() {
     await connection.execute(`UPDATE insights SET title = 'Transform Payroll Management: Oracle\\'s Intelligent Global Approach', excerpt = 'Learn how Oracle\\'s unified payroll solutions reduce compliance risks, automate complex calculations, and deliver seamless global payroll operations for diverse workforces.', date = 'June 10, 2026' WHERE id = 3`);
 
     console.log("✅ Live database content update complete!");
-    await connection.end();
+
 
   } catch (error) {
-    console.error("❌ Error updating database:", error);
+    console.error("❌ Error updating database:", error.message);
+    process.exitCode = 1;
+  } finally {
+    if (connection) await connection.end();
   }
 }
 

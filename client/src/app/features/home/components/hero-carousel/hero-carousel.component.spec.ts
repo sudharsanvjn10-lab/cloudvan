@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeroCarouselComponent } from './hero-carousel.component';
@@ -8,7 +10,8 @@ describe('HeroCarouselComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HeroCarouselComponent]
+      imports: [HeroCarouselComponent],
+      providers: [provideHttpClient(), provideRouter([])]
     })
     .compileComponents();
 

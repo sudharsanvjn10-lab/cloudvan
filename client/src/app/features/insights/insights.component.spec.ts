@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InsightsComponent } from './insights.component';
@@ -8,7 +10,8 @@ describe('InsightsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InsightsComponent]
+      imports: [InsightsComponent],
+      providers: [provideHttpClient(), provideRouter([])]
     })
     .compileComponents();
 

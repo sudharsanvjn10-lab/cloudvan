@@ -2,7 +2,6 @@ import { Component, OnInit, HostListener, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { catchError, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { FadeUpDirective } from '../../shared/directives/fade-up.directive';
 
@@ -32,6 +31,9 @@ export interface JobPosition {
       </div>
       
       <div class="jobs-list">
+        <p *ngIf="jobsState() === 'loading'" role="status">Loading current openings…</p>
+        <p *ngIf="jobsState() === 'error'" role="alert">Openings are temporarily unavailable. Please try again later.</p>
+        <p *ngIf="jobsState() === 'loaded' && !jobs().length" role="status">There are no open positions right now.</p>
         <div class="job-card" *ngFor="let job of jobs(); let i = index" appFadeUp [delay]="i * 120">
           <div class="job-info">
             <h3>{{ job.title }}</h3>
@@ -94,7 +96,7 @@ export interface JobPosition {
             </span>
           </button>
           
-          <p *ngIf="applied()" class="success-msg">Thank you! Your application has been submitted successfully.</p>
+          <p *ngIf="applied()" class="success-msg">{{ applicationSuccessMessage() }}</p>
         </form>
       </div>
     </div>
@@ -229,16 +231,11 @@ export class CareersComponent implements OnInit {
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
 
-  private fallbackJobs: JobPosition[] = [
-    { id: 1, title: 'Senior Oracle Fusion HCM Functional Consultant (Core HR & Payroll)', location: 'Chennai, India', type: 'Full-Time' },
-    { id: 2, title: 'Oracle Fusion HCM Technical Developer (HDL, Fast Formulas & OTBI)', location: 'Chennai, India', type: 'Full-Time' },
-    { id: 3, title: 'Redwood UI & VBS Specialist (Oracle HCM Extensions)', location: 'Madurai, India', type: 'Full-Time' },
-    { id: 4, title: 'Oracle Recruiting Cloud (ORC) & Talent Specialist', location: 'Madurai, India', type: 'Full-Time' }
-  ];
-
-  jobs = signal<JobPosition[]>(this.fallbackJobs);
+  jobs = signal<JobPosition[]>([]);
+  jobsState = signal<'loading' | 'loaded' | 'error'>('loading');
   selectedJob = signal<string | null>(null);
   applied = signal(false);
+  applicationSuccessMessage = signal<string>('Thank you! Your application has been submitted successfully.');
   isSubmitting = signal(false);
   errorMessage = signal<string | null>(null);
 
@@ -258,11 +255,12 @@ export class CareersComponent implements OnInit {
 
   ngOnInit() {
     this.http.get<JobPosition[]>(`${environment.apiUrl}/jobs`)
-      .pipe(catchError(() => of(this.fallbackJobs)))
-      .subscribe(data => {
-        if (data && data.length > 0) {
-          this.jobs.set(data);
-        }
+      .subscribe({
+        next: jobs => {
+          this.jobs.set(jobs);
+          this.jobsState.set('loaded');
+        },
+        error: () => this.jobsState.set('error')
       });
   }
 
@@ -295,13 +293,18 @@ export class CareersComponent implements OnInit {
         jobTitle: this.selectedJob()
       };
       
-      this.http.post(`${environment.apiUrl}/apply`, payload).subscribe({
-        next: () => {
+      this.http.post<{ success: boolean; message?: string; emailDelivered?: boolean }>(`${environment.apiUrl}/apply`, payload).subscribe({
+        next: (res) => {
           this.isSubmitting.set(false);
           this.applied.set(true);
+          if (res && res.emailDelivered === false) {
+            this.applicationSuccessMessage.set('Application recorded successfully! (Note: Confirmation email notification is temporarily offline).');
+          } else {
+            this.applicationSuccessMessage.set('Thank you! Your application has been submitted successfully.');
+          }
           setTimeout(() => {
             this.closeApplyModal();
-          }, 2500);
+          }, 3000);
         },
         error: (err) => {
           this.isSubmitting.set(false);

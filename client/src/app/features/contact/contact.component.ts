@@ -63,6 +63,7 @@ import { environment } from '../../../environments/environment';
             </button>
 
             <p *ngIf="submitted()" class="success-msg">Thank you! Your message has been received. Our Oracle HCM team will be in touch shortly.</p>
+            <p *ngIf="deliveryWarning()" class="delivery-warning" style="color: #b45309; margin-top: 0.5rem; font-size: 0.9rem; font-weight: 500;">⚠️ {{ deliveryWarning() }}</p>
           </form>
         </div>
 
@@ -164,17 +165,25 @@ export class ContactComponent {
   submitted = signal(false);
   isSubmitting = signal(false);
   errorMessage = signal<string | null>(null);
+  deliveryWarning = signal<string | null>(null);
 
   onSubmit() {
     if (this.contactForm.valid && !this.isSubmitting()) {
       this.isSubmitting.set(true);
       this.errorMessage.set(null);
-      this.http.post(`${environment.apiUrl}/contact`, this.contactForm.value).subscribe({
-        next: () => {
+      this.deliveryWarning.set(null);
+      this.http.post<{ success: boolean; message?: string; emailDelivered?: boolean }>(`${environment.apiUrl}/contact`, this.contactForm.value).subscribe({
+        next: (res) => {
           this.isSubmitting.set(false);
           this.submitted.set(true);
+          if (res && res.emailDelivered === false) {
+            this.deliveryWarning.set('Message saved to our records. Note: Automated email notification is temporarily offline.');
+          }
           this.contactForm.reset();
-          setTimeout(() => this.submitted.set(false), 6000);
+          setTimeout(() => {
+            this.submitted.set(false);
+            this.deliveryWarning.set(null);
+          }, 8000);
         },
         error: (err) => {
           this.isSubmitting.set(false);

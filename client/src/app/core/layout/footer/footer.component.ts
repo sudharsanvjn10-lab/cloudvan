@@ -29,18 +29,6 @@ import { environment } from '../../../../environments/environment';
         </div>
 
         <div class="footer-col">
-          <h3>Oracle HCM Tracks</h3>
-          <ul>
-            <li><a routerLink="/services" fragment="core-hr">Core HR & Global HR</a></li>
-            <li><a routerLink="/services" fragment="payroll">Payroll & Compensation</a></li>
-            <li><a routerLink="/services" fragment="absence">Time & Absence Management</a></li>
-            <li><a routerLink="/services" fragment="talent">Talent & Recruiting (ORC)</a></li>
-            <li><a routerLink="/services" fragment="redwood">Redwood & VBS Extensions</a></li>
-            <li><a routerLink="/services" fragment="integrations">HDL & BI Reporting</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
           <h3>Quick Links</h3>
           <ul>
             <li><a routerLink="/about">About Us</a></li>
@@ -97,7 +85,7 @@ import { environment } from '../../../../environments/environment';
       padding-bottom: 3.5rem;
 
       @media (min-width: 768px) { grid-template-columns: repeat(2, 1fr); }
-      @media (min-width: 1024px) { grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 2.5rem; }
+      @media (min-width: 1024px) { grid-template-columns: 2fr 1fr 1.5fr; gap: 2.5rem; }
     }
 
     .logo-text {

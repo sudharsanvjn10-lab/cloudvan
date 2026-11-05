@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WhyCloudVantageComponent } from './why-cloud-vantage.component';
@@ -8,7 +10,8 @@ describe('WhyCloudVantageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WhyCloudVantageComponent]
+      imports: [WhyCloudVantageComponent],
+      providers: [provideHttpClient(), provideRouter([])]
     })
     .compileComponents();
 

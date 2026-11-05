@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ClientsLogosComponent } from './clients-logos.component';
@@ -8,7 +10,8 @@ describe('ClientsLogosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ClientsLogosComponent]
+      imports: [ClientsLogosComponent],
+      providers: [provideHttpClient(), provideRouter([])]
     })
     .compileComponents();
 
